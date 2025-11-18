@@ -6,6 +6,7 @@
     "interviews": "Interviews",
     "settings": "Settings",
     "logout": "Logout",
+    "logoutSuccess": "Successfully logged out",
     "login": "Login",
     "register": "Register",
     "email": "Email",
@@ -22,7 +23,8 @@
     "error": "Error",
     "success": "Success",
     "confirm": "Confirm",
-    "close": "Close"
+    "close": "Close",
+    "back": "Back"
   },
   "auth": {
     "loginTitle": "Welcome Back",
@@ -104,7 +106,11 @@
     "currentPassword": "Current Password",
     "newPassword": "New Password",
     "confirmNewPassword": "Confirm New Password",
-    "updateProfile": "Update Profile"
+    "updateProfile": "Update Profile",
+    "subscription": "Subscription",
+    "manageSubscription": "Manage Subscription",
+    "upgradeToPremium": "Upgrade to Premium",
+    "currentPlan": "Current Plan"
   },
   "errors": {
     "networkError": "Network error. Please try again.",

@@ -2,63 +2,61 @@
 
 :root {
   /* Paleta de colores personalizada */
-  --black-olive: #423e37ff;
-  --xanthous: #e3b23cff;
-  --eggshell: #edebd7ff;
-  --taupe-gray: #a39594ff;
-  --dim-gray: #6e675fff;
+  --black-olive: #423e37;
+  --xanthous: #e3b23c;
+  --eggshell: #edebd7;
+  --taupe-gray: #a39594;
+  --dim-gray: #6e675f;
 
-  /* Colores específicos de Subscription */
-  --subscription-primary: var(--xanthous);
-  --subscription-primary-hover: #d4a02e;
-  --subscription-primary-dark: #c59025;
-  --subscription-primary-light: #ead16f;
-  --subscription-purple: var(--dim-gray);
-  --subscription-purple-dark: #5d5651;
-  --subscription-purple-darker: #4c4743;
-  --subscription-success: var(--xanthous);
-  --subscription-danger: #c85a54;
-  --subscription-danger-hover: #b54842;
-  --subscription-danger-light: #d77871;
+  /* Colores principales */
+  --color-primary: var(--xanthous);
+  --color-primary-hover: #d4a02e;
+  --color-secondary: var(--dim-gray);
+  --color-secondary-hover: #5d5651;
+  --color-success: #10b981;
+  --color-success-hover: #059669;
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+  --color-warning: var(--xanthous);
+  --color-warning-hover: #d4a02e;
+  --color-purple: var(--dim-gray);
+  --color-purple-hover: #5d5651;
 
-  /* Backgrounds Subscription */
-  --subscription-bg-light: var(--eggshell);
-  --subscription-bg-dark: var(--black-olive);
-  --subscription-bg-card-light: #ffffff;
-  --subscription-bg-card-dark: var(--dim-gray);
-  --subscription-bg-premium: var(--xanthous);
-  --subscription-bg-badge: rgba(227, 178, 60, 0.2);
-  --subscription-bg-button-current: rgba(227, 178, 60, 0.2);
-  --subscription-bg-button-upgrade: var(--xanthous);
-  --subscription-bg-button-upgrade-hover: #d4a02e;
+  /* Colores de fondo */
+  --bg-light: var(--eggshell);
+  --bg-dark: var(--black-olive);
+  --bg-card-light: #ffffff;
+  --bg-card-dark: var(--dim-gray);
+  --bg-input-dark: #5d5651;
 
-  /* Textos Subscription */
-  --subscription-text-dark: var(--black-olive);
-  --subscription-text-medium: var(--dim-gray);
-  --subscription-text-gray: var(--taupe-gray);
-  --subscription-text-gray-light: #c4b8b7;
-  --subscription-text-gray-lighter: #dcd5d4;
-  --subscription-text-white: var(--eggshell);
-  --subscription-text-white-transparent: rgba(237, 235, 215, 0.9);
+  /* Colores de texto - Mayor contraste */
+  --text-dark: #2d2a25;
+  --text-light: #ffffff;
+  --text-muted: #8a7f7e;
+  --text-muted-dark: #e8e3e2;
 
-  /* Bordes Subscription */
-  --subscription-border-current: var(--xanthous);
+  /* Colores de borde - Más visibles */
+  --border-light: #8a7f7e;
+  --border-dark: #5d5651;
 
-  /* Sombras Subscription */
-  --subscription-shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  /* Degradados */
+  --gradient-blue: var(--xanthous);
+  --gradient-green: #10b981;
+  --gradient-purple: var(--dim-gray);
+  --gradient-orange: var(--xanthous);
 
-  /* Espaciado Subscription */
-  --subscription-spacing-xs: 0.25rem;
-  --subscription-spacing-sm: 0.5rem;
-  --subscription-spacing-md: 0.75rem;
-  --subscription-spacing-lg: 1rem;
-  --subscription-spacing-xl: 1.5rem;
-  --subscription-spacing-2xl: 2rem;
+  /* Sombras */
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 
-  /* Bordes redondeados Subscription */
-  --subscription-radius-sm: 0.375rem;
-  --subscription-radius-md: 0.5rem;
-  --subscription-radius-full: 9999px;
+  /* Espaciado */
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+
+  /* Bordes redondeados */
+  --radius-md: 0.5rem;
+}
 
   /* Tamaños de fuente Subscription */
   --subscription-font-xs: 0.875rem;

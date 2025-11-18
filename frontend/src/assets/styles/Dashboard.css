@@ -132,12 +132,12 @@
 }
 
 .dashboard__button--download {
-  background-color: var(--color-success);
+  background-color: var(--color-primary);
   color: var(--text-light);
 }
 
 .dashboard__button--download:hover {
-  background-color: var(--color-success-hover);
+  background-color: var(--color-primary-hover);
 }
 
 .dashboard__button--save {
@@ -273,6 +273,14 @@
   box-shadow: var(--shadow-md);
   padding: var(--spacing-lg);
   color: var(--text-light);
+}
+
+.stat-card--gray {
+  background: linear-gradient(135deg, var(--dim-gray), var(--color-secondary-hover));
+}
+
+.stat-card--yellow {
+  background: linear-gradient(135deg, var(--xanthous), var(--color-primary-hover));
 }
 
 .stat-card--blue {
