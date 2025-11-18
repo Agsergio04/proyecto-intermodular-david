@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import i18n from './i18n/config';
 import { useAuthStore, useThemeStore, useLanguageStore } from './store';
 
 // Pages
@@ -33,14 +32,15 @@ function App() {
     initializeAuth();
     initializeTheme();
     initializeLanguage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const token = localStorage.getItem('token');
 
   return (
     <Router>
-      <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-white transition-colors">
-        {token && <Header />}
+      <div className="min-h-screen transition-colors">
+        <Header />
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
@@ -88,9 +88,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
-          {/* Default Route */}
-          <Route path="/" element={<Navigate to={token ? "/dashboard" : "/"} />} />
         </Routes>
 
         {/* Toast Notifications */}

@@ -1,0 +1,104 @@
+/* StatCard Component - Con paleta unificada */
+
+:root {
+  /* Paleta de colores personalizada */
+  --black-olive: #423e37;
+  --xanthous: #e3b23c;
+  --eggshell: #edebd7;
+  --taupe-gray: #a39594;
+  --dim-gray: #6e675f;
+
+  /* Colores principales */
+  --color-primary: var(--xanthous);
+  --color-primary-hover: #d4a02e;
+  --color-secondary: var(--dim-gray);
+  --color-secondary-hover: #5d5651;
+  --color-success: #10b981;
+  --color-success-hover: #059669;
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+  --color-warning: var(--xanthous);
+  --color-warning-hover: #d4a02e;
+  --color-purple: var(--dim-gray);
+  --color-purple-hover: #5d5651;
+
+  /* Colores de fondo */
+  --bg-light: var(--eggshell);
+  --bg-dark: var(--black-olive);
+  --bg-card-light: #ffffff;
+  --bg-card-dark: var(--dim-gray);
+  --bg-input-dark: #5d5651;
+
+  /* Colores de texto - Mayor contraste */
+  --text-dark: #2d2a25;
+  --text-light: #ffffff;
+  --text-muted: #8a7f7e;
+  --text-muted-dark: #e8e3e2;
+
+  /* Colores de borde - Más visibles */
+  --border-light: #8a7f7e;
+  --border-dark: #5d5651;
+
+  /* Degradados */
+  --gradient-blue: var(--xanthous);
+  --gradient-green: #10b981;
+  --gradient-purple: var(--dim-gray);
+  --gradient-orange: var(--xanthous);
+
+  /* Sombras */
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+  /* Espaciado */
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+
+  /* Bordes redondeados */
+  --radius-md: 0.5rem;
+}
+
+.stat-card {
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card--blue {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+}
+
+.stat-card--green {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+}
+
+.stat-card--purple {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+}
+
+.stat-card--orange {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+}
+
+.stat-card__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.stat-card__title {
+  font-size: 0.875rem;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+}
+
+.stat-card__value {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.stat-card__icon {
+  font-size: 2rem;
+  opacity: 0.8;
+}

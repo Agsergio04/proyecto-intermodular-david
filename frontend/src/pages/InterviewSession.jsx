@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { interviewService, responseService } from '../services';
+import { interviewService, responseService } from '../api';
 import { FiArrowLeft, FiArrowRight, FiX, FiCheck } from 'react-icons/fi';
 
 

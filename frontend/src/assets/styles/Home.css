@@ -44,10 +44,12 @@
 .home {
   min-height: 100vh;
   background: var(--home-bg-gradient-light);
+  color: var(--home-text-dark);
 }
 
 .home--dark {
   background: var(--home-bg-gradient-dark);
+  color: var(--home-text-white);
 }
 
 /* Navigation */
@@ -103,6 +105,9 @@
   border-radius: 0.5rem;
   font-weight: 600;
   transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+  background: none;
 }
 
 .home__nav-button--login {
@@ -198,6 +203,8 @@
   margin: 0 auto;
   transition: all 0.2s;
   transform: scale(1);
+  border: none;
+  cursor: pointer;
 }
 
 .home__hero-button:hover {
@@ -453,6 +460,8 @@
   border-radius: 0.5rem;
   font-weight: bold;
   transition: all 0.2s;
+  border: none;
+  cursor: pointer;
 }
 
 .pricing-card__button--free {
@@ -508,6 +517,8 @@
   font-size: 1.125rem;
   transition: all 0.2s;
   transform: scale(1);
+  border: none;
+  cursor: pointer;
 }
 
 .home__cta-button:hover {

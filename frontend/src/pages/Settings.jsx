@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { useLanguageStore } from '../store';
+import { useLanguageStore, useThemeStore } from '../store';
 import { toast } from 'react-toastify';
-import { authService } from '../services';
+import { authService } from '../api';
 import { FiArrowLeft, FiCheckCircle } from 'react-icons/fi';
+import '../assets/styles/Settings.css';
 
 // Planes de suscripción
 const SubscriptionPlans = [
@@ -37,6 +38,7 @@ const Settings = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { language, setLanguage } = useLanguageStore();
+  const { isDark } = useThemeStore();
   const [loading, setLoading] = useState(false);
 
   // Carga inicial desde localStorage solo si no hay usuario
@@ -175,56 +177,62 @@ const Settings = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center gap-4 mb-8">
+    <div className={`settings ${isDark ? 'settings--dark' : ''}`}>
+      <div className="settings__container">
+        <div className="settings__header">
           <button
             onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-semibold transition"
+            className="settings__back-button"
           >
-            <FiArrowLeft /> {t('Volver') || 'Back'}
+            <FiArrowLeft /> {t('common.back')}
           </button>
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
-            {t('settings.title') || 'Settings'}
+          <h1 className={`settings__title ${isDark ? 'settings__title--dark' : ''}`}>
+            {t('settings.title')}
           </h1>
         </div>
 
         {/* SUSCRIPCIÓN */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-          <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-3">Suscripción</h2>
-          <div className="flex items-center gap-3 mb-3">
-            <FiCheckCircle className={`text-2xl ${
-              subscription === 'premium' ? 'text-green-500' : 'text-gray-400'
+        <div className={`settings__subscription ${isDark ? 'settings__subscription--dark' : ''}`}>
+          <h2 className={`settings__section-title ${isDark ? 'settings__section-title--dark' : ''}`}>
+            {t('settings.subscription')}
+          </h2>
+          <div className="settings__subscription-status">
+            <FiCheckCircle className={`settings__subscription-icon ${
+              subscription === 'premium' ? 'settings__subscription-icon--premium' : 'settings__subscription-icon--free'
             }`} />
-            <span className="text-lg font-medium text-gray-800 dark:text-gray-200">
-              {subscription === 'premium' ? 'Premium' : 'Gratis'}
+            <span className={`settings__subscription-label ${isDark ? 'settings__subscription-label--dark' : ''}`}>
+              {subscription === 'premium' ? t('subscription.premiumPlan') : t('subscription.freePlan')}
             </span>
           </div>
           <button
             onClick={() => setShowPlans(!showPlans)}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition"
+            className="settings__manage-button"
           >
-            Gestionar suscripción
+            {t('settings.manageSubscription')}
           </button>
           {showPlans && (
-            <div className="mt-6 grid gap-6 md:grid-cols-2">
+            <div className="settings__plans-grid">
               {SubscriptionPlans.map((plan) => (
-                <div key={plan.key} className={`p-6 rounded-lg shadow transition ${
-                  subscription === plan.key
-                    ? 'border-2 border-blue-500 bg-blue-50 dark:bg-blue-900'
-                    : 'border border-gray-200 dark:border-gray-700'
+                <div key={plan.key} className={`plan-card ${isDark ? 'plan-card--dark' : ''} ${
+                  subscription === plan.key ? `plan-card--active ${isDark ? 'plan-card--active--dark' : ''}` : ''
                 }`}>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                    {plan.name}
-                    {subscription === plan.key && (
-                      <span className="ml-2 px-3 py-1 bg-blue-500 text-white text-xs rounded-full">
-                        Actual
-                      </span>
-                    )}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-3">{plan.description}</p>
-                  <div className="font-bold text-2xl mb-3">{plan.price}</div>
-                  <ul className="mb-4 list-disc ml-6">
+                  <div className="plan-card__header">
+                    <h3 className={`plan-card__name ${isDark ? 'plan-card__name--dark' : ''}`}>
+                      {plan.name}
+                      {subscription === plan.key && (
+                        <span className="plan-card__badge">
+                          {t('settings.currentPlan')}
+                        </span>
+                      )}
+                    </h3>
+                  </div>
+                  <p className={`plan-card__description ${isDark ? 'plan-card__description--dark' : ''}`}>
+                    {plan.description}
+                  </p>
+                  <div className={`plan-card__price ${isDark ? 'plan-card__price--dark' : ''}`}>
+                    {plan.price}
+                  </div>
+                  <ul className={`plan-card__features ${isDark ? 'plan-card__features--dark' : ''}`}>
                     {plan.features.map((feat) => (
                       <li key={feat}>{feat}</li>
                     ))}
@@ -232,9 +240,9 @@ const Settings = () => {
                   {subscription !== plan.key && plan.key === 'premium' && (
                     <button
                       onClick={handleUpgrade}
-                      className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold transition"
+                      className="plan-card__upgrade-button"
                     >
-                      Upgradear a Premium
+                      {t('settings.upgradeToPremium')}
                     </button>
                   )}
                 </div>
@@ -243,124 +251,124 @@ const Settings = () => {
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="settings__grid">
           {/* Perfil */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
-              {t('settings.profile') || 'Profile Settings'}
+          <div className={`settings__form-card ${isDark ? 'settings__form-card--dark' : ''}`}>
+            <h2 className={`settings__section-title ${isDark ? 'settings__section-title--dark' : ''}`}>
+              {t('settings.profile')}
             </h2>
-            <form onSubmit={handleUpdateProfile} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('common.firstName') || 'First Name'}
+            <form onSubmit={handleUpdateProfile} className="settings__form">
+              <div className="settings__field">
+                <label className={`settings__label ${isDark ? 'settings__label--dark' : ''}`}>
+                  {t('common.firstName')}
                 </label>
                 <input
                   type="text"
                   name="firstName"
                   value={profileData.firstName}
                   onChange={handleProfileChange}
-                  className="w-full border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
+                  className={`settings__input ${isDark ? 'settings__input--dark' : ''}`}
                   required
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('common.lastName') || 'Last Name'}
+              <div className="settings__field">
+                <label className={`settings__label ${isDark ? 'settings__label--dark' : ''}`}>
+                  {t('common.lastName')}
                 </label>
                 <input
                   type="text"
                   name="lastName"
                   value={profileData.lastName}
                   onChange={handleProfileChange}
-                  className="w-full border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
+                  className={`settings__input ${isDark ? 'settings__input--dark' : ''}`}
                   required
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('common.profession') || 'Profession'}
+              <div className="settings__field">
+                <label className={`settings__label ${isDark ? 'settings__label--dark' : ''}`}>
+                  {t('common.profession')}
                 </label>
                 <input
                   type="text"
                   name="profession"
                   value={profileData.profession}
                   onChange={handleProfileChange}
-                  className="w-full border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
+                  className={`settings__input ${isDark ? 'settings__input--dark' : ''}`}
                 />
               </div>
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-lg transition disabled:opacity-50 flex items-center justify-center gap-2"
+                className="settings__submit-button"
               >
                 {loading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
-                    {t('common.loading') || 'Loading...'}
+                    {t('common.loading')}
                   </>
                 ) : (
-                  t('settings.updateProfile') || 'Update Profile'
+                  t('settings.updateProfile')
                 )}
               </button>
             </form>
           </div>
           {/* Contraseña */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
-              {t('settings.security') || 'Security'}
+          <div className={`settings__form-card ${isDark ? 'settings__form-card--dark' : ''}`}>
+            <h2 className={`settings__section-title ${isDark ? 'settings__section-title--dark' : ''}`}>
+              {t('settings.security')}
             </h2>
-            <form onSubmit={handleChangePassword} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('settings.currentPassword') || 'Current Password'}
+            <form onSubmit={handleChangePassword} className="settings__form">
+              <div className="settings__field">
+                <label className={`settings__label ${isDark ? 'settings__label--dark' : ''}`}>
+                  {t('settings.currentPassword')}
                 </label>
                 <input
                   type="password"
                   name="currentPassword"
                   value={passwordData.currentPassword}
                   onChange={handlePasswordChange}
-                  className="w-full border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
+                  className={`settings__input ${isDark ? 'settings__input--dark' : ''}`}
                   required
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('settings.newPassword') || 'New Password'}
+              <div className="settings__field">
+                <label className={`settings__label ${isDark ? 'settings__label--dark' : ''}`}>
+                  {t('settings.newPassword')}
                 </label>
                 <input
                   type="password"
                   name="newPassword"
                   value={passwordData.newPassword}
                   onChange={handlePasswordChange}
-                  className="w-full border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
+                  className={`settings__input ${isDark ? 'settings__input--dark' : ''}`}
                   required
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('settings.confirmNewPassword') || 'Confirm New Password'}
+              <div className="settings__field">
+                <label className={`settings__label ${isDark ? 'settings__label--dark' : ''}`}>
+                  {t('settings.confirmNewPassword')}
                 </label>
                 <input
                   type="password"
                   name="confirmNewPassword"
                   value={passwordData.confirmNewPassword}
                   onChange={handlePasswordChange}
-                  className="w-full border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
+                  className={`settings__input ${isDark ? 'settings__input--dark' : ''}`}
                   required
                 />
               </div>
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-lg transition disabled:opacity-50 flex items-center justify-center gap-2"
+                className="settings__submit-button"
               >
                 {loading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
-                    {t('common.loading') || 'Loading...'}
+                    {t('common.loading')}
                   </>
                 ) : (
-                  t('settings.changePassword') || 'Change Password'
+                  t('settings.changePassword')
                 )}
               </button>
             </form>
@@ -368,18 +376,18 @@ const Settings = () => {
         </div>
 
         {/* Preferencias */}
-        <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-          <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
-            {t('settings.preferences') || 'Preferences'}
+        <div className={`settings__language-section ${isDark ? 'settings__language-section--dark' : ''}`}>
+          <h2 className={`settings__section-title ${isDark ? 'settings__section-title--dark' : ''}`}>
+            {t('settings.preferences')}
           </h2>
-          <div className="max-w-xs">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              {t('settings.language') || 'Language'}
+          <div className="settings__field">
+            <label className={`settings__label ${isDark ? 'settings__label--dark' : ''}`}>
+              {t('settings.language')}
             </label>
             <select
               value={language}
               onChange={(e) => handleLanguageChange(e.target.value)}
-              className="w-full border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
+              className={`settings__select ${isDark ? 'settings__select--dark' : ''}`}
             >
               <option value="en">English</option>
               <option value="es">Español</option>
@@ -390,13 +398,30 @@ const Settings = () => {
         </div>
 
         {/* Current User Info */}
-        <div className="mt-8 bg-gray-200 dark:bg-gray-700 rounded-lg p-4">
-          <p className="text-sm text-gray-700 dark:text-gray-300">
+        <div className={`settings__full-section ${isDark ? 'settings__full-section--dark' : ''}`}>
+          <p className={`settings__label ${isDark ? 'settings__label--dark' : ''}`}>
             <strong>Current User Email:</strong> {user?.email || 'N/A'}
           </p>
-          <p className="text-sm text-gray-700 dark:text-gray-300">
+          <p className={`settings__label ${isDark ? 'settings__label--dark' : ''}`}>
             <strong>User ID:</strong> {user?._id || user?.id || 'N/A'}
           </p>
+        </div>
+
+        {/* Cerrar Sesión */}
+        <div className={`settings__full-section ${isDark ? 'settings__full-section--dark' : ''}`}>
+          <button
+            onClick={() => {
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              toast.success(t('common.logoutSuccess'));
+              navigate('/login');
+            }}
+            className="settings__submit-button"
+            style={{ backgroundColor: 'var(--color-danger)', width: '100%' }}
+          >
+            <FiArrowLeft className="rotate-180" />
+            {t('common.logout')}
+          </button>
         </div>
       </div>
     </div>

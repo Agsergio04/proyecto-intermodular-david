@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAuthStore, useThemeStore, useLanguageStore } from '../store';
+import { useAuthStore, useThemeStore, useLanguageStore } from './index';
 import { FiLogOut, FiMoon, FiSun, FiGlobe, FiMenu, FiX, FiUser } from 'react-icons/fi';
 import { useState } from 'react';
 

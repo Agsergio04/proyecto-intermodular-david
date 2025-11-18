@@ -1,50 +1,18 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { FiArrowRight, FiMic, FiBarChart2, FiLock } from 'react-icons/fi';
-import '../css/Home.css';
+import { useHome } from '../hooks/useHome';
+import '../assets/styles/Home.css';
 
 const Home = () => {
-  const navigate = useNavigate();
-  const { t } = useTranslation();
-  const token = localStorage.getItem('token');
+  const {
+    isAuthenticated,
+    navigateToRegister,
+    freePlan,
+    premiumPlan
+  } = useHome();
 
   return (
     <div className="home home--dark">
-      {/* Navigation */}
-      <nav className="home__nav home__nav--dark">
-        <div className="home__nav-container">
-          <h1 className="home__logo home__logo--dark">
-            {t('common.appName')}
-          </h1>
-          <div className="home__nav-actions">
-            {token ? (
-              <button
-                onClick={() => navigate('/dashboard')}
-                className="home__nav-button home__nav-button--dashboard"
-              >
-                Dashboard
-              </button>
-            ) : (
-              <>
-                <button
-                  onClick={() => navigate('/login')}
-                  className="home__nav-button home__nav-button--login home__nav-button--login--dark"
-                >
-                  {t('common.login')}
-                </button>
-                <button
-                  onClick={() => navigate('/register')}
-                  className="home__nav-button home__nav-button--register"
-                >
-                  {t('common.register')}
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      </nav>
-
       {/* Hero Section */}
       <section className="home__hero">
         <h2 className="home__hero-title home__hero-title--dark">
@@ -53,9 +21,9 @@ const Home = () => {
         <p className="home__hero-description home__hero-description--dark">
           Practice with realistic AI-generated questions, get instant feedback, and track your progress. Perfect preparation for your dream job.
         </p>
-        {!token && (
+        {!isAuthenticated && (
           <button
-            onClick={() => navigate('/register')}
+            onClick={navigateToRegister}
             className="home__hero-button"
           >
             Get Started Free <FiArrowRight />
@@ -96,30 +64,8 @@ const Home = () => {
             Simple, Transparent Pricing
           </h3>
           <div className="home__pricing-grid">
-            <PricingCard
-              plan="Free"
-              price="$0"
-              features={[
-                'Unlimited voice interviews',
-                'AI-generated questions',
-                '7 days free trial',
-                'Basic feedback'
-              ]}
-              cta="Start Free"
-            />
-            <PricingCard
-              plan="Premium"
-              price="$9.99"
-              period="per month"
-              features={[
-                'Everything in Free',
-                'Download reports',
-                'Advanced analytics',
-                'Priority support'
-              ]}
-              cta="Upgrade Now"
-              featured={true}
-            />
+            <PricingCard {...freePlan} />
+            <PricingCard {...premiumPlan} />
           </div>
         </div>
       </section>
@@ -133,9 +79,9 @@ const Home = () => {
           <p className="home__cta-description">
             Join thousands of professionals already practicing with our AI-powered interview platform
           </p>
-          {!token && (
+          {!isAuthenticated && (
             <button
-              onClick={() => navigate('/register')}
+              onClick={navigateToRegister}
               className="home__cta-button"
             >
               Get Started Free Now
@@ -195,3 +141,4 @@ const PricingCard = ({ plan, price, period, features, cta, featured }) => (
 );
 
 export default Home;
+

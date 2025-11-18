@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { interviewService } from '../services';
+import { interviewService } from '../api';
 import { FiPlus, FiSearch, FiTrash2, FiEye } from 'react-icons/fi';
 
 const Interviews = () => {

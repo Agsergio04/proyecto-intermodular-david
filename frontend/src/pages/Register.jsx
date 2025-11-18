@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import { authService } from '../services';
+import { authService } from '../api';
 import { useAuthStore } from '../store';
 import { FiMail, FiLock, FiUser } from 'react-icons/fi';
-import '../css/Register.css';
+import '../assets/styles/Register.css';
 
 const Register = () => {
   const navigate = useNavigate();
