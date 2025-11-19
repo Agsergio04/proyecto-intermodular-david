@@ -142,13 +142,13 @@
 
 .dashboard__button--save {
   flex: 1;
-  background-color: var(--color-success);
+  background-color: var(--xanthous);
   color: var(--text-light);
   justify-content: center;
 }
 
 .dashboard__button--save:hover:not(:disabled) {
-  background-color: var(--color-success-hover);
+  background-color: var(--xanthous);
 }
 
 .dashboard__button--cancel {
@@ -287,9 +287,6 @@
   background: var(--gradient-blue);
 }
 
-.stat-card--green {
-  background: var(--gradient-green);
-}
 
 .stat-card--purple {
   background: var(--gradient-purple);

@@ -4,9 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { interviewService } from '../api';
 import { FiPlus, FiSearch, FiTrash2, FiEye } from 'react-icons/fi';
+import { useThemeStore } from '../store';
+import '../assets/styles/Interviews.css';
 
 const Interviews = () => {
   const { t } = useTranslation();
+  const { isDark } = useThemeStore();
   const navigate = useNavigate();
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -122,35 +125,41 @@ const Interviews = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+    <div className={`interviews ${isDark ? 'interviews--dark' : ''}`}>
+      <div className="interviews__container">
+        <div className="interviews__header">
+          <h1 className={`interviews__title ${isDark ? 'interviews__title--dark' : ''}`}>
             {t('interview.myInterviews')}
           </h1>
-          <div className="flex gap-3">
+          <div className="interviews__actions">
             <button
               onClick={() => navigate('/dashboard')}
-              className="flex items-center gap-2 bg-gray-500 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-semibold transition"
+              className="interviews__button interviews__button--dashboard"
             >
               ← {t('dashboard.title')}
+            </button>
+            <button
+              onClick={() => setShowCreateForm(!showCreateForm)}
+              disabled={showCreateForm}
+              className="interviews__button interviews__button--new"
+            >
+              <FiPlus /> {t('interview.newInterview')}
             </button>
           </div>
         </div>
 
-
         {showCreateForm && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-            <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">
+          <div className={`interviews__form ${isDark ? 'interviews__form--dark' : ''}`}>
+            <h2 className={`interviews__form-title ${isDark ? 'interviews__form-title--dark' : ''}`}>
               {t('interview.newInterview')}
             </h2>
-            <form onSubmit={handleCreateInterview} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form onSubmit={handleCreateInterview} className="interviews__form-grid">
               <input
                 type="text"
                 placeholder="Interview Title"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-2"
+                className={`interviews__form-input ${isDark ? 'interviews__form-input--dark' : ''}`}
                 required
                 disabled={formLoading}
               />
@@ -159,14 +168,14 @@ const Interviews = () => {
                 placeholder="Profession"
                 value={formData.profession}
                 onChange={(e) => setFormData({ ...formData, profession: e.target.value })}
-                className="border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-2"
+                className={`interviews__form-input ${isDark ? 'interviews__form-input--dark' : ''}`}
                 required
                 disabled={formLoading}
               />
               <select
                 value={formData.type}
                 onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                className="border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-2"
+                className={`interviews__form-input ${isDark ? 'interviews__form-input--dark' : ''}`}
                 disabled={formLoading}
               >
                 <option value="ai_generated">AI Generated</option>
@@ -175,7 +184,7 @@ const Interviews = () => {
               <select
                 value={formData.difficulty}
                 onChange={(e) => setFormData({ ...formData, difficulty: e.target.value })}
-                className="border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-2"
+                className={`interviews__form-input ${isDark ? 'interviews__form-input--dark' : ''}`}
                 disabled={formLoading}
               >
                 <option value="junior">Junior</option>
@@ -185,7 +194,7 @@ const Interviews = () => {
               <select
                 value={formData.language}
                 onChange={(e) => setFormData({ ...formData, language: e.target.value })}
-                className="border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-2"
+                className={`interviews__form-input ${isDark ? 'interviews__form-input--dark' : ''}`}
                 disabled={formLoading}
               >
                 <option value="en">English</option>
@@ -193,15 +202,15 @@ const Interviews = () => {
                 <option value="fr">Français</option>
                 <option value="de">Deutsch</option>
               </select>
-              <div className="md:col-span-2 flex gap-2">
+              <div className="interviews__form-actions">
                 <button
                   type="submit"
                   disabled={formLoading}
-                  className="flex-1 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold transition disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="interviews__form-button interviews__form-button--submit"
                 >
                   {formLoading ? (
                     <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+                      <div className="interviews__form-spinner"></div>
                       Creating...
                     </>
                   ) : (
@@ -212,7 +221,7 @@ const Interviews = () => {
                   type="button"
                   onClick={() => setShowCreateForm(false)}
                   disabled={formLoading}
-                  className="flex-1 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition disabled:opacity-50"
+                  className="interviews__form-button interviews__form-button--cancel"
                 >
                   Cancel
                 </button>
@@ -221,62 +230,66 @@ const Interviews = () => {
           </div>
         )}
 
-        <div className="mb-8">
-          <div className="flex items-center border-2 border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 bg-white dark:bg-gray-800">
-            <FiSearch className="text-gray-400 mr-2" />
+        <div className="interviews__search">
+          <div className="interviews__search-wrapper">
+            <FiSearch className="interviews__search-icon" />
             <input
               type="text"
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-transparent outline-none text-gray-800 dark:text-white"
+              className={`interviews__search-input ${isDark ? 'interviews__search-input--dark' : ''}`}
             />
           </div>
         </div>
 
         {loading ? (
-          <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          <div className="interviews__loading">
+            <div className="interviews__loading-spinner"></div>
           </div>
         ) : filteredInterviews.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-500 dark:text-gray-400 text-lg">
-              {t('interview.noInterviews')}
-            </p>
+          <div className={`interviews__empty ${isDark ? 'interviews__empty--dark' : ''}`}>
+            <p>{t('interview.noInterviews')}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="interviews__grid">
             {filteredInterviews.map(interview => (
               <div
                 key={interview._id}
-                className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition"
+                className={`interview-card ${isDark ? 'interview-card--dark' : ''}`}
               >
-                <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">
-                  {interview.title}
-                </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                  {interview.profession} • {interview.difficulty}
-                </p>
-                <div className="flex items-center gap-2 mb-4">
-                  <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                    interview.status === 'completed'
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-yellow-100 text-yellow-800'
-                  }`}>
+                <div className="interview-card__header">
+                  <h3 className={`interview-card__title ${isDark ? 'interview-card__title--dark' : ''}`}>
+                    {interview.title}
+                  </h3>
+                  <span className={`interview-card__status interview-card__status--${interview.status === 'completed' ? 'completed' : interview.status === 'in_progress' ? 'in-progress' : 'scheduled'}`}>
                     {interview.status}
                   </span>
-                  <span className="text-sm text-gray-500">{interview.totalScore}%</span>
                 </div>
-                <div className="flex gap-2">
+                <div className="interview-card__info">
+                  <div className={`interview-card__info-item ${isDark ? 'interview-card__info-item--dark' : ''}`}>
+                    <span className="interview-card__info-label">Profession:</span>
+                    <span>{interview.profession}</span>
+                  </div>
+                  <div className={`interview-card__info-item ${isDark ? 'interview-card__info-item--dark' : ''}`}>
+                    <span className="interview-card__info-label">Difficulty:</span>
+                    <span>{interview.difficulty}</span>
+                  </div>
+                  <div className={`interview-card__info-item ${isDark ? 'interview-card__info-item--dark' : ''}`}>
+                    <span className="interview-card__info-label">Score:</span>
+                    <span>{interview.totalScore}%</span>
+                  </div>
+                </div>
+                <div className="interview-card__actions">
                   <button
                     onClick={() => navigate(`/interview/${interview._id}`)}
-                    className="flex-1 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded transition"
+                    className="interview-card__button interview-card__button--view"
                   >
                     <FiEye /> View
                   </button>
                   <button
                     onClick={() => handleDeleteInterview(interview._id)}
-                    className="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded transition"
+                    className="interview-card__button interview-card__button--delete"
                   >
                     <FiTrash2 />
                   </button>

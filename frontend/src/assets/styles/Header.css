@@ -17,12 +17,17 @@
   --color-success-hover: #059669;
   --color-danger: #ef4444;
   --color-danger-hover: #dc2626;
+  --color-warning: var(--xanthous);
+  --color-warning-hover: #d4a02e;
+  --color-purple: var(--dim-gray);
+  --color-purple-hover: #5d5651;
 
   /* Colores de fondo */
   --bg-light: var(--eggshell);
   --bg-dark: var(--black-olive);
   --bg-card-light: #ffffff;
   --bg-card-dark: var(--dim-gray);
+  --bg-input-dark: #5d5651;
 
   /* Colores de texto - Mayor contraste */
   --text-dark: #2d2a25;
@@ -34,28 +39,28 @@
   --border-light: #8a7f7e;
   --border-dark: #5d5651;
 
+  /* Degradados */
+  --gradient-blue: var(--xanthous);
+  --gradient-green: #10b981;
+  --gradient-purple: var(--dim-gray);
+  --gradient-orange: var(--xanthous);
+
+  /* Sombras */
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
   /* Espaciado */
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
 
   /* Bordes redondeados */
   --radius-md: 0.5rem;
-
-  /* Header específico */
-  --header-bg-light: var(--bg-card-light);
-  --header-bg-dark: var(--bg-dark);
-  --header-text-light: var(--text-dark);
-  --header-text-dark: var(--text-light);
-  --header-border-light: var(--border-light);
-  --header-border-dark: var(--border-dark);
-  --header-button-hover-light: var(--eggshell);
-  --header-button-hover-dark: var(--dim-gray);
-  --header-logout-bg: var(--color-danger);
-  --header-logout-hover: var(--color-danger-hover);
 }
 
+/* Header Component */
 .header {
-  background-color: var(--header-bg-light);
+  background-color: var(--bg-card-light);
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
@@ -64,7 +69,7 @@
 }
 
 .header--dark {
-  background-color: var(--header-bg-dark);
+  background-color: var(--bg-dark);
 }
 
 .header__container {
@@ -85,25 +90,26 @@
   transition: all 0.2s;
   padding: var(--spacing-sm);
   border-radius: var(--radius-md);
+  text-decoration: none;
 }
 
 .header__logo:hover {
-  background-color: var(--header-button-hover-light);
+  background-color: var(--bg-light);
 }
 
 .header__logo--dark:hover {
-  background-color: var(--header-button-hover-dark);
+  background-color: var(--dim-gray);
 }
 
 .header__logo-text {
-  color: var(--header-text-light);
+  color: var(--text-dark);
   font-weight: bold;
   font-size: 1.5rem;
   letter-spacing: -0.025em;
 }
 
 .header__logo-text--dark {
-  color: var(--header-text-dark);
+  color: var(--text-light);
 }
 
 /* Desktop Menu */
@@ -119,7 +125,7 @@
   }
 }
 
-/* Navigation Buttons (for authenticated users) */
+/* Navigation Buttons */
 .header__nav-buttons {
   display: flex;
   align-items: center;
@@ -132,7 +138,7 @@
   border: none;
   background: none;
   cursor: pointer;
-  color: var(--header-text-light);
+  color: var(--text-dark);
   font-weight: 500;
   transition: all 0.2s;
   display: flex;
@@ -141,18 +147,18 @@
 }
 
 .header__nav-button--dark {
-  color: var(--header-text-dark);
+  color: var(--text-light);
 }
 
 .header__nav-button:hover {
-  background-color: var(--header-button-hover-light);
+  background-color: var(--bg-light);
 }
 
 .header__nav-button--dark:hover {
-  background-color: var(--header-button-hover-dark);
+  background-color: var(--dim-gray);
 }
 
-/* Auth Buttons (for non-authenticated users) */
+/* Auth Buttons */
 .header__auth-buttons {
   display: flex;
   align-items: center;
@@ -165,21 +171,21 @@
   border: none;
   background: none;
   cursor: pointer;
-  color: var(--header-text-light);
+  color: var(--text-dark);
   font-weight: 600;
   transition: all 0.2s;
 }
 
 .header__login-button--dark {
-  color: var(--header-text-dark);
+  color: var(--text-light);
 }
 
 .header__login-button:hover {
-  background-color: var(--header-button-hover-light);
+  background-color: var(--bg-light);
 }
 
 .header__login-button--dark:hover {
-  background-color: var(--header-button-hover-dark);
+  background-color: var(--dim-gray);
 }
 
 .header__register-button {
@@ -203,25 +209,25 @@
 .header__language-select {
   padding: 0.5rem;
   border-radius: 0.5rem;
-  border: 1px solid var(--header-border-light);
+  border: 1px solid var(--border-light);
   background-color: transparent;
-  color: var(--header-text-light);
+  color: var(--text-dark);
   cursor: pointer;
   font-size: 0.875rem;
   transition: all 0.2s;
 }
 
 .header__language-select--dark {
-  border-color: var(--header-border-dark);
-  color: var(--header-text-dark);
+  border-color: var(--border-dark);
+  color: var(--text-light);
 }
 
 .header__language-select:hover {
-  background-color: var(--header-button-hover-light);
+  background-color: var(--bg-light);
 }
 
 .header__language-select--dark:hover {
-  background-color: var(--header-button-hover-dark);
+  background-color: var(--dim-gray);
 }
 
 /* Theme Toggle */
@@ -231,7 +237,7 @@
   border: none;
   background: none;
   cursor: pointer;
-  color: var(--header-text-light);
+  color: var(--text-dark);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -239,90 +245,34 @@
 }
 
 .header__theme-button--dark {
-  color: var(--header-text-dark);
+  color: var(--text-light);
 }
 
 .header__theme-button:hover {
-  background-color: var(--header-button-hover-light);
+  background-color: var(--bg-light);
 }
 
 .header__theme-button--dark:hover {
-  background-color: var(--header-button-hover-dark);
+  background-color: var(--dim-gray);
 }
 
 .header__theme-icon {
   font-size: 1.25rem;
 }
 
-.header__theme-icon--sun {
-  color: var(--color-primary);
-}
-
-.header__theme-icon--moon {
-  color: var(--header-text-light);
-}
-
-.header__theme-icon--moon--dark {
-  color: var(--header-text-dark);
-}
-
-/* User Button */
-.header__user-button {
-  padding: 0.5rem;
-  border-radius: 9999px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  color: var(--header-text-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-}
-
-.header__user-button--dark {
-  color: var(--header-text-dark);
-}
-
-.header__user-button:hover {
-  background-color: var(--header-button-hover-light);
-}
-
-.header__user-button--dark:hover {
-  background-color: var(--header-button-hover-dark);
-}
-
-/* Logout Button */
-.header__logout-button {
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  border: none;
-  background-color: var(--header-logout-bg);
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.header__logout-button:hover {
-  background-color: var(--header-logout-hover);
-}
-
 /* Mobile Menu Button */
 .header__mobile-button {
   display: flex;
   padding: 0.5rem;
+  border-radius: 0.5rem;
   border: none;
   background: none;
   cursor: pointer;
-  color: var(--header-text-light);
+  color: var(--text-dark);
 }
 
 .header__mobile-button--dark {
-  color: var(--header-text-dark);
+  color: var(--text-light);
 }
 
 @media (min-width: 768px) {
@@ -333,17 +283,14 @@
 
 /* Mobile Menu */
 .header__mobile-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-  background-color: var(--header-bg-light);
-  border-top: 1px solid var(--header-border-light);
+  display: block;
+  background-color: var(--bg-card-light);
+  border-top: 1px solid var(--border-light);
 }
 
 .header__mobile-menu--dark {
-  background-color: var(--header-bg-dark);
-  border-color: var(--header-border-dark);
+  background-color: var(--bg-dark);
+  border-top-color: var(--border-dark);
 }
 
 @media (min-width: 768px) {
@@ -352,13 +299,21 @@
   }
 }
 
-.header__mobile-menu-item {
-  padding: 0.75rem;
+.header__mobile-menu-content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.header__mobile-menu-button {
+  width: 100%;
+  padding: 0.75rem 1rem;
   border-radius: 0.5rem;
   border: none;
   background: none;
   cursor: pointer;
-  color: var(--header-text-light);
+  color: var(--text-dark);
   font-weight: 500;
   text-align: left;
   transition: all 0.2s;
@@ -367,15 +322,15 @@
   gap: 0.5rem;
 }
 
-.header__mobile-menu-item--dark {
-  color: var(--header-text-dark);
+.header__mobile-menu-button--dark {
+  color: var(--text-light);
 }
 
-.header__mobile-menu-item:hover {
-  background-color: var(--header-button-hover-light);
+.header__mobile-menu-button:hover {
+  background-color: var(--bg-light);
 }
 
-.header__mobile-menu-item--dark:hover {
-  background-color: var(--header-button-hover-dark);
+.header__mobile-menu-button--dark:hover {
+  background-color: var(--dim-gray);
 }
 
