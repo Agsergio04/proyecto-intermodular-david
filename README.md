@@ -20,4 +20,4 @@ https://docs.google.com/document/d/1xu7vyxbRvfv0ZTRClv94e4x6COEIJ8DxJaOmVWwDtB4/
 - Alejandro Bravo y Sergio Aragón - Equipo Scrum.
 
 # URL TEMPORAL
-[Web](http://192.168.13.21:3000)
+[preguntat.com](preguntat.up.railway.app/)
