@@ -153,7 +153,7 @@ openssl rand -base64 32
 
 **Ejemplo:**
 ```env
-JWT_SECRET=e0aa7498e2e1d2343a8e1f74025a830e
+JWT_SECRET=mi_secreto_super_seguro_generado_aleatoriamente_12345
 ```
 
 #### 🤖 GEMINI_API_KEY (OBLIGATORIO para IA)
@@ -169,11 +169,11 @@ Esta es la clave para usar la inteligencia artificial de Google Gemini (genera p
 
 3. **Hacer clic en "Create API Key"**
    - Selecciona un proyecto existente o crea uno nuevo
-   - Google te dará una clave como: `AIzaSyDsB9zy8dUeGJWGgDXuwFSZFTRW_-5IWnk`
+   - Google te dará una clave como: `AIzaSy...` (cadena de ~39 caracteres)
 
 4. **Copiar la clave y pegarla:**
    ```env
-   GEMINI_API_KEY=AIzaSyDsB9zy8dUeGJWGgDXuwFSZFTRW_-5IWnk
+   GEMINI_API_KEY=TU_API_KEY_AQUI_ejemplo_AIzaSy...
    ```
 
 **⚠️ IMPORTANTE:**
@@ -278,7 +278,7 @@ REACT_APP_API_URL=http://localhost:5001/api
 Usa la **misma clave** que pusiste en el backend:
 
 ```env
-REACT_APP_GEMINI_API_KEY=AIzaSyDsB9zy8dUeGJWGgDXuwFSZFTRW_-5IWnk
+REACT_APP_GEMINI_API_KEY=TU_API_KEY_AQUI_ejemplo_AIzaSy...
 ```
 
 #### 💳 REACT_APP_PAYPAL_CLIENT_ID (OPCIONAL)
@@ -432,7 +432,7 @@ docker exec ai_interview_backend printenv | findstr GEMINI
 
 Deberías ver:
 ```
-GEMINI_API_KEY=AIzaSy...
+GEMINI_API_KEY=TU_API_KEY_AQUI
 ```
 
 ### Verificar Frontend
@@ -444,7 +444,7 @@ docker exec ai_interview_frontend printenv | findstr REACT_APP
 Deberías ver:
 ```
 REACT_APP_API_URL=http://localhost:5001/api
-REACT_APP_GEMINI_API_KEY=AIzaSy...
+REACT_APP_GEMINI_API_KEY=TU_API_KEY_AQUI
 ```
 
 ---
@@ -518,7 +518,7 @@ REACT_APP_API_URL=http://localhost:5002/api
 1. Consigue una API key: https://aistudio.google.com/app/apikey
 2. Pégala en `backend/.env.local`:
    ```env
-   GEMINI_API_KEY=AIzaSy...
+   GEMINI_API_KEY=TU_API_KEY_AQUI
    ```
 3. Reinicia los contenedores:
    ```bash
