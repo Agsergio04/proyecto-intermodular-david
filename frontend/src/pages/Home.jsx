@@ -1,9 +1,11 @@
 import React from 'react';
 import { FiArrowRight, FiMic, FiBarChart2, FiLock } from 'react-icons/fi';
 import { useHome } from '../hooks/useHome';
+import { useThemeStore } from '../store';
 import '../assets/styles/Home.css';
 
 const Home = () => {
+  const { isDark } = useThemeStore();
   const {
     isAuthenticated,
     navigateToRegister,
@@ -12,13 +14,13 @@ const Home = () => {
   } = useHome();
 
   return (
-    <div className="home home--dark">
+    <div className={`home ${isDark ? 'home--dark' : ''}`}>
       {/* Hero Section */}
       <section className="home__hero">
-        <h2 className="home__hero-title home__hero-title--dark">
+        <h2 className={`home__hero-title ${isDark ? 'home__hero-title--dark' : ''}`}>
           Master Your Interview Skills with AI
         </h2>
-        <p className="home__hero-description home__hero-description--dark">
+        <p className={`home__hero-description ${isDark ? 'home__hero-description--dark' : ''}`}>
           Practice with realistic AI-generated questions, get instant feedback, and track your progress. Perfect preparation for your dream job.
         </p>
         {!isAuthenticated && (
@@ -32,9 +34,9 @@ const Home = () => {
       </section>
 
       {/* Features Section */}
-      <section className="home__features home__features--dark">
+      <section className={`home__features ${isDark ? 'home__features--dark' : ''}`}>
         <div className="home__features-container">
-          <h3 className="home__features-title home__features-title--dark">
+          <h3 className={`home__features-title ${isDark ? 'home__features-title--dark' : ''}`}>
             Why Choose Our Platform?
           </h3>
           <div className="home__features-grid">
@@ -60,7 +62,7 @@ const Home = () => {
       {/* Pricing Section */}
       <section className="home__pricing">
         <div className="home__pricing-container">
-          <h3 className="home__pricing-title home__pricing-title--dark">
+          <h3 className={`home__pricing-title ${isDark ? 'home__pricing-title--dark' : ''}`}>
             Simple, Transparent Pricing
           </h3>
           <div className="home__pricing-grid">

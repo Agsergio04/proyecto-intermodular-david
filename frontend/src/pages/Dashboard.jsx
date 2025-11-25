@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { FiDownload, FiTrendingUp, FiAward, FiClock, FiPlus } from 'react-icons/fi';
 import { useDashboard } from '../hooks/useDashboard';
+import { useThemeStore } from '../store';
 import { StatCard } from '../components/StatCard';
 import '../assets/styles/Dashboard.css';
 
@@ -10,6 +11,7 @@ const COLORS = ['#3b82f6', '#8b5cf6', '#ef4444', '#10b981'];
 
 const Dashboard = () => {
   const { t } = useTranslation();
+  const { isDark } = useThemeStore();
   const {
     stats,
     trends,
@@ -33,10 +35,10 @@ const Dashboard = () => {
   }
 
   return (
-      <div className="dashboard dashboard--dark">
+      <div className={`dashboard ${isDark ? 'dashboard--dark' : ''}`}>
         <div className="dashboard__container">
           <div className="dashboard__header">
-            <h1 className="dashboard__title dashboard__title--dark">
+            <h1 className={`dashboard__title ${isDark ? 'dashboard__title--dark' : ''}`}>
               {t('dashboard.title')}
             </h1>
             <div className="dashboard__actions">
@@ -63,8 +65,8 @@ const Dashboard = () => {
           </div>
 
           {showCreateForm && (
-              <div className="dashboard__form dashboard__form--dark">
-                <h2 className="dashboard__form-title dashboard__form-title--dark">
+              <div className={`dashboard__form ${isDark ? 'dashboard__form--dark' : ''}`}>
+                <h2 className={`dashboard__form-title ${isDark ? 'dashboard__form-title--dark' : ''}`}>
                   {t('interview.newInterview')}
                 </h2>
                 <form onSubmit={handleCreateInterview} className="dashboard__form-grid">
@@ -73,7 +75,7 @@ const Dashboard = () => {
                       placeholder="Interview Title"
                       value={formData.title}
                       onChange={(e) => updateFormData('title', e.target.value)}
-                      className="dashboard__form-input dashboard__form-input--dark"
+                      className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
                       required
                       disabled={formLoading}
                   />
@@ -82,14 +84,14 @@ const Dashboard = () => {
                       placeholder="Profession (e.g., Frontend Developer)"
                       value={formData.profession}
                       onChange={(e) => updateFormData('profession', e.target.value)}
-                      className="dashboard__form-input dashboard__form-input--dark"
+                      className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
                       required
                       disabled={formLoading}
                   />
                   <select
                       value={formData.type}
                       onChange={(e) => updateFormData('type', e.target.value)}
-                      className="dashboard__form-input dashboard__form-input--dark"
+                      className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
                       disabled={formLoading}
                   >
                     <option value="ai_generated">AI Generated</option>
@@ -98,7 +100,7 @@ const Dashboard = () => {
                   <select
                       value={formData.difficulty}
                       onChange={(e) => updateFormData('difficulty', e.target.value)}
-                      className="dashboard__form-input dashboard__form-input--dark"
+                      className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
                       disabled={formLoading}
                   >
                     <option value="junior">Junior</option>
@@ -108,7 +110,7 @@ const Dashboard = () => {
                   <select
                       value={formData.language}
                       onChange={(e) => updateFormData('language', e.target.value)}
-                      className="dashboard__form-input dashboard__form-input--dark"
+                      className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
                       disabled={formLoading}
                   >
                     <option value="en">English</option>
@@ -150,30 +152,34 @@ const Dashboard = () => {
                 value={stats?.totalInterviews || 0}
                 icon={<FiTrendingUp className="text-2xl" />}
                 color="stat-card--gray"
+                isDark={isDark}
             />
             <StatCard
                 title={t('dashboard.completedInterviews')}
                 value={stats?.completedInterviews || 0}
                 icon={<FiAward className="text-2xl" />}
                 color="stat-card--yellow"
+                isDark={isDark}
             />
             <StatCard
                 title={t('dashboard.averageScore')}
                 value={`${stats?.averageScore || 0}%`}
                 icon={<FiAward className="text-2xl" />}
                 color="stat-card--purple"
+                isDark={isDark}
             />
             <StatCard
                 title={t('dashboard.totalDuration')}
                 value={`${Math.round((stats?.totalDuration || 0) / 60)} min`}
                 icon={<FiClock className="text-2xl" />}
                 color="stat-card--orange"
+                isDark={isDark}
             />
           </div>
 
           <div className="dashboard__charts-grid">
-            <div className="dashboard__chart-card dashboard__chart-card--dark">
-              <h2 className="dashboard__chart-title dashboard__chart-title--dark">
+            <div className={`dashboard__chart-card ${isDark ? 'dashboard__chart-card--dark' : ''}`}>
+              <h2 className={`dashboard__chart-title ${isDark ? 'dashboard__chart-title--dark' : ''}`}>
                 {t('dashboard.performanceTrends')}
               </h2>
               {trends && trends.length > 0 ? (
@@ -188,12 +194,12 @@ const Dashboard = () => {
                     </LineChart>
                   </ResponsiveContainer>
               ) : (
-                  <p className="dashboard__chart-empty dashboard__chart-empty--dark">{t('interview.noInterviews')}</p>
+                  <p className={`dashboard__chart-empty ${isDark ? 'dashboard__chart-empty--dark' : ''}`}>{t('interview.noInterviews')}</p>
               )}
             </div>
 
-            <div className="dashboard__chart-card dashboard__chart-card--dark">
-              <h2 className="dashboard__chart-title dashboard__chart-title--dark">
+            <div className={`dashboard__chart-card ${isDark ? 'dashboard__chart-card--dark' : ''}`}>
+              <h2 className={`dashboard__chart-title ${isDark ? 'dashboard__chart-title--dark' : ''}`}>
                 {t('dashboard.scoreDistribution')}
               </h2>
               {stats?.interviewsByProfession && Object.keys(stats.interviewsByProfession).length > 0 ? (
@@ -220,7 +226,7 @@ const Dashboard = () => {
                     </PieChart>
                   </ResponsiveContainer>
               ) : (
-                  <p className="dashboard__chart-empty dashboard__chart-empty--dark">{t('interview.noInterviews')}</p>
+                  <p className={`dashboard__chart-empty ${isDark ? 'dashboard__chart-empty--dark' : ''}`}>{t('interview.noInterviews')}</p>
               )}
             </div>
           </div>

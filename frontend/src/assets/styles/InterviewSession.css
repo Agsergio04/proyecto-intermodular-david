@@ -64,8 +64,12 @@
 .interview-session__progress-bar {
   height: 0.5rem;
   border-radius: 9999px;
-  background-color: var(--xanthous);
+  background-color: var(--color-primary-light);
   transition: width 0.3s ease;
+}
+
+.interview-session--dark .interview-session__progress-bar {
+  background-color: var(--color-primary-dark);
 }
 
 /* Question Card */
@@ -92,13 +96,18 @@
   flex-shrink: 0;
   width: 2.5rem;
   height: 2.5rem;
-  background-color: var(--xanthous);
+  background-color: var(--color-primary-light);
   color: var(--text-light);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
+}
+
+.interview-session--dark .interview-session__question-number {
+  background-color: var(--color-primary-dark);
+  color: var(--text-dark);
 }
 
 .interview-session__question-difficulty {
@@ -264,12 +273,21 @@
 }
 
 .interview-session__button--retry {
-  background-color: var(--xanthous);
+  background-color: var(--color-primary-light);
   color: var(--text-light);
 }
 
+.interview-session--dark .interview-session__button--retry {
+  background-color: var(--color-primary-dark);
+  color: var(--text-dark);
+}
+
 .interview-session__button--retry:hover {
-  background-color: var(--color-primary-hover);
+  background-color: var(--color-primary-light-hover);
+}
+
+.interview-session--dark .interview-session__button--retry:hover {
+  background-color: var(--color-primary-dark-hover);
 }
 
 .interview-session__button--confirm {
@@ -282,18 +300,28 @@
 }
 
 .interview-session__button--mic {
-  background-color: var(--xanthous);
+  background-color: var(--color-primary-light);
   color: var(--text-light);
   width: 5rem;
   height: 3rem;
 }
 
+.interview-session--dark .interview-session__button--mic {
+  background-color: var(--color-primary-dark);
+  color: var(--text-dark);
+}
+
 .interview-session__button--mic:hover {
-  background-color: var(--color-primary-hover);
+  background-color: var(--color-primary-light-hover);
+}
+
+.interview-session--dark .interview-session__button--mic:hover {
+  background-color: var(--color-primary-dark-hover);
 }
 
 .interview-session__button--mic--listening {
   background-color: var(--color-danger);
+  color: var(--text-light);
   animation: pulse 1.5s infinite;
 }
 
@@ -311,12 +339,21 @@
 }
 
 .interview-session__button--save {
-  background-color: var(--xanthous);
+  background-color: var(--color-primary-light);
   color: var(--text-light);
 }
 
+.interview-session--dark .interview-session__button--save {
+  background-color: var(--color-primary-dark);
+  color: var(--text-dark);
+}
+
 .interview-session__button--save:hover {
-  background-color: var(--color-primary-hover);
+  background-color: var(--color-primary-light-hover);
+}
+
+.interview-session--dark .interview-session__button--save:hover {
+  background-color: var(--color-primary-dark-hover);
 }
 
 .interview-session__button:disabled {
@@ -378,7 +415,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: var(--xanthous);
+  background-color: var(--color-primary-light);
   color: var(--text-light);
   padding: 0.5rem 1rem;
   border-radius: var(--radius-md);
@@ -389,8 +426,19 @@
   margin-left: auto;
 }
 
+.interview-session--dark .interview-session__exit-button {
+  background-color: var(--color-primary-dark);
+  color: var(--text-dark);
+}
+
 .interview-session__exit-button:hover {
-  background-color: var(--color-primary-hover);
+  background-color: var(--color-primary-light-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.interview-session--dark .interview-session__exit-button:hover {
+  background-color: var(--color-primary-dark-hover);
 }
 
 .interview-session__complete-button {
@@ -410,6 +458,8 @@
 
 .interview-session__complete-button:hover {
   background-color: var(--color-success-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .interview-session__complete-button:disabled {

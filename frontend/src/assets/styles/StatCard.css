@@ -8,19 +8,23 @@
   --taupe-gray: #a39594;
   --dim-gray: #6e675f;
 
-  /* Colores principales */
-  --color-primary: var(--xanthous);
-  --color-primary-hover: #d4a02e;
+  /* Azul para modo claro */
+  --blue-primary: #3b82f6;
+  --blue-primary-hover: #2563eb;
+  --blue-light: #60a5fa;
+  --blue-lighter: #93c5fd;
+
+  /* Colores principales - Modo claro usa azul, modo oscuro usa amarillo/gris */
+  --color-primary-light: var(--blue-primary);
+  --color-primary-light-hover: var(--blue-primary-hover);
+  --color-primary-dark: var(--xanthous);
+  --color-primary-dark-hover: #d4a02e;
+
+  /* Colores secundarios */
   --color-secondary: var(--dim-gray);
   --color-secondary-hover: #5d5651;
   --color-success: #10b981;
   --color-success-hover: #059669;
-  --color-danger: #ef4444;
-  --color-danger-hover: #dc2626;
-  --color-warning: var(--xanthous);
-  --color-warning-hover: #d4a02e;
-  --color-purple: var(--dim-gray);
-  --color-purple-hover: #5d5651;
 
   /* Colores de fondo */
   --bg-light: var(--eggshell);
@@ -62,24 +66,44 @@
   padding: 1.5rem;
   border-radius: 0.75rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
-.stat-card--blue {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+/* Modo Claro - Todas las cards en azul */
+.stat-card--gray {
+  background: linear-gradient(135deg, var(--blue-primary), var(--blue-primary-hover));
 }
 
-.stat-card--green {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+.stat-card--yellow {
+  background: linear-gradient(135deg, var(--blue-light), var(--blue-primary));
 }
 
 .stat-card--purple {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+  background: linear-gradient(135deg, var(--blue-primary), var(--blue-primary-hover));
 }
 
 .stat-card--orange {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+  background: linear-gradient(135deg, var(--blue-light), var(--blue-primary));
 }
 
+/* Modo Oscuro - Gris y amarillo */
+.stat-card--gray.stat-card--dark-mode {
+  background: linear-gradient(135deg, var(--dim-gray), var(--color-secondary-hover));
+}
+
+.stat-card--yellow.stat-card--dark-mode {
+  background: linear-gradient(135deg, var(--xanthous), #d4a02e);
+}
+
+.stat-card--purple.stat-card--dark-mode {
+  background: linear-gradient(135deg, var(--dim-gray), var(--color-secondary-hover));
+}
+
+.stat-card--orange.stat-card--dark-mode {
+  background: linear-gradient(135deg, var(--xanthous), #d4a02e);
+}
+
+/* Contenido de la card */
 .stat-card__content {
   display: flex;
   justify-content: space-between;

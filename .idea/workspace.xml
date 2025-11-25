@@ -4,9 +4,67 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b2e8140-e031-48cb-87be-40599ae013ae" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/copilotDiffState.xml" beforeDir="false" />
+    <list default="true" id="1b2e8140-e031-48cb-87be-40599ae013ae" name="Changes" comment="Reorganizacion y gestion de la dockerizacion del proyecto">
+      <change afterPath="$PROJECT_DIR$/.idea/Proyecto_Intermodular_Pablo(ay_diosmio)_y_Sergio.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/copilotDiffState.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Guia_de_preparacion_de_docker.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/.dockerignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/.dockerignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/docker-entrypoint.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DEPLOYMENT.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/INTERVIEW_FIX.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PROJECT_STRUCTURE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/QUICKSTART.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SETUP.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.env.example" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/controllers/authController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/authController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/controllers/interviewController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/interviewController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/controllers/responseController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/responseController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/docker-entrypoint.sh" beforeDir="false" afterPath="$PROJECT_DIR$/backend/docker-entrypoint.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/routes/ai.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/routes/ai.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cliente/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.env.example" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/api.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/i18n/config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/i18n/de.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/i18n/en.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/i18n/es.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/i18n/fr.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/assets/styles/Dashboard.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/assets/styles/Header.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/assets/styles/Home.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/assets/styles/InterviewSession.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/assets/styles/Interviews.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/assets/styles/Login.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/assets/styles/Register.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/assets/styles/Settings.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/assets/styles/StatCard.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/assets/styles/Subscription.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/assets/styles/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/StatCard.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/hooks/useDashboard.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/hooks/useHeader.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/hooks/useHome.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Dashboard.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Home.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/InterviewSession.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Interviews.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Login.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Register.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Settings.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Subscription.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/store/Header.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/store/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/servidor/package-lock.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +89,7 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/pablitoclavito04/proyecto-intermodular-david.git&quot;,
+    &quot;url&quot;: &quot;https://github.com/Agsergio04/proyecto-intermodular-david.git&quot;,
     &quot;accountId&quot;: &quot;1ab3948b-8781-4f7a-bceb-a977014dc1a5&quot;
   }
 }</component>
@@ -45,9 +103,12 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Docker.docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;Proyecto__En__Curso&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/sergi/Desktop/Trabajo/fp/Segundo/Proyecto Intermodular/proyecto-intermodular-david&quot;,
     &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -58,6 +119,32 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\sergi\Desktop\Trabajo\fp\Segundo\Proyecto Intermodular\Proyecto_Intermodular_Pablo(ay_diosmio)_y_Sergio\frontend" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="docker-compose.yml: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="sourceFilePath" value="docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Docker.docker-compose.yml: Compose Deployment" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -78,10 +165,16 @@
       <workItem from="1762977288610" duration="2176000" />
       <workItem from="1763021770695" duration="9000" />
       <workItem from="1763025580422" duration="2000" />
+      <workItem from="1764074358624" duration="9000" />
+      <workItem from="1764074439195" duration="8045000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Reorganizacion y gestion de la dockerizacion del proyecto" />
+    <option name="LAST_COMMIT_MESSAGE" value="Reorganizacion y gestion de la dockerizacion del proyecto" />
   </component>
 </project>

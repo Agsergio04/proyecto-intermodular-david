@@ -8,22 +8,27 @@
   --taupe-gray: #a39594;
   --dim-gray: #6e675f;
 
+  /* Azul para modo claro */
+  --blue-primary: #3b82f6;
+  --blue-primary-hover: #2563eb;
+
   /* Colores específicos de Login */
-  --login-primary: var(--xanthous);
-  --login-primary-hover: #d4a02e;
-  --login-primary-light: #ead16f;
-  --login-purple: var(--dim-gray);
-  --login-purple-dark: #5d5651;
+  --login-primary-light: var(--blue-primary);
+  --login-primary-light-hover: var(--blue-primary-hover);
+  --login-primary-dark: var(--xanthous);
+  --login-primary-dark-hover: #d4a02e;
   --login-success: #10b981;
   --login-success-hover: #059669;
 
   /* Backgrounds Login */
-  --login-bg-gradient-light: linear-gradient(to bottom right, var(--xanthous), var(--dim-gray));
+  --login-bg-gradient-light: linear-gradient(to bottom right, var(--blue-primary), var(--dim-gray));
   --login-bg-gradient-dark: linear-gradient(to bottom right, var(--black-olive), var(--dim-gray));
   --login-bg-container-light: #ffffff;
   --login-bg-container-dark: var(--dim-gray);
-  --login-bg-button: var(--xanthous);
-  --login-bg-button-hover: #d4a02e;
+  --login-bg-button-light: var(--blue-primary);
+  --login-bg-button-light-hover: var(--blue-primary-hover);
+  --login-bg-button-dark: var(--xanthous);
+  --login-bg-button-dark-hover: #d4a02e;
 
   /* Textos Login - Mayor contraste */
   --login-text-dark: #2d2a25;
@@ -154,16 +159,29 @@
 
 .login__submit {
   width: 100%;
-  background: var(--login-bg-button);
+  background: var(--login-bg-button-light);
   color: var(--login-text-white);
   font-weight: bold;
   padding: var(--login-spacing-sm);
   border-radius: var(--login-radius-md);
   transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.login--dark .login__submit {
+  background: var(--login-bg-button-dark);
+  color: var(--login-text-dark);
 }
 
 .login__submit:hover:not(:disabled) {
-  background: var(--login-bg-button-hover);
+  background: var(--login-bg-button-light-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.login--dark .login__submit:hover:not(:disabled) {
+  background: var(--login-bg-button-dark-hover);
 }
 
 .login__submit:disabled {
@@ -193,20 +211,20 @@
 }
 
 .login__link-text {
-  color: var(--login-primary);
+  color: var(--login-primary-light);
   font-weight: 600;
   cursor: pointer;
   transition: color 0.2s;
 }
 
 .login__link-text:hover {
-  color: var(--login-primary-hover);
+  color: var(--login-primary-light-hover);
 }
 
 .login__link-text--dark {
-  color: var(--login-primary-light);
+  color: var(--login-primary-dark);
 }
 
 .login__link-text--dark:hover {
-  color: var(--login-primary);
+  color: var(--login-primary-dark-hover);
 }

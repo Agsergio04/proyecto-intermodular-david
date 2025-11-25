@@ -8,19 +8,25 @@
   --taupe-gray: #a39594;
   --dim-gray: #6e675f;
 
-  /* Colores principales */
-  --color-primary: var(--xanthous);
-  --color-primary-hover: #d4a02e;
+  /* Colores para modo claro - Azul */
+  --blue-primary: #3b82f6;
+  --blue-primary-hover: #2563eb;
+  --blue-light: #60a5fa;
+  --blue-dark: #1e40af;
+
+  /* Colores principales - Modo claro usa azul, modo oscuro usa amarillo */
+  --color-primary-light: var(--blue-primary);
+  --color-primary-light-hover: var(--blue-primary-hover);
+  --color-primary-dark: var(--xanthous);
+  --color-primary-dark-hover: #d4a02e;
+
+  /* Colores secundarios */
   --color-secondary: var(--dim-gray);
   --color-secondary-hover: #5d5651;
   --color-success: #10b981;
   --color-success-hover: #059669;
   --color-danger: #ef4444;
   --color-danger-hover: #dc2626;
-  --color-warning: var(--xanthous);
-  --color-warning-hover: #d4a02e;
-  --color-purple: var(--dim-gray);
-  --color-purple-hover: #5d5651;
 
   /* Colores de fondo */
   --bg-light: var(--eggshell);
@@ -136,9 +142,9 @@
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   border: none;
-  background: none;
+  background-color: var(--color-primary-light);
+  color: var(--text-light);
   cursor: pointer;
-  color: var(--text-dark);
   font-weight: 500;
   transition: all 0.2s;
   display: flex;
@@ -147,15 +153,20 @@
 }
 
 .header__nav-button--dark {
-  color: var(--text-light);
+  background-color: var(--color-primary-dark);
+  color: var(--text-dark);
 }
 
 .header__nav-button:hover {
-  background-color: var(--bg-light);
+  background-color: var(--color-primary-light-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .header__nav-button--dark:hover {
-  background-color: var(--dim-gray);
+  background-color: var(--color-primary-dark-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Auth Buttons */
@@ -168,41 +179,55 @@
 .header__login-button {
   padding: 0.5rem 1.5rem;
   border-radius: 0.5rem;
-  border: none;
+  border: 2px solid var(--color-primary-light);
   background: none;
   cursor: pointer;
-  color: var(--text-dark);
+  color: var(--color-primary-light);
   font-weight: 600;
   transition: all 0.2s;
 }
 
 .header__login-button--dark {
-  color: var(--text-light);
+  border-color: var(--color-primary-dark);
+  color: var(--color-primary-dark);
 }
 
 .header__login-button:hover {
-  background-color: var(--bg-light);
+  background-color: var(--color-primary-light);
+  color: var(--text-light);
 }
 
 .header__login-button--dark:hover {
-  background-color: var(--dim-gray);
+  background-color: var(--color-primary-dark);
+  color: var(--text-dark);
 }
 
 .header__register-button {
   padding: 0.5rem 1.5rem;
   border-radius: var(--radius-md);
   border: none;
-  background-color: var(--color-primary);
+  background-color: var(--color-primary-light);
   color: var(--text-light);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
 }
 
+.header__register-button--dark {
+  background-color: var(--color-primary-dark);
+  color: var(--text-dark);
+}
+
 .header__register-button:hover {
-  background-color: var(--color-primary-hover);
+  background-color: var(--color-primary-light-hover);
   transform: translateY(-2px);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.header__register-button--dark:hover {
+  background-color: var(--color-primary-dark-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
 }
 
 /* Language Selector */
@@ -332,5 +357,37 @@
 
 .header__mobile-menu-button--dark:hover {
   background-color: var(--dim-gray);
+}
+
+/* Mobile Menu Item (igual que mobile-menu-button pero con azul en modo claro) */
+.header__mobile-menu-item {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  background-color: var(--color-primary-light);
+  cursor: pointer;
+  color: var(--text-light);
+  font-weight: 500;
+  text-align: left;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header__mobile-menu-item--dark {
+  background-color: var(--color-primary-dark);
+  color: var(--text-dark);
+}
+
+.header__mobile-menu-item:hover {
+  background-color: var(--color-primary-light-hover);
+  transform: translateY(-1px);
+}
+
+.header__mobile-menu-item--dark:hover {
+  background-color: var(--color-primary-dark-hover);
+  transform: translateY(-1px);
 }
 

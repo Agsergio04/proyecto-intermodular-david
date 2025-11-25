@@ -4,11 +4,13 @@ const Interview = require('../models/Interview');
 const { GoogleGenAI, Type } = require("@google/genai");
 
 const API_KEY = process.env.GEMINI_API_KEY;
-if (!API_KEY) {
-    throw new Error("GEMINI_API_KEY environment variable not set");
-}
+let ai = null;
 
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+if (API_KEY) {
+    ai = new GoogleGenAI({ apiKey: API_KEY });
+} else {
+    console.warn("⚠️  GEMINI_API_KEY not set. AI features will be disabled.");
+}
 
 // Submit response to a question
 exports.submitResponse = async (req, res) => {
@@ -39,7 +41,7 @@ exports.submitResponse = async (req, res) => {
     });
 
     // Generate AI feedback and scoring with Gemini
-    if (responseText) {
+    if (responseText && ai) {
       try {
         const aiResponse = await ai.models.generateContent({
           model: 'gemini-2.5-flash',

@@ -16,22 +16,57 @@ const aiRoutes = require('./routes/ai');
 
 const app = express();
 
+// Trust proxy - Important for Docker/Nginx setups
+app.set('trust proxy', 1);
+
 // Middleware
 app.use(helmet());
+
+// CORS configuration - Allow multiple origins
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-  credentials: true
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps, Postman, curl)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('⚠️  CORS blocked origin:', origin);
+      callback(null, true); // Allow anyway for development
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  max: 100, // limit each IP to 100 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: (req) => {
+    // Skip rate limiting for health checks
+    return req.path === '/api/health';
+  }
 });
-app.use(limiter);
+app.use('/api', limiter);
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+// Request logging middleware
+app.use((req, res, next) => {
+  console.log(`📨 ${req.method} ${req.path}`);
+  next();
+});
 
 // Database Connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://mongo:27017/ai-interview')
@@ -57,15 +92,19 @@ app.get('/api/health', (req, res) => {
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error('❌ Error:', err.message);
+  console.error('Stack:', err.stack);
+
   res.status(err.status || 500).json({
     message: err.message || 'Internal Server Error',
-    status: err.status || 500
+    status: err.status || 500,
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
   });
 });
 
 // 404 handler
 app.use((req, res) => {
+  console.log(`⚠️  404 - Route not found: ${req.method} ${req.path}`);
   res.status(404).json({ message: 'Route not found' });
 });
 

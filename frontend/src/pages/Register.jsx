@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { authService } from '../api';
-import { useAuthStore } from '../store';
+import { useAuthStore, useThemeStore } from '../store';
 import { FiMail, FiLock, FiUser } from 'react-icons/fi';
 import '../assets/styles/Register.css';
 
 const Register = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { isDark } = useThemeStore();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -55,18 +56,18 @@ const Register = () => {
   };
 
   return (
-    <div className="register register--dark">
-      <div className="register__container register__container--dark">
-        <h2 className="register__title register__title--dark">
+    <div className={`register ${isDark ? 'register--dark' : ''}`}>
+      <div className={`register__container ${isDark ? 'register__container--dark' : ''}`}>
+        <h2 className={`register__title ${isDark ? 'register__title--dark' : ''}`}>
           {t('auth.registerTitle')}
         </h2>
 
         <form onSubmit={handleSubmit} className="register__form">
           <div className="register__field">
-            <label className="register__label register__label--dark">
+            <label className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
               {t('common.firstName')}
             </label>
-            <div className="register__input-wrapper register__input-wrapper--dark">
+            <div className={`register__input-wrapper ${isDark ? 'register__input-wrapper--dark' : ''}`}>
               <FiUser className="register__icon" />
               <input
                 type="text"
@@ -74,16 +75,16 @@ const Register = () => {
                 value={formData.firstName}
                 onChange={handleChange}
                 placeholder={t('common.firstName')}
-                className="register__input register__input--dark"
+                className={`register__input ${isDark ? 'register__input--dark' : ''}`}
               />
             </div>
           </div>
 
           <div className="register__field">
-            <label className="register__label register__label--dark">
+            <label className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
               {t('common.lastName')}
             </label>
-            <div className="register__input-wrapper register__input-wrapper--dark">
+            <div className={`register__input-wrapper ${isDark ? 'register__input-wrapper--dark' : ''}`}>
               <FiUser className="register__icon" />
               <input
                 type="text"
@@ -91,16 +92,16 @@ const Register = () => {
                 value={formData.lastName}
                 onChange={handleChange}
                 placeholder={t('common.lastName')}
-                className="register__input register__input--dark"
+                className={`register__input ${isDark ? 'register__input--dark' : ''}`}
               />
             </div>
           </div>
 
           <div className="register__field">
-            <label className="register__label register__label--dark">
+            <label className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
               {t('common.email')}
             </label>
-            <div className="register__input-wrapper register__input-wrapper--dark">
+            <div className={`register__input-wrapper ${isDark ? 'register__input-wrapper--dark' : ''}`}>
               <FiMail className="register__icon" />
               <input
                 type="email"
@@ -108,16 +109,16 @@ const Register = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder={t('common.email')}
-                className="register__input register__input--dark"
+                className={`register__input ${isDark ? 'register__input--dark' : ''}`}
               />
             </div>
           </div>
 
           <div className="register__field">
-            <label className="register__label register__label--dark">
+            <label className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
               {t('common.password')}
             </label>
-            <div className="register__input-wrapper register__input-wrapper--dark">
+            <div className={`register__input-wrapper ${isDark ? 'register__input-wrapper--dark' : ''}`}>
               <FiLock className="register__icon" />
               <input
                 type="password"
@@ -125,20 +126,20 @@ const Register = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder={t('common.password')}
-                className="register__input register__input--dark"
+                className={`register__input ${isDark ? 'register__input--dark' : ''}`}
               />
             </div>
           </div>
 
           <div className="register__field">
-            <label className="register__label register__label--dark">
+            <label className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
               {t('common.language')}
             </label>
             <select
               name="language"
               value={formData.language}
               onChange={handleChange}
-              className="register__select register__select--dark"
+              className={`register__select ${isDark ? 'register__select--dark' : ''}`}
             >
               <option value="en">English</option>
               <option value="es">Español</option>
@@ -156,11 +157,11 @@ const Register = () => {
           </button>
         </form>
 
-        <p className="register__link register__link--dark">
+        <p className={`register__link ${isDark ? 'register__link--dark' : ''}`}>
           {t('auth.haveAccount')}
           <span
             onClick={() => navigate('/login')}
-            className="register__link-text register__link-text--dark"
+            className={`register__link-text ${isDark ? 'register__link-text--dark' : ''}`}
           >
             {t('common.login')}
           </span>

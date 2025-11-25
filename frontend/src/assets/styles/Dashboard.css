@@ -8,9 +8,15 @@
   --taupe-gray: #a39594;
   --dim-gray: #6e675f;
 
-  /* Colores principales */
-  --color-primary: var(--xanthous);
-  --color-primary-hover: #d4a02e;
+  /* Azul para modo claro */
+  --blue-primary: #3b82f6;
+  --blue-primary-hover: #2563eb;
+
+  /* Colores principales - Modo claro usa azul, modo oscuro usa amarillo */
+  --color-primary-light: var(--blue-primary);
+  --color-primary-light-hover: var(--blue-primary-hover);
+  --color-primary-dark: var(--xanthous);
+  --color-primary-dark-hover: #d4a02e;
   --color-secondary: var(--dim-gray);
   --color-secondary-hover: #5d5651;
   --color-success: #10b981;
@@ -106,6 +112,8 @@
   border-radius: var(--radius-md);
   font-weight: 600;
   transition: all 0.2s;
+  border: none;
+  cursor: pointer;
 }
 
 .dashboard__button:disabled {
@@ -114,12 +122,23 @@
 }
 
 .dashboard__button--new {
-  background-color: var(--color-primary);
+  background-color: var(--color-primary-light);
   color: var(--text-light);
 }
 
+.dashboard__button--new.dashboard--dark .dashboard__button--new,
+.dashboard--dark .dashboard__button--new {
+  background-color: var(--color-primary-dark);
+  color: var(--text-dark);
+}
+
 .dashboard__button--new:hover:not(:disabled) {
-  background-color: var(--color-primary-hover);
+  background-color: var(--color-primary-light-hover);
+  transform: translateY(-1px);
+}
+
+.dashboard--dark .dashboard__button--new:hover:not(:disabled) {
+  background-color: var(--color-primary-dark-hover);
 }
 
 .dashboard__button--interviews {
@@ -132,23 +151,42 @@
 }
 
 .dashboard__button--download {
-  background-color: var(--color-primary);
+  background-color: var(--color-primary-light);
   color: var(--text-light);
 }
 
+.dashboard--dark .dashboard__button--download {
+  background-color: var(--color-primary-dark);
+  color: var(--text-dark);
+}
+
 .dashboard__button--download:hover {
-  background-color: var(--color-primary-hover);
+  background-color: var(--color-primary-light-hover);
+  transform: translateY(-1px);
+}
+
+.dashboard--dark .dashboard__button--download:hover {
+  background-color: var(--color-primary-dark-hover);
 }
 
 .dashboard__button--save {
   flex: 1;
-  background-color: var(--xanthous);
+  background-color: var(--color-primary-light);
   color: var(--text-light);
   justify-content: center;
 }
 
+.dashboard--dark .dashboard__button--save {
+  background-color: var(--color-primary-dark);
+  color: var(--text-dark);
+}
+
 .dashboard__button--save:hover:not(:disabled) {
-  background-color: var(--xanthous);
+  background-color: var(--color-primary-light-hover);
+}
+
+.dashboard--dark .dashboard__button--save:hover:not(:disabled) {
+  background-color: var(--color-primary-dark-hover);
 }
 
 .dashboard__button--cancel {

@@ -8,9 +8,15 @@
   --taupe-gray: #a39594;
   --dim-gray: #6e675f;
 
-  /* Colores principales */
-  --color-primary: var(--xanthous);
-  --color-primary-hover: #d4a02e;
+  /* Azul para modo claro */
+  --blue-primary: #3b82f6;
+  --blue-primary-hover: #2563eb;
+
+  /* Colores principales - Modo claro usa azul, modo oscuro usa amarillo */
+  --color-primary-light: var(--blue-primary);
+  --color-primary-light-hover: var(--blue-primary-hover);
+  --color-primary-dark: var(--xanthous);
+  --color-primary-dark-hover: #d4a02e;
   --color-secondary: var(--dim-gray);
   --color-secondary-hover: #5d5651;
   --color-success: #10b981;
@@ -169,16 +175,29 @@
 
 .register__submit {
   width: 100%;
-  background: var(--color-primary);
+  background: var(--color-primary-light);
   color: var(--text-light);
   font-weight: bold;
   padding: var(--spacing-sm);
   border-radius: var(--radius-md);
   transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.register--dark .register__submit {
+  background: var(--color-primary-dark);
+  color: var(--text-dark);
 }
 
 .register__submit:hover:not(:disabled) {
-  background: var(--color-primary-hover);
+  background: var(--color-primary-light-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.register--dark .register__submit:hover:not(:disabled) {
+  background: var(--color-primary-dark-hover);
 }
 
 .register__submit:disabled {

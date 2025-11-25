@@ -5,11 +5,13 @@ const User = require('../models/User');
 const { GoogleGenAI } = require("@google/genai");
 
 const API_KEY = process.env.GEMINI_API_KEY;
-if (!API_KEY) {
-    throw new Error("GEMINI_API_KEY environment variable not set");
-}
+let ai = null;
 
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+if (API_KEY) {
+    ai = new GoogleGenAI({ apiKey: API_KEY });
+} else {
+    console.warn("⚠️  GEMINI_API_KEY not set. AI features will be disabled.");
+}
 
 // ✅ Normalizar dificultad de Gemini a nuestro formato
 const normalizeDifficulty = (difficulty) => {
@@ -31,6 +33,12 @@ const normalizeDifficulty = (difficulty) => {
 // Generate AI questions based on profession
 exports.generateAIQuestions = async (req, res) => {
   try {
+    if (!ai) {
+      return res.status(503).json({
+        message: 'AI service not available. GEMINI_API_KEY not configured.'
+      });
+    }
+
     const { profession, difficulty, language, count } = req.body;
 
     if (!profession) {

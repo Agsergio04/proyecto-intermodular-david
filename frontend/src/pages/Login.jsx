@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { authService } from '../api';
-import { useAuthStore } from '../store';
+import { useAuthStore, useThemeStore } from '../store';
 import { FiMail, FiLock } from 'react-icons/fi';
 import '../assets/styles/Login.css';
 
 const Login = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { isDark } = useThemeStore();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -53,18 +54,18 @@ const Login = () => {
   };
 
   return (
-    <div className="login login--dark">
-      <div className="login__container login__container--dark">
-        <h2 className="login__title login__title--dark">
+    <div className={`login ${isDark ? 'login--dark' : ''}`}>
+      <div className={`login__container ${isDark ? 'login__container--dark' : ''}`}>
+        <h2 className={`login__title ${isDark ? 'login__title--dark' : ''}`}>
           {t('auth.loginTitle')}
         </h2>
 
         <form onSubmit={handleSubmit} className="login__form">
           <div className="login__field">
-            <label className="login__label login__label--dark">
+            <label className={`login__label ${isDark ? 'login__label--dark' : ''}`}>
               {t('common.email')}
             </label>
-            <div className="login__input-wrapper login__input-wrapper--dark">
+            <div className={`login__input-wrapper ${isDark ? 'login__input-wrapper--dark' : ''}`}>
               <FiMail className="login__icon" />
               <input
                 type="email"
@@ -72,16 +73,16 @@ const Login = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder={t('common.email')}
-                className="login__input login__input--dark"
+                className={`login__input ${isDark ? 'login__input--dark' : ''}`}
               />
             </div>
           </div>
 
           <div className="login__field">
-            <label className="login__label login__label--dark">
+            <label className={`login__label ${isDark ? 'login__label--dark' : ''}`}>
               {t('common.password')}
             </label>
-            <div className="login__input-wrapper login__input-wrapper--dark">
+            <div className={`login__input-wrapper ${isDark ? 'login__input-wrapper--dark' : ''}`}>
               <FiLock className="login__icon" />
               <input
                 type="password"
@@ -89,7 +90,7 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder={t('common.password')}
-                className="login__input login__input--dark"
+                className={`login__input ${isDark ? 'login__input--dark' : ''}`}
               />
             </div>
           </div>
@@ -103,11 +104,11 @@ const Login = () => {
           </button>
         </form>
 
-        <p className="login__link login__link--dark">
+        <p className={`login__link ${isDark ? 'login__link--dark' : ''}`}>
           {t('auth.noAccount')}
           <span
             onClick={() => navigate('/register')}
-            className="login__link-text login__link-text--dark"
+            className={`login__link-text ${isDark ? 'login__link-text--dark' : ''}`}
           >
             {t('common.register')}
           </span>

@@ -4,15 +4,23 @@ const authMiddleware = require('../middleware/auth');
 const { GoogleGenAI, Modality } = require("@google/genai");
 
 const API_KEY = process.env.GEMINI_API_KEY;
-if (!API_KEY) {
-    throw new Error("GEMINI_API_KEY environment variable not set");
-}
+let ai = null;
 
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+if (API_KEY) {
+    ai = new GoogleGenAI({ apiKey: API_KEY });
+} else {
+    console.warn("⚠️  GEMINI_API_KEY not set. AI features will be disabled.");
+}
 
 // Convert speech to text with Gemini
 router.post('/transcribe', authMiddleware, async (req, res) => {
   try {
+    if (!ai) {
+      return res.status(503).json({
+        message: 'AI service not available. GEMINI_API_KEY not configured.'
+      });
+    }
+
     const { audioBase64, language } = req.body;
 
     if (!audioBase64) {
@@ -54,6 +62,12 @@ router.post('/transcribe', authMiddleware, async (req, res) => {
 // Get next question from AI with Gemini
 router.post('/next-question', authMiddleware, async (req, res) => {
   try {
+    if (!ai) {
+      return res.status(503).json({
+        message: 'AI service not available. GEMINI_API_KEY not configured.'
+      });
+    }
+
     const { interviewHistory, profession, language, difficulty } = req.body;
 
     try {
@@ -95,6 +109,12 @@ Do not include any other text or explanation.`,
 // Generate AI feedback for response with Gemini
 router.post('/evaluate-response', authMiddleware, async (req, res) => {
   try {
+    if (!ai) {
+      return res.status(503).json({
+        message: 'AI service not available. GEMINI_API_KEY not configured.'
+      });
+    }
+
     const { question, response, profession, language } = req.body;
 
     try {
