@@ -4,9 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b2e8140-e031-48cb-87be-40599ae013ae" name="Changes" comment="Reorganizacion y gestion de la dockerizacion del proyecto">
+    <list default="true" id="1b2e8140-e031-48cb-87be-40599ae013ae" name="Changes" comment="Creacion de la variable repositorioUrl para la entidad Interview">
+      <change afterPath="$PROJECT_DIR$/backend/scripts/testRepositoryUrl.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/controllers/authController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/authController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/controllers/interviewController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/interviewController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/models/User.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/models/User.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/routes/interviews.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/routes/interviews.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/scripts/seedData.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/scripts/seedData.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Settings.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Settings.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +121,7 @@
       <workItem from="1764101143261" duration="3223000" />
       <workItem from="1764141509123" duration="6000" />
       <workItem from="1764141635476" duration="102000" />
-      <workItem from="1764143317877" duration="866000" />
+      <workItem from="1764143317877" duration="1744000" />
     </task>
     <task id="LOCAL-00001" summary="Reorganizacion y gestion de la dockerizacion del proyecto">
       <option name="closed" value="true" />
@@ -125,7 +131,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764088273636</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Creacion de la variable repositorioUrl para la entidad Interview">
+      <option name="closed" value="true" />
+      <created>1764144687206</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1764144687206</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -133,6 +147,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Reorganizacion y gestion de la dockerizacion del proyecto" />
-    <option name="LAST_COMMIT_MESSAGE" value="Reorganizacion y gestion de la dockerizacion del proyecto" />
+    <MESSAGE value="Creacion de la variable repositorioUrl para la entidad Interview" />
+    <option name="LAST_COMMIT_MESSAGE" value="Creacion de la variable repositorioUrl para la entidad Interview" />
   </component>
 </project>

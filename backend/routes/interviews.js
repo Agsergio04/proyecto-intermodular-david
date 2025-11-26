@@ -19,6 +19,9 @@ router.get('/:interviewId', authMiddleware, interviewController.getInterview);
 // Update interview status
 router.put('/:interviewId/status', authMiddleware, interviewController.updateInterviewStatus);
 
+// Update interview repository URL
+router.put('/:interviewId/repository', authMiddleware, interviewController.updateInterviewRepository);
+
 // Delete interview
 router.delete('/:interviewId', authMiddleware, interviewController.deleteInterview);
 

@@ -114,7 +114,6 @@ exports.login = async (req, res) => {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
-        profession: user.profession,
         language: user.language,
         subscriptionStatus: user.subscriptionStatus,
         freeTrialEndDate: user.freeTrialEndDate,
@@ -147,7 +146,6 @@ exports.getMe = async (req, res) => {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
-        profession: user.profession,
         language: user.language,
         subscriptionStatus: user.subscriptionStatus,
         freeTrialEndDate: user.freeTrialEndDate,
@@ -164,7 +162,7 @@ exports.getMe = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   try {
-    const { firstName, lastName, profession, language, profileImage } = req.body;
+    const { firstName, lastName, language, profileImage } = req.body;
 
     const user = await User.findById(req.userId);
     if (!user) {
@@ -173,7 +171,6 @@ exports.updateProfile = async (req, res) => {
 
     if (firstName) user.firstName = firstName;
     if (lastName) user.lastName = lastName;
-    if (profession) user.profession = profession;
     if (language) user.language = language;
     if (profileImage) user.profileImage = profileImage;
 
@@ -187,7 +184,6 @@ exports.updateProfile = async (req, res) => {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
-        profession: user.profession,
         language: user.language,
         profileImage: user.profileImage
       }

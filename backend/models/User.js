@@ -23,10 +23,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Last name is required']
   },
-  profession: {
-    type: String,
-    default: ''
-  },
   language: {
     type: String,
     enum: ['en', 'es', 'fr', 'de', 'pt', 'it', 'ja', 'zh'],

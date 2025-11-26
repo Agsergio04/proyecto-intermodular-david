@@ -98,9 +98,9 @@ exports.generateAIQuestions = async (req, res) => {
 // Create new interview
 exports.createInterview = async (req, res) => {
   try {
-    const { title, profession, type, difficulty, language, questions } = req.body;
+    const { title, profession, type, difficulty, language, questions, repositoryUrl } = req.body;
 
-    console.log('📝 Creating interview with:', { title, profession, difficulty, language, questions });
+    console.log('📝 Creating interview with:', { title, profession, difficulty, language, questions, repositoryUrl });
 
     const user = await User.findById(req.userId);
     if (!user) {
@@ -113,7 +113,8 @@ exports.createInterview = async (req, res) => {
       profession,
       type,
       difficulty: difficulty || 'mid',
-      language: language || user.language || 'en'
+      language: language || user.language || 'en',
+      repositoryUrl: repositoryUrl || null
     });
 
     await interview.save();
@@ -178,6 +179,7 @@ exports.createInterview = async (req, res) => {
         difficulty: interview.difficulty,
         language: interview.language,
         status: interview.status,
+        repositoryUrl: interview.repositoryUrl,
         questions: interview.questions
       }
     });
@@ -296,5 +298,39 @@ exports.deleteInterview = async (req, res) => {
   } catch (error) {
     console.error('Delete interview error:', error);
     res.status(500).json({ message: 'Error deleting interview', error: error.message });
+  }
+};
+
+// Update interview repository URL
+exports.updateInterviewRepository = async (req, res) => {
+  try {
+    const { interviewId } = req.params;
+    const { repositoryUrl } = req.body;
+
+    const interview = await Interview.findById(interviewId);
+    if (!interview) {
+      return res.status(404).json({ message: 'Interview not found' });
+    }
+
+    if (interview.userId.toString() !== req.userId) {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    interview.repositoryUrl = repositoryUrl || null;
+    interview.updatedAt = Date.now();
+
+    await interview.save();
+
+    res.status(200).json({
+      message: 'Repository URL updated successfully',
+      interview: {
+        id: interview._id,
+        title: interview.title,
+        repositoryUrl: interview.repositoryUrl
+      }
+    });
+  } catch (error) {
+    console.error('Update repository URL error:', error);
+    res.status(500).json({ message: 'Error updating repository URL', error: error.message });
   }
 };

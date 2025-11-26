@@ -1,5 +1,7 @@
 const User = require('../models/User');
 const Subscription = require('../models/Subscription');
+const Interview = require('../models/Interview');
+const Question = require('../models/Question');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
@@ -11,6 +13,8 @@ const seedDatabase = async () => {
     // Clear existing data
     await User.deleteMany({});
     await Subscription.deleteMany({});
+    await Interview.deleteMany({});
+    await Question.deleteMany({});
     console.log('Cleared existing data');
 
     // Create test users
@@ -20,7 +24,6 @@ const seedDatabase = async () => {
         password: 'Password123',
         firstName: 'John',
         lastName: 'Doe',
-        profession: 'Software Engineer',
         language: 'en'
       },
       {
@@ -28,7 +31,6 @@ const seedDatabase = async () => {
         password: 'Password123',
         firstName: 'Jane',
         lastName: 'Smith',
-        profession: 'Product Manager',
         language: 'es'
       }
     ];
@@ -60,10 +62,106 @@ const seedDatabase = async () => {
       await createdUsers[i].save();
     }
 
+    // Create sample interviews with repository URLs
+    const sampleInterviews = [
+      {
+        userId: createdUsers[0]._id,
+        title: 'Frontend Developer Interview',
+        profession: 'Frontend Developer',
+        type: 'ai_generated',
+        difficulty: 'medium',
+        language: 'en',
+        repositoryUrl: 'https://github.com/example/frontend-project',
+        status: 'in_progress'
+      },
+      {
+        userId: createdUsers[0]._id,
+        title: 'React Developer Position',
+        profession: 'React Developer',
+        type: 'custom',
+        difficulty: 'hard',
+        language: 'en',
+        repositoryUrl: 'https://github.com/example/react-portfolio',
+        status: 'completed',
+        completedAt: new Date()
+      },
+      {
+        userId: createdUsers[1]._id,
+        title: 'Entrevista Backend Node.js',
+        profession: 'Backend Developer',
+        type: 'ai_generated',
+        difficulty: 'medium',
+        language: 'es',
+        repositoryUrl: 'https://github.com/ejemplo/api-nodejs',
+        status: 'pending'
+      },
+      {
+        userId: createdUsers[1]._id,
+        title: 'Desarrollador Full Stack',
+        profession: 'Full Stack Developer',
+        type: 'custom',
+        difficulty: 'hard',
+        language: 'es',
+        repositoryUrl: null, // Sin repositorio
+        status: 'in_progress'
+      }
+    ];
+
+    const createdInterviews = await Interview.insertMany(sampleInterviews);
+    console.log(`Created ${createdInterviews.length} sample interviews`);
+
+    // Create sample questions for the first interview
+    const sampleQuestions = [
+      {
+        interviewId: createdInterviews[0]._id,
+        questionText: 'What is the difference between let, const, and var in JavaScript?',
+        category: 'JavaScript Fundamentals',
+        difficulty: 'easy',
+        order: 1
+      },
+      {
+        interviewId: createdInterviews[0]._id,
+        questionText: 'Explain the concept of React Hooks and provide examples.',
+        category: 'React',
+        difficulty: 'medium',
+        order: 2
+      },
+      {
+        interviewId: createdInterviews[0]._id,
+        questionText: 'How would you optimize the performance of a React application?',
+        category: 'Performance',
+        difficulty: 'hard',
+        order: 3
+      }
+    ];
+
+    const createdQuestions = await Question.insertMany(sampleQuestions);
+    console.log(`Created ${createdQuestions.length} sample questions`);
+
+    // Update interview with questions
+    createdInterviews[0].questions = createdQuestions.map(q => q._id);
+    createdInterviews[0].statistics = {
+      totalQuestions: createdQuestions.length,
+      answeredQuestions: 0,
+      skippedQuestions: 0,
+      averageResponseTime: 0,
+      confidence: 0
+    };
+    await createdInterviews[0].save();
+
+    // Update users with interview references
+    createdUsers[0].interviews = [createdInterviews[0]._id, createdInterviews[1]._id];
+    createdUsers[1].interviews = [createdInterviews[2]._id, createdInterviews[3]._id];
+    await createdUsers[0].save();
+    await createdUsers[1].save();
+
     console.log('✅ Database seeding completed successfully');
     console.log('\nTest Credentials:');
     console.log('Email: user1@example.com | Password: Password123');
     console.log('Email: user2@example.com | Password: Password123');
+    console.log('\nSample Interviews Created:');
+    console.log(`- ${createdInterviews.length} interviews with repository URLs`);
+    console.log(`- ${createdQuestions.length} sample questions`);
 
     process.exit(0);
   } catch (error) {
