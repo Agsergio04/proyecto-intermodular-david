@@ -60,6 +60,10 @@ const interviewSchema = new mongoose.Schema({
     type: String,
     default: null
   },
+  repositoryUrl: {
+    type: String,
+    default: null
+  },
   statistics: {
     totalQuestions: Number,
     answeredQuestions: Number,
