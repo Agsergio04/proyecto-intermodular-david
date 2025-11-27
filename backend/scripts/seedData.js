@@ -115,21 +115,18 @@ const seedDatabase = async () => {
       {
         interviewId: createdInterviews[0]._id,
         questionText: 'What is the difference between let, const, and var in JavaScript?',
-        category: 'JavaScript Fundamentals',
         difficulty: 'easy',
         order: 1
       },
       {
         interviewId: createdInterviews[0]._id,
         questionText: 'Explain the concept of React Hooks and provide examples.',
-        category: 'React',
         difficulty: 'medium',
         order: 2
       },
       {
         interviewId: createdInterviews[0]._id,
         questionText: 'How would you optimize the performance of a React application?',
-        category: 'Performance',
         difficulty: 'hard',
         order: 3
       }

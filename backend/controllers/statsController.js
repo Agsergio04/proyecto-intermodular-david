@@ -69,7 +69,6 @@ exports.getInterviewStats = async (req, res) => {
     const scoresByDifficulty = {};
     const questionStats = interview.questions.map(question => ({
       question: question.questionText,
-      category: question.category,
       difficulty: question.difficulty,
       responses: question.responses.map(resp => ({
         score: resp.score,

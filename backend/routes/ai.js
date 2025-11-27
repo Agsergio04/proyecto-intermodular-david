@@ -82,7 +82,7 @@ router.post('/next-question', authMiddleware, async (req, res) => {
 Previous Q&A:
 ${formattedHistory}
     
-Generate ONLY the next interview question in valid JSON format with fields: question, category, difficulty, timeLimit (in seconds).
+Generate ONLY the next interview question in valid JSON format with fields: question, difficulty, timeLimit (in seconds).
 Do not include any other text or explanation.`,
         config: {
           responseMimeType: 'application/json'
@@ -92,7 +92,6 @@ Do not include any other text or explanation.`,
       const questionData = JSON.parse(response.text);
       res.status(200).json({
         question: questionData.question,
-        category: questionData.category,
         difficulty: questionData.difficulty,
         timeLimit: questionData.timeLimit
       });

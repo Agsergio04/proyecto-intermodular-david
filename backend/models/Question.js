@@ -18,10 +18,6 @@ const questionSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  category: {
-    type: String,
-    default: 'general'
-  },
   difficulty: {
     type: String,
     enum: ['easy', 'medium', 'hard'],

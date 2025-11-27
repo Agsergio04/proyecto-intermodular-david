@@ -65,10 +65,9 @@ exports.generateAIQuestions = async (req, res) => {
                   type: 'OBJECT',
                   properties: {
                     question: { type: 'STRING' },
-                    category: { type: 'STRING' },
                     difficulty: { type: 'STRING' }
                   },
-                  required: ['question', 'category', 'difficulty']
+                  required: ['question', 'difficulty']
                 }
               }
             },
@@ -136,7 +135,6 @@ exports.createInterview = async (req, res) => {
             interviewId: interview._id,
             questionText: questionText,
             order: i + 1,
-            category: questions[i].category || 'general',
             difficulty: normalizedDifficulty // USA LA DIFICULTAD NORMALIZADA
           });
           

@@ -51,7 +51,6 @@ const Settings = () => {
   const [profileData, setProfileData] = useState({
     firstName: user?.firstName || '',
     lastName: user?.lastName || '',
-    profession: user?.profession || '',
   });
 
   const [passwordData, setPasswordData] = useState({
@@ -69,8 +68,7 @@ const Settings = () => {
         localStorage.setItem('user', JSON.stringify(res.data.user));
         setProfileData({
           firstName: res.data.user?.firstName || '',
-          lastName: res.data.user?.lastName || '',
-          profession: res.data.user?.profession || ''
+          lastName: res.data.user?.lastName || ''
         });
       } catch (error) {
         toast.error('No se pudo actualizar el usuario.');
@@ -112,7 +110,6 @@ const Settings = () => {
         ...user,
         firstName: profileData.firstName,
         lastName: profileData.lastName,
-        profession: profileData.profession,
         ...response.data,
       };
       setUser(updatedUser);
@@ -283,16 +280,6 @@ const Settings = () => {
                   className={`settings__input ${isDark ? 'settings__input--dark' : ''}`}
                   required
                 />
-              </div>
-              <div className="settings__field">
-                <label className={`settings__label ${isDark ? 'settings__label--dark' : ''}`}>
-                  {t('common.profession')}
-                </label>
-                <input
-                  type="text"
-                  name="profession"
-                  value={profileData.profession}
-                  onChange={handleProfileChange}
                   className={`settings__input ${isDark ? 'settings__input--dark' : ''}`}
                 />
               </div>
