@@ -25,82 +25,40 @@ async function fetchReadme(owner, repo) {
     return null;
 }
 
-exports.generateTextFromRepo = async (req, res) => {
-    const { repoUrl, questionCount = 5 } = req.body || {};
-    if (!repoUrl) return res.status(400).json({ error: 'repoUrl is required' });
-
+// Función principal para generar texto y preguntas desde repo
+async function generateTextAndQuestions(repoUrl, questionCount = 5) {
     const parsed = parseGitHubUrl(repoUrl);
-    if (!parsed) return res.status(400).json({ error: 'Invalid GitHub repo URL' });
-
+    if (!parsed) throw new Error('Invalid GitHub repo URL');
     const readme = await fetchReadme(parsed.owner, parsed.repo);
     const baseText = readme ? readme.slice(0, 8000) : `No README found for ${parsed.owner}/${parsed.repo}`;
-
-    // Heurística simple para generar preguntas: dividir por encabezados y párrafos
     const paragraphs = baseText
         .split(/\r?\n\r?\n/)
         .map(p => p.replace(/\r?\n/g, ' ').trim())
         .filter(Boolean);
-
     const questions = [];
     for (let i = 0; i < questionCount; i++) {
         const source = paragraphs[i] || paragraphs[i % paragraphs.length] || baseText;
         const qText = `Basada en el repositorio ${parsed.owner}/${parsed.repo}: resuma o formule una pregunta sobre: "${source.slice(0, 200)}"`;
         questions.push(qText);
     }
-
-    // Devuelve tanto el texto base como el array de preguntas para que InterviewController los consuma
-    return res.json({
+    return {
         repo: `${parsed.owner}/${parsed.repo}`,
         generatedText: baseText,
         questions
-    });
-};
+    };
+}
 
-// File: backend/controllers/InterviewController.js
-const Question = require('../models/Question');
+// Exportar la función para uso interno
+exports.generateTextAndQuestions = generateTextAndQuestions;
 
-// Mantener resto del controlador igual; añadimos la nueva función:
-exports.createQuestionsFromGitinest = async (req, res) => {
-    const { interviewId, questions } = req.body || {};
-    if (!interviewId) return res.status(400).json({ error: 'interviewId is required' });
-    if (!Array.isArray(questions) || questions.length === 0) {
-        return res.status(400).json({ error: 'questions must be a non-empty array of strings' });
-    }
-
+// Endpoint Express para API
+exports.generateTextFromRepo = async (req, res) => {
+    const { repoUrl, questionCount = 5 } = req.body || {};
+    if (!repoUrl) return res.status(400).json({ error: 'repoUrl is required' });
     try {
-        const docs = questions.map((text, idx) => ({
-            interviewId,
-            questionText: String(text).trim(),
-            order: idx + 1,
-            difficulty: 'medium',
-            timeLimit: 300
-        }));
-
-        const created = await Question.insertMany(docs);
-        return res.status(201).json({ created });
+        const result = await generateTextAndQuestions(repoUrl, questionCount);
+        return res.json(result);
     } catch (err) {
-        console.error('createQuestionsFromGitinest error', err);
-        return res.status(500).json({ error: 'Failed to create questions' });
+        return res.status(400).json({ error: err.message });
     }
 };
-
-// File: backend/routes/gitinest.js
-const express = require('express');
-const router = express.Router();
-const GitinestController = require('../controllers/GitinestController');
-
-router.post('/', GitinestController.generateTextFromRepo);
-
-module.exports = router;
-
-// File: backend/routes/interview.js (fragmento - añadir o reemplazar la ruta POST /generate-questions)
-const express = require('express');
-const router = express.Router();
-const InterviewController = require('../controllers/InterviewController');
-
-// ... otras rutas ...
-
-// Reemplazar o añadir esta ruta para que use las preguntas enviadas por Gitinest
-router.post('/generate-questions', InterviewController.createQuestionsFromGitinest);
-
-module.exports = router;

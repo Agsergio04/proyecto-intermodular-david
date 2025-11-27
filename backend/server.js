@@ -13,6 +13,7 @@ const subscriptionRoutes = require('./routes/subscriptions');
 const userRoutes = require('./routes/users');
 const statsRoutes = require('./routes/stats');
 const aiRoutes = require('./routes/ai');
+const gitinestRoutes = require('./routes/gitinest');
 
 const app = express();
 
@@ -84,6 +85,7 @@ app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/gitinest', gitinestRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
