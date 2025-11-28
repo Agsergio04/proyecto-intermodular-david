@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { statsService, interviewService } from '../api';
 
+
 export const useDashboard = () => {
     const navigate = useNavigate();
     const [stats, setStats] = useState(null);
@@ -13,7 +14,7 @@ export const useDashboard = () => {
     const [formLoading, setFormLoading] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
-        profession: '',
+        repository: '',
         type: 'ai_generated',
         difficulty: 'mid',
         language: 'en'
@@ -60,7 +61,7 @@ export const useDashboard = () => {
     const handleCreateInterview = async (e) => {
         e.preventDefault();
 
-        if (!formData.title.trim() || !formData.profession.trim()) {
+        if (!formData.title.trim() || !formData.repository.trim()) {
             toast.warning('Please fill in all required fields');
             return;
         }
@@ -75,7 +76,7 @@ export const useDashboard = () => {
 
                 try {
                     const questionsResponse = await interviewService.generateQuestions({
-                        profession: formData.profession,
+                        repository: formData.repository,
                         difficulty: formData.difficulty,
                         language: formData.language,
                         count: 5
@@ -108,7 +109,7 @@ export const useDashboard = () => {
 
             const createResponse = await interviewService.createInterview({
                 title: formData.title,
-                profession: formData.profession,
+                repository: formData.repository,
                 type: formData.type,
                 difficulty: formData.difficulty,
                 language: formData.language,
@@ -119,7 +120,7 @@ export const useDashboard = () => {
             setShowCreateForm(false);
             setFormData({
                 title: '',
-                profession: '',
+                repository: '',
                 type: 'ai_generated',
                 difficulty: 'mid',
                 language: 'en'

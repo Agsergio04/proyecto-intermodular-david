@@ -81,22 +81,13 @@ const Dashboard = () => {
                   />
                   <input
                       type="text"
-                      placeholder="Profession (e.g., Frontend Developer)"
-                      value={formData.profession}
-                      onChange={(e) => updateFormData('profession', e.target.value)}
+                      placeholder="Repository URL (e.g., https://github.com/user/repo)"
+                      value={formData.repository}
+                      onChange={(e) => updateFormData('repository', e.target.value)}
                       className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
                       required
                       disabled={formLoading}
                   />
-                  <select
-                      value={formData.type}
-                      onChange={(e) => updateFormData('type', e.target.value)}
-                      className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
-                      disabled={formLoading}
-                  >
-                    <option value="ai_generated">AI Generated</option>
-                    <option value="custom">Custom</option>
-                  </select>
                   <select
                       value={formData.difficulty}
                       onChange={(e) => updateFormData('difficulty', e.target.value)}

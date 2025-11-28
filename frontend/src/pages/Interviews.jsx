@@ -18,8 +18,7 @@ const Interviews = () => {
   const [formLoading, setFormLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
-    profession: '',
-    type: 'ai_generated',
+    repository: '',
     difficulty: 'mid',
     language: 'en'
   });
@@ -43,7 +42,7 @@ const Interviews = () => {
   const handleCreateInterview = async (e) => {
     e.preventDefault();
     
-    if (!formData.title.trim() || !formData.profession.trim()) {
+    if (!formData.title.trim() || !formData.repository.trim()) {
       toast.warning('Please fill in all required fields');
       return;
     }
@@ -51,34 +50,29 @@ const Interviews = () => {
     setFormLoading(true);
     
     try {
-      let questions = [];
+      toast.info('Generating questions from repository with AI...');
       
-      if (formData.type === 'ai_generated') {
-        toast.info('Generating questions with AI...');
-        
-        // ✅ LLAMAR AL BACKEND
-        const questionsResponse = await interviewService.generateQuestions({
-          profession: formData.profession,
-          difficulty: formData.difficulty,
-          language: formData.language,
-          count: 5
-        });
-        
-        questions = questionsResponse.data.questions;
-        
-        if (!questions || questions.length === 0) {
-          toast.error('Failed to generate questions. Please try again.');
-          setFormLoading(false);
-          return;
-        }
-        
-        toast.success(`${questions.length} questions generated!`);
+      const questionsResponse = await interviewService.generateQuestions({
+        repository: formData.repository,
+        difficulty: formData.difficulty,
+        language: formData.language,
+        count: 5
+      });
+      
+      const questions = questionsResponse.data.questions;
+      
+      if (!questions || questions.length === 0) {
+        toast.error('Failed to generate questions. Please try again.');
+        setFormLoading(false);
+        return;
       }
+      
+      toast.success(`${questions.length} questions generated!`);
 
       const response = await interviewService.createInterview({
         title: formData.title,
-        profession: formData.profession,
-        type: formData.type,
+        repository: formData.repository,
+        type: 'ai_generated',
         difficulty: formData.difficulty,
         language: formData.language,
         questions: questions
@@ -89,8 +83,7 @@ const Interviews = () => {
       setShowCreateForm(false);
       setFormData({
         title: '',
-        profession: '',
-        type: 'ai_generated',
+        repository: '',
         difficulty: 'mid',
         language: 'en'
       });
@@ -121,7 +114,8 @@ const Interviews = () => {
 
   const filteredInterviews = interviews.filter(i =>
     i.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    i.profession.toLowerCase().includes(searchTerm.toLowerCase())
+    (i.repository && i.repository.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (i.profession && i.profession.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
@@ -165,22 +159,13 @@ const Interviews = () => {
               />
               <input
                 type="text"
-                placeholder={t('interview.profession')}
-                value={formData.profession}
-                onChange={(e) => setFormData({ ...formData, profession: e.target.value })}
+                placeholder="Repository URL (e.g., https://github.com/user/repo)"
+                value={formData.repository}
+                onChange={(e) => setFormData({ ...formData, repository: e.target.value })}
                 className={`interviews__form-input ${isDark ? 'interviews__form-input--dark' : ''}`}
                 required
                 disabled={formLoading}
               />
-              <select
-                value={formData.type}
-                onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                className={`interviews__form-input ${isDark ? 'interviews__form-input--dark' : ''}`}
-                disabled={formLoading}
-              >
-                <option value="ai_generated">{t('interview.aiGenerated')}</option>
-                <option value="custom">{t('interview.custom')}</option>
-              </select>
               <select
                 value={formData.difficulty}
                 onChange={(e) => setFormData({ ...formData, difficulty: e.target.value })}
@@ -268,8 +253,8 @@ const Interviews = () => {
                 </div>
                 <div className="interview-card__info">
                   <div className={`interview-card__info-item ${isDark ? 'interview-card__info-item--dark' : ''}`}>
-                    <span className="interview-card__info-label">{t('interview.profession')}:</span>
-                    <span>{interview.profession}</span>
+                    <span className="interview-card__info-label">Repository:</span>
+                    <span>{interview.repository || interview.profession || 'N/A'}</span>
                   </div>
                   <div className={`interview-card__info-item ${isDark ? 'interview-card__info-item--dark' : ''}`}>
                     <span className="interview-card__info-label">{t('interview.difficulty')}:</span>
