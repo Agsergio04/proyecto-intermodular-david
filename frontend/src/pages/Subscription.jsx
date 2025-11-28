@@ -12,7 +12,7 @@ const Subscription = () => {
 
   useEffect(() => {
     fetchSubscription();
-  }, []);
+  }, [fetchSubscription]);
 
   const fetchSubscription = async () => {
     try {

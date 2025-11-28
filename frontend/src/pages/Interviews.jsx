@@ -26,7 +26,7 @@ const Interviews = () => {
 
   useEffect(() => {
     fetchInterviews();
-  }, []);
+  }, [fetchInterviews]);
 
   const fetchInterviews = async () => {
     try {

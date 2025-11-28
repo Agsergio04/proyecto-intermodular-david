@@ -35,8 +35,6 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const token = localStorage.getItem('token');
-
   return (
     <Router>
       <div className="min-h-screen transition-colors">
