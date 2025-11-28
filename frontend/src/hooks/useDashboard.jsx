@@ -13,7 +13,7 @@ export const useDashboard = () => {
     const [formLoading, setFormLoading] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
-        profession: '',
+        repoUrl: '',
         type: 'ai_generated',
         difficulty: 'mid',
         language: 'en'
@@ -60,8 +60,8 @@ export const useDashboard = () => {
     const handleCreateInterview = async (e) => {
         e.preventDefault();
 
-        if (!formData.title.trim() || !formData.profession.trim()) {
-            toast.warning('Please fill in all required fields');
+        if (!formData.title.trim() || !formData.repoUrl.trim()) {
+            toast.warning('Por favor, rellena el título y la URL del repositorio');
             return;
         }
 
@@ -71,11 +71,17 @@ export const useDashboard = () => {
             let questions = [];
 
             if (formData.type === 'ai_generated') {
-                toast.info('Generating questions with AI...');
+                toast.info('Generando preguntas con IA...');
 
                 try {
+                    console.log('📤 Body enviado a generateQuestions:', {
+                        repoUrl: formData.repoUrl,
+                        difficulty: formData.difficulty,
+                        language: formData.language,
+                        count: 5
+                    });
                     const questionsResponse = await interviewService.generateQuestions({
-                        profession: formData.profession,
+                        repoUrl: formData.repoUrl,
                         difficulty: formData.difficulty,
                         language: formData.language,
                         count: 5
@@ -84,42 +90,42 @@ export const useDashboard = () => {
                     questions = questionsResponse.data?.questions || [];
 
                     if (!questions || questions.length === 0) {
-                        toast.error('Failed to generate questions. Please try again.');
+                        toast.error('No se pudieron generar preguntas. Inténtalo de nuevo.');
                         setFormLoading(false);
                         return;
                     }
 
-                    toast.success(`${questions.length} questions generated!`);
+                    toast.success(`${questions.length} preguntas generadas!`);
                 } catch (genError) {
-                    console.error('❌ Error generating questions:', genError);
-                    toast.error('Error generating questions: ' + genError.message);
+                    console.error('❌ Error generando preguntas:', genError);
+                    toast.error('Error generando preguntas: ' + genError.message);
                     setFormLoading(false);
                     return;
                 }
             } else {
                 questions = [
-                    { question: "Question 1", difficulty: formData.difficulty },
-                    { question: "Question 2", difficulty: formData.difficulty },
-                    { question: "Question 3", difficulty: formData.difficulty },
-                    { question: "Question 4", difficulty: formData.difficulty },
-                    { question: "Question 5", difficulty: formData.difficulty }
+                    { question: "Pregunta 1", difficulty: formData.difficulty },
+                    { question: "Pregunta 2", difficulty: formData.difficulty },
+                    { question: "Pregunta 3", difficulty: formData.difficulty },
+                    { question: "Pregunta 4", difficulty: formData.difficulty },
+                    { question: "Pregunta 5", difficulty: formData.difficulty }
                 ];
             }
 
             const createResponse = await interviewService.createInterview({
                 title: formData.title,
-                profession: formData.profession,
+                repoUrl: formData.repoUrl,
                 type: formData.type,
                 difficulty: formData.difficulty,
                 language: formData.language,
                 questions: questions
             });
 
-            toast.success('Interview created successfully!');
+            toast.success('Entrevista creada correctamente!');
             setShowCreateForm(false);
             setFormData({
                 title: '',
-                profession: '',
+                repoUrl: '',
                 type: 'ai_generated',
                 difficulty: 'mid',
                 language: 'en'
@@ -134,8 +140,8 @@ export const useDashboard = () => {
             }, 500);
 
         } catch (error) {
-            console.error('❌ Error creating interview:', error);
-            const errorMessage = error.message || error.response?.data?.message || 'Error creating interview';
+            console.error('❌ Error creando entrevista:', error);
+            const errorMessage = error.message || error.response?.data?.message || 'Error creando entrevista';
             toast.error(errorMessage);
         } finally {
             setFormLoading(false);

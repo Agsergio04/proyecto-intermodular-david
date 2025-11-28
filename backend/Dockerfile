@@ -9,8 +9,8 @@ COPY package.json ./
 RUN npm install --no-save
 
 # Copy entrypoint script
-COPY docker-entrypoint.sh ./
-RUN chmod +x ./docker-entrypoint.sh
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
 
 # Copy application code
 COPY . .
@@ -19,4 +19,4 @@ COPY . .
 EXPOSE 5000
 
 # Run entrypoint script
-ENTRYPOINT ["./docker-entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "/app/docker-entrypoint.sh"]

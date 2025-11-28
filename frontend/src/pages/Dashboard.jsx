@@ -72,7 +72,7 @@ const Dashboard = () => {
                 <form onSubmit={handleCreateInterview} className="dashboard__form-grid">
                   <input
                       type="text"
-                      placeholder="Interview Title"
+                      placeholder="Título de la entrevista"
                       value={formData.title}
                       onChange={(e) => updateFormData('title', e.target.value)}
                       className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
@@ -80,10 +80,10 @@ const Dashboard = () => {
                       disabled={formLoading}
                   />
                   <input
-                      type="text"
-                      placeholder="Profession (e.g., Frontend Developer)"
-                      value={formData.profession}
-                      onChange={(e) => updateFormData('profession', e.target.value)}
+                      type="url"
+                      placeholder="URL del repositorio (GitHub, GitLab, etc.)"
+                      value={formData.repoUrl}
+                      onChange={(e) => updateFormData('repoUrl', e.target.value)}
                       className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
                       required
                       disabled={formLoading}
@@ -118,6 +118,11 @@ const Dashboard = () => {
                     <option value="fr">Français</option>
                     <option value="de">Deutsch</option>
                   </select>
+                  <div className="dashboard__form-info" style={{gridColumn: '1 / -1', marginBottom: '8px'}}>
+                    <span style={{color: isDark ? '#fff' : '#333', fontWeight: 'bold'}}>
+                      Introduce la URL del repositorio (GitHub, GitLab, etc.) para generar preguntas técnicas con IA.
+                    </span>
+                  </div>
                   <div className="dashboard__form-actions">
                     <button
                         type="submit"

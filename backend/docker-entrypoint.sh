@@ -3,15 +3,15 @@
 
 cd /app
 
-# Install dependencies if node_modules doesn't exist
+# Instalar dependencias si node_modules no existe
 if [ ! -d "node_modules" ]; then
-  echo "Installing backend dependencies..."
+  echo "Instalando dependencias del backend..."
   npm install --no-save
 fi
 
-# Wait for MongoDB to be ready
-echo "Waiting for MongoDB to be ready..."
+# Esperar a que MongoDB esté listo
+echo "Esperando a MongoDB..."
 sleep 5
 
-# Start the server
+# Iniciar el servidor
 npm start

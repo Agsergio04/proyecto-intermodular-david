@@ -40,10 +40,14 @@ exports.generateAIQuestions = async (req, res) => {
       });
     }
 
-    const { profession, difficulty, language, count } = req.body;
+    // Log del body recibido para depuración
+    console.log('🔎 Body recibido en generateAIQuestions:', JSON.stringify(req.body));
 
-    if (!profession) {
-      return res.status(400).json({ message: 'Profession is required' });
+    const { repoUrl, difficulty, language, count } = req.body;
+
+    if (!repoUrl) {
+      console.log('❌ Error: repoUrl no recibido o vacío');
+      return res.status(400).json({ message: 'Repository URL is required', body: req.body });
     }
 
     const difficultyLevel = difficulty || 'mid';
@@ -54,7 +58,7 @@ exports.generateAIQuestions = async (req, res) => {
     try {
       const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
-        contents: `Generate exactly ${questionCount} technical interview questions for a ${difficultyLevel} level ${profession} position in ${languageText} language. The questions should cover a range of topics relevant to the position.`,
+        contents: `Generate exactly ${questionCount} technical interview questions for a repository at ${repoUrl} for a ${difficultyLevel} level position in ${languageText} language. The questions should cover a range of topics relevant to the code and technologies found in the repository.`,
         config: {
           responseMimeType: 'application/json',
           responseSchema: {
@@ -98,9 +102,9 @@ exports.generateAIQuestions = async (req, res) => {
 // Create new interview
 exports.createInterview = async (req, res) => {
   try {
-    const { title, profession, type, difficulty, language, questions, repositoryUrl } = req.body;
+    const { title, repoUrl, type, difficulty, language, questions } = req.body;
 
-    console.log('📝 Creating interview with:', { title, profession, difficulty, language, questions, repositoryUrl });
+    console.log('📝 Creating interview with:', { title, repoUrl, difficulty, language, questions });
 
     const user = await User.findById(req.userId);
     if (!user) {
@@ -110,11 +114,11 @@ exports.createInterview = async (req, res) => {
     const interview = new Interview({
       userId: req.userId,
       title,
-      profession,
+      repoUrl,
       type,
       difficulty: difficulty || 'mid',
       language: language || user.language || 'en',
-      repositoryUrl: repositoryUrl || null
+      repositoryUrl: repoUrl || null
     });
 
     await interview.save();
@@ -122,10 +126,10 @@ exports.createInterview = async (req, res) => {
 
     let createdQuestions = [];
     // Si hay repositoryUrl, generar preguntas usando GitinestController
-    if (repositoryUrl) {
+    if (repoUrl) {
       try {
         // Usar la función de GitinestController para obtener preguntas
-        const parsed = GitinestController.parseGitHubUrl(repositoryUrl);
+        const parsed = GitinestController.parseGitHubUrl(repoUrl);
         if (!parsed) throw new Error('Invalid GitHub repo URL');
         const readme = await GitinestController.fetchReadme(parsed.owner, parsed.repo);
         const baseText = readme ? readme.slice(0, 8000) : `No README found for ${parsed.owner}/${parsed.repo}`;

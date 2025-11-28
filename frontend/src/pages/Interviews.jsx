@@ -18,7 +18,7 @@ const Interviews = () => {
   const [formLoading, setFormLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
-    profession: '',
+    repoUrl: '',
     type: 'ai_generated',
     difficulty: 'mid',
     language: 'en'
@@ -43,8 +43,8 @@ const Interviews = () => {
   const handleCreateInterview = async (e) => {
     e.preventDefault();
     
-    if (!formData.title.trim() || !formData.profession.trim()) {
-      toast.warning('Please fill in all required fields');
+    if (!formData.title.trim() || !formData.repoUrl.trim()) {
+      toast.warning('Por favor, rellena el título y la URL del repositorio');
       return;
     }
     
@@ -56,9 +56,9 @@ const Interviews = () => {
       if (formData.type === 'ai_generated') {
         toast.info('Generating questions with AI...');
         
-        // ✅ LLAMAR AL BACKEND
+        // ✅ LLAMAR AL BACKEND con repoUrl
         const questionsResponse = await interviewService.generateQuestions({
-          profession: formData.profession,
+          repoUrl: formData.repoUrl,
           difficulty: formData.difficulty,
           language: formData.language,
           count: 5
@@ -77,11 +77,11 @@ const Interviews = () => {
 
       const response = await interviewService.createInterview({
         title: formData.title,
-        profession: formData.profession,
+        repoUrl: formData.repoUrl,
         type: formData.type,
         difficulty: formData.difficulty,
         language: formData.language,
-        questions: questions
+        questions
       });
 
       toast.success('Interview created successfully!');
@@ -89,7 +89,7 @@ const Interviews = () => {
       setShowCreateForm(false);
       setFormData({
         title: '',
-        profession: '',
+        repoUrl: '',
         type: 'ai_generated',
         difficulty: 'mid',
         language: 'en'
@@ -164,10 +164,10 @@ const Interviews = () => {
                 disabled={formLoading}
               />
               <input
-                type="text"
-                placeholder={t('interview.profession')}
-                value={formData.profession}
-                onChange={(e) => setFormData({ ...formData, profession: e.target.value })}
+                type="url"
+                placeholder="URL del repositorio (GitHub, GitLab, etc.)"
+                value={formData.repoUrl}
+                onChange={(e) => setFormData({ ...formData, repoUrl: e.target.value })}
                 className={`interviews__form-input ${isDark ? 'interviews__form-input--dark' : ''}`}
                 required
                 disabled={formLoading}
@@ -268,8 +268,14 @@ const Interviews = () => {
                 </div>
                 <div className="interview-card__info">
                   <div className={`interview-card__info-item ${isDark ? 'interview-card__info-item--dark' : ''}`}>
-                    <span className="interview-card__info-label">{t('interview.profession')}:</span>
-                    <span>{interview.profession}</span>
+                    <span className="interview-card__info-label">Repositorio:</span>
+                    {interview.repoUrl || interview.repositoryUrl ? (
+                      <a href={interview.repoUrl || interview.repositoryUrl} target="_blank" rel="noopener noreferrer" style={{color: '#3b82f6', wordBreak: 'break-all'}}>
+                        {interview.repoUrl || interview.repositoryUrl}
+                      </a>
+                    ) : (
+                      <span>-</span>
+                    )}
                   </div>
                   <div className={`interview-card__info-item ${isDark ? 'interview-card__info-item--dark' : ''}`}>
                     <span className="interview-card__info-label">{t('interview.difficulty')}:</span>

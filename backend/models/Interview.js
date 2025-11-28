@@ -12,6 +12,10 @@ const interviewSchema = new mongoose.Schema({
   },
   profession: {
     type: String,
+    required: false
+  },
+  repoUrl: {
+    type: String,
     required: true
   },
   type: {

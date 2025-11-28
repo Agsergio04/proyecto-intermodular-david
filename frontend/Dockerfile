@@ -2,16 +2,21 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+# Copy package.json
 COPY package.json ./
 
-# Copy entrypoint script
-COPY docker-entrypoint.sh ./
-RUN chmod +x ./docker-entrypoint.sh && \
-    npm install --no-save
+# Install dependencies during build
+RUN npm install --no-save
 
+# Copy entrypoint script
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
+
+# Copy application code
 COPY . .
 
+# Expose port
 EXPOSE 3000
 
 # Run entrypoint script
-ENTRYPOINT ["./docker-entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "/app/docker-entrypoint.sh"]
