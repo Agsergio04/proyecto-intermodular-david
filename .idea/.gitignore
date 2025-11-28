@@ -9,10 +9,9 @@
 
 # Dependencias
 node_modules/
-package-lock.json
 
 # Variables de entorno
-.env
+.envnpm install
 .env.local
 .env.production
 
