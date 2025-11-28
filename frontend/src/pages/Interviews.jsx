@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -24,11 +24,7 @@ const Interviews = () => {
     language: 'en'
   });
 
-  useEffect(() => {
-    fetchInterviews();
-  }, [fetchInterviews]);
-
-  const fetchInterviews = async () => {
+  const fetchInterviews = useCallback(async () => {
     try {
       setLoading(true);
       const response = await interviewService.getInterviews();
@@ -38,7 +34,11 @@ const Interviews = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
+
+  useEffect(() => {
+    fetchInterviews();
+  }, [fetchInterviews]);
 
   const handleCreateInterview = async (e) => {
     e.preventDefault();

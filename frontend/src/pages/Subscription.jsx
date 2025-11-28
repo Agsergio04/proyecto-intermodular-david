@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { subscriptionService } from '../api';
@@ -10,11 +10,7 @@ const Subscription = () => {
   const [loading, setLoading] = useState(true);
   const [isPremium, setIsPremium] = useState(false);
 
-  useEffect(() => {
-    fetchSubscription();
-  }, [fetchSubscription]);
-
-  const fetchSubscription = async () => {
+  const fetchSubscription = useCallback(async () => {
     try {
       const response = await subscriptionService.getSubscription();
       setSubscription(response.data.subscription);
@@ -26,7 +22,11 @@ const Subscription = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
+
+  useEffect(() => {
+    fetchSubscription();
+  }, [fetchSubscription]);
 
   const handleUpgrade = async () => {
     try {
