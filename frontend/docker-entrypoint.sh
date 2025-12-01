@@ -1,13 +1,12 @@
 #!/bin/sh
-# Frontend initialization script
+set -e
 
 cd /app
 
-# Instalar dependencias si node_modules no existe
 if [ ! -d "node_modules" ]; then
-  echo "Instalando dependencias del frontend..."
+  echo "Installing frontend dependencies..."
   npm install --no-save
 fi
 
-# Iniciar el servidor
-npm start
+echo "Starting frontend server..."
+exec npm start

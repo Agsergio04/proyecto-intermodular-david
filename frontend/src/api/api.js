@@ -23,6 +23,13 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
     console.log('📤 API Request:', config.method?.toUpperCase(), config.url);
+    if (config.data) {
+      console.log('📤 Request Body:', JSON.stringify(config.data));
+      if (config.url?.includes('generate-questions')) {
+        console.log('📤 GENERATE-QUESTIONS - Body keys:', Object.keys(config.data));
+        console.log('📤 GENERATE-QUESTIONS - repoUrl:', config.data.repoUrl);
+      }
+    }
     return config;
   },
   error => {

@@ -4,7 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b2e8140-e031-48cb-87be-40599ae013ae" name="Changes" comment="Realizacion de que User no guarde profesion y que se recoja el URL del repositorio" />
+    <list default="true" id="1b2e8140-e031-48cb-87be-40599ae013ae" name="Changes" comment="Arreglando el Cloudflare">
+      <change afterPath="$PROJECT_DIR$/SOLUCION_ERRORES.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/restart-services.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/restart-services.ps1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test-api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/controllers/interviewController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/interviewController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/controllers/statsController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/statsController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/docker-entrypoint.sh" beforeDir="false" afterPath="$PROJECT_DIR$/backend/docker-entrypoint.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/routes/interviews.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/routes/interviews.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/docker-entrypoint.sh" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/docker-entrypoint.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/hooks/useDashboard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/hooks/useDashboard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Interviews.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Interviews.jsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,10 +31,16 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="CSS File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -46,24 +69,25 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Proyecto__En__Curso__backend&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/sergi/Downloads/adad&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/sergi/Desktop/Trabajo/fp/Segundo/Despligue de Aplicaciones Web/2526-u2-2-1-dockerbasico-Agsergio04&quot;,
     &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\WebStorm 2024.3.4\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\sergi\\Desktop\\Trabajo\\fp\\Segundo\\Proyecto Intermodular\\Proyecto_Intermodular_David\\frontend\\node_modules\\typescript\\lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\sergi\Desktop\Trabajo\fp\Segundo\Proyecto Intermodular\Proyecto_Intermodular_David\worker" />
       <recent name="C:\Users\sergi\Desktop\Trabajo\fp\Segundo\Proyecto Intermodular\Proyecto_Intermodular_Pablo(ay_diosmio)_y_Sergio\frontend" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Docker.docker-compose.yml: Compose Deployment">
     <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
       <deployment type="docker-compose.yml">
         <settings />
@@ -78,8 +102,51 @@
       </deployment>
       <method v="2" />
     </configuration>
+    <configuration name="docker-compose.yml.backend: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="backend" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="docker-compose.yml.frontend: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="frontend" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="docker-compose.yml.mongo: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="mongo" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Docker.docker-compose.yml: Compose Deployment" />
+        <item itemvalue="Docker.docker-compose.yml.mongo: Compose Deployment" />
+        <item itemvalue="Docker.docker-compose.yml.frontend: Compose Deployment" />
+        <item itemvalue="Docker.docker-compose.yml.backend: Compose Deployment" />
         <item itemvalue="Docker.docker-compose.yml: Compose Deployment" />
       </list>
     </recent_temporary>
@@ -115,6 +182,15 @@
       <workItem from="1764143317877" duration="6859000" />
       <workItem from="1764161550346" duration="923000" />
       <workItem from="1764228655472" duration="578000" />
+      <workItem from="1764328226590" duration="8000" />
+      <workItem from="1764328254155" duration="3000" />
+      <workItem from="1764328299147" duration="3115000" />
+      <workItem from="1764573998443" duration="1534000" />
+      <workItem from="1764575599314" duration="1258000" />
+      <workItem from="1764579609493" duration="172000" />
+      <workItem from="1764580188085" duration="791000" />
+      <workItem from="1764585288983" duration="275000" />
+      <workItem from="1764591100457" duration="412000" />
     </task>
     <task id="LOCAL-00001" summary="Reorganizacion y gestion de la dockerizacion del proyecto">
       <option name="closed" value="true" />

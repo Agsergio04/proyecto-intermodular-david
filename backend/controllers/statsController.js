@@ -23,9 +23,10 @@ exports.getUserStats = async (req, res) => {
       interviewsByMonth[month] = (interviewsByMonth[month] || 0) + 1;
     });
 
-    const interviewsByProfession = {};
+    const interviewsByRepo = {};
     interviews.forEach(interview => {
-      interviewsByProfession[interview.profession] = (interviewsByProfession[interview.profession] || 0) + 1;
+      const repoName = interview.repoUrl || interview.repositoryUrl || 'Sin repositorio';
+      interviewsByRepo[repoName] = (interviewsByRepo[repoName] || 0) + 1;
     });
 
     res.status(200).json({
@@ -35,7 +36,7 @@ exports.getUserStats = async (req, res) => {
         averageScore: Math.round(averageScore),
         totalDuration,
         interviewsByMonth,
-        interviewsByProfession
+        interviewsByProfession: interviewsByRepo // Mantener nombre para compatibilidad con frontend
       }
     });
   } catch (error) {
@@ -96,7 +97,7 @@ exports.getInterviewStats = async (req, res) => {
     res.status(200).json({
       stats: {
         title: interview.title,
-        profession: interview.profession,
+        repoUrl: interview.repoUrl || interview.repositoryUrl,
         totalScore: interview.totalScore,
         statistics: interview.statistics,
         scoresByDifficulty,
@@ -122,7 +123,7 @@ exports.getPerformanceTrends = async (req, res) => {
       trends.push({
         date: interview.createdAt,
         score: interview.totalScore,
-        profession: interview.profession,
+        repoUrl: interview.repoUrl || interview.repositoryUrl,
         duration: interview.duration
       });
     });

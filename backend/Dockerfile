@@ -10,7 +10,7 @@ RUN npm install --no-save
 
 # Copy entrypoint script
 COPY docker-entrypoint.sh /app/docker-entrypoint.sh
-RUN chmod +x /app/docker-entrypoint.sh
+RUN apk add --no-cache dos2unix && dos2unix /app/docker-entrypoint.sh && chmod +x /app/docker-entrypoint.sh && apk del dos2unix
 
 # Copy application code
 COPY . .

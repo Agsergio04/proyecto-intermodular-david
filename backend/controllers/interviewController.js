@@ -31,7 +31,7 @@ const normalizeDifficulty = (difficulty) => {
   return 'medium';
 };
 
-// Generate AI questions based on profession
+// Generate AI questions based on repository
 exports.generateAIQuestions = async (req, res) => {
   try {
     if (!ai) {
@@ -213,7 +213,7 @@ exports.createInterview = async (req, res) => {
       interview: {
         id: interview._id,
         title: interview.title,
-        profession: interview.profession,
+        repoUrl: interview.repoUrl,
         type: interview.type,
         difficulty: interview.difficulty,
         language: interview.language,

@@ -66,6 +66,9 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 // Request logging middleware
 app.use((req, res, next) => {
   console.log(`📨 ${req.method} ${req.path}`);
+  if (req.method === 'POST' || req.method === 'PUT') {
+    console.log(`📦 Body:`, JSON.stringify(req.body));
+  }
   next();
 });
 

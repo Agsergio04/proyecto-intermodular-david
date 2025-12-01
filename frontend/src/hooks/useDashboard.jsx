@@ -60,6 +60,11 @@ export const useDashboard = () => {
     const handleCreateInterview = async (e) => {
         e.preventDefault();
 
+        console.log('🔍 FormData completo:', formData);
+        console.log('🔍 repoUrl value:', formData.repoUrl);
+        console.log('🔍 repoUrl length:', formData.repoUrl?.length);
+        console.log('🔍 repoUrl trimmed:', formData.repoUrl?.trim());
+
         if (!formData.title.trim() || !formData.repoUrl.trim()) {
             toast.warning('Por favor, rellena el título y la URL del repositorio');
             return;
@@ -74,18 +79,16 @@ export const useDashboard = () => {
                 toast.info('Generando preguntas con IA...');
 
                 try {
-                    console.log('📤 Body enviado a generateQuestions:', {
-                        repoUrl: formData.repoUrl,
+                    const requestBody = {
+                        repoUrl: formData.repoUrl.trim(),
                         difficulty: formData.difficulty,
                         language: formData.language,
                         count: 5
-                    });
-                    const questionsResponse = await interviewService.generateQuestions({
-                        repoUrl: formData.repoUrl,
-                        difficulty: formData.difficulty,
-                        language: formData.language,
-                        count: 5
-                    });
+                    };
+                    console.log('📤 Body enviado a generateQuestions:', requestBody);
+                    console.log('📤 repoUrl específicamente:', requestBody.repoUrl);
+
+                    const questionsResponse = await interviewService.generateQuestions(requestBody);
 
                     questions = questionsResponse.data?.questions || [];
 
@@ -151,7 +154,12 @@ export const useDashboard = () => {
     const toggleCreateForm = () => setShowCreateForm(!showCreateForm);
 
     const updateFormData = (field, value) => {
-        setFormData(prev => ({ ...prev, [field]: value }));
+        console.log(`🔄 Actualizando campo: ${field} = ${value}`);
+        setFormData(prev => {
+            const newData = { ...prev, [field]: value };
+            console.log('🔄 FormData actualizado:', newData);
+            return newData;
+        });
     };
 
     const navigateToInterviews = () => navigate('/interviews');

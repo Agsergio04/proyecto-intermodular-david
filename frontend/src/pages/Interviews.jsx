@@ -121,7 +121,8 @@ const Interviews = () => {
 
   const filteredInterviews = interviews.filter(i =>
     i.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    i.profession.toLowerCase().includes(searchTerm.toLowerCase())
+    (i.repoUrl && i.repoUrl.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (i.repositoryUrl && i.repositoryUrl.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
