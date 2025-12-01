@@ -3,7 +3,6 @@ const Question = require('../models/Question');
 const Response = require('../models/Response');
 const User = require('../models/User');
 const { GoogleGenAI } = require("@google/genai");
-const GitinestController = require('./GitinestController');
 
 const API_KEY = process.env.GEMINI_API_KEY;
 let ai = null;
@@ -125,44 +124,9 @@ exports.createInterview = async (req, res) => {
     console.log('✅ Interview saved:', interview._id);
 
     let createdQuestions = [];
-    // Si hay repositoryUrl, generar preguntas usando GitinestController
-    if (repoUrl) {
-      try {
-        // Usar la función de GitinestController para obtener preguntas
-        const parsed = GitinestController.parseGitHubUrl(repoUrl);
-        if (!parsed) throw new Error('Invalid GitHub repo URL');
-        const readme = await GitinestController.fetchReadme(parsed.owner, parsed.repo);
-        const baseText = readme ? readme.slice(0, 8000) : `No README found for ${parsed.owner}/${parsed.repo}`;
-        const paragraphs = baseText
-          .split(/\r?\n\r?\n/)
-          .map(p => p.replace(/\r?\n/g, ' ').trim())
-          .filter(Boolean);
-        const questionCount = questions && questions.length > 0 ? questions.length : 5;
-        for (let i = 0; i < questionCount; i++) {
-          const source = paragraphs[i] || paragraphs[i % paragraphs.length] || baseText;
-          const qText = `Basada en el repositorio ${parsed.owner}/${parsed.repo}: resuma o formule una pregunta sobre: "${source.slice(0, 200)}"`;
-          const question = new Question({
-            interviewId: interview._id,
-            questionText: qText,
-            order: i + 1,
-            difficulty: 'medium'
-          });
-          await question.save();
-          createdQuestions.push(question);
-          interview.questions.push(question._id);
-        }
-        interview.statistics = {
-          totalQuestions: createdQuestions.length,
-          answeredQuestions: 0,
-          skippedQuestions: 0,
-          averageResponseTime: 0,
-          confidence: 0
-        };
-      } catch (err) {
-        console.error('Error generando preguntas desde Gitinest:', err.message);
-        // Si falla, continuar con el flujo normal
-      }
-    } else if (questions && questions.length > 0) {
+
+    // PRIORIDAD: Si hay preguntas en el body, usarlas siempre
+    if (questions && questions.length > 0) {
       console.log('📝 Creating questions...');
 
       for (let i = 0; i < questions.length; i++) {
@@ -267,6 +231,12 @@ exports.getInterview = async (req, res) => {
 
     if (interview.userId.toString() !== req.userId) {
       return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    console.log('✅ Interview retrieved:', interview._id);
+    console.log('📊 Questions count:', interview.questions?.length || 0);
+    if (interview.questions && interview.questions.length > 0) {
+      console.log('📝 First question:', interview.questions[0]);
     }
 
     res.status(200).json({ interview });
