@@ -254,9 +254,9 @@ const Interviews = () => {
           </div>
         ) : (
           <div className="interviews__grid">
-            {filteredInterviews.map(interview => (
+            {filteredInterviews.map((interview, index) => (
               <div
-                key={interview._id}
+                key={interview._id || interview.id || `interview-${index}`}
                 className={`interview-card ${isDark ? 'interview-card--dark' : ''}`}
               >
                 <div className="interview-card__header">

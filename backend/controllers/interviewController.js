@@ -172,6 +172,11 @@ exports.createInterview = async (req, res) => {
     await user.save();
     console.log('✅ User updated');
 
+    // Poblar las preguntas antes de enviar la respuesta
+    await interview.populate('questions');
+    console.log('✅ Interview populated with questions');
+    console.log('📊 Questions in response:', interview.questions.length);
+
     res.status(201).json({
       message: 'Interview created successfully',
       interview: {
@@ -183,7 +188,7 @@ exports.createInterview = async (req, res) => {
         language: interview.language,
         status: interview.status,
         repositoryUrl: interview.repositoryUrl,
-        questions: interview.questions
+        questions: interview.questions // Ahora incluye los objetos completos de las preguntas
       }
     });
   } catch (error) {
@@ -236,7 +241,16 @@ exports.getInterview = async (req, res) => {
     console.log('✅ Interview retrieved:', interview._id);
     console.log('📊 Questions count:', interview.questions?.length || 0);
     if (interview.questions && interview.questions.length > 0) {
-      console.log('📝 First question:', interview.questions[0]);
+      console.log('📝 First question:', JSON.stringify(interview.questions[0], null, 2));
+      console.log('📝 First question text:', interview.questions[0]?.questionText);
+      console.log('📝 All questions:', interview.questions.map((q, i) => ({
+        index: i,
+        id: q._id,
+        text: q.questionText,
+        difficulty: q.difficulty
+      })));
+    } else {
+      console.log('⚠️ No questions found in interview!');
     }
 
     res.status(200).json({ interview });

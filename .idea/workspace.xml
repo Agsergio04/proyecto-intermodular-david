@@ -4,23 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b2e8140-e031-48cb-87be-40599ae013ae" name="Changes" comment="Arreglando el Cloudflare">
-      <change afterPath="$PROJECT_DIR$/SOLUCION_ERRORES.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/restart-services.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/restart-services.ps1" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test-api.js" afterDir="false" />
+    <list default="true" id="1b2e8140-e031-48cb-87be-40599ae013ae" name="Changes" comment="Paso del promp al backend">
+      <change afterPath="$PROJECT_DIR$/PRUEBA_FINAL_GEMINI.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RESPUESTA_README_GEMINI.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SOLUCION_FINAL_GEMINI_MEJORADO.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SOLUCION_GEMINI_API.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test-gemini-fix.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test-readme-fetch.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/CAMBIOS_CATEGORY_ELIMINADA.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/controllers/GitinestController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/GitinestController.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/controllers/interviewController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/interviewController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/controllers/statsController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/controllers/statsController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/docker-entrypoint.sh" beforeDir="false" afterPath="$PROJECT_DIR$/backend/docker-entrypoint.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/routes/interviews.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/routes/interviews.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/server.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/docker-entrypoint.sh" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/docker-entrypoint.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/api/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/api.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/hooks/useDashboard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/hooks/useDashboard.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/Interviews.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Interviews.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-api.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -190,7 +187,7 @@
       <workItem from="1764579609493" duration="172000" />
       <workItem from="1764580188085" duration="791000" />
       <workItem from="1764585288983" duration="275000" />
-      <workItem from="1764591100457" duration="412000" />
+      <workItem from="1764591100457" duration="8701000" />
     </task>
     <task id="LOCAL-00001" summary="Reorganizacion y gestion de la dockerizacion del proyecto">
       <option name="closed" value="true" />
@@ -224,7 +221,23 @@
       <option name="project" value="LOCAL" />
       <updated>1764228941638</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Comprobante de la creacion de las preguntas y refactorizacion de los componentes docker-entrypoints.sh">
+      <option name="closed" value="true" />
+      <created>1764591998221</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1764591998221</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Paso del promp al backend">
+      <option name="closed" value="true" />
+      <created>1764615770531</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1764615770531</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -234,6 +247,8 @@
     <MESSAGE value="Reorganizacion y gestion de la dockerizacion del proyecto" />
     <MESSAGE value="Creacion de la variable repositorioUrl para la entidad Interview" />
     <MESSAGE value="Realizacion de que User no guarde profesion y que se recoja el URL del repositorio" />
-    <option name="LAST_COMMIT_MESSAGE" value="Realizacion de que User no guarde profesion y que se recoja el URL del repositorio" />
+    <MESSAGE value="Comprobante de la creacion de las preguntas y refactorizacion de los componentes docker-entrypoints.sh" />
+    <MESSAGE value="Paso del promp al backend" />
+    <option name="LAST_COMMIT_MESSAGE" value="Paso del promp al backend" />
   </component>
 </project>

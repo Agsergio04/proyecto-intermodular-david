@@ -15,12 +15,16 @@ router.post('/generate-questions', authMiddleware, async (req, res) => {
   console.log('📥 req.body.repoUrl:', req.body.repoUrl);
   console.log('📥 typeof req.body.repoUrl:', typeof req.body.repoUrl);
 
-  // Extraer repoUrl de diferentes posibles ubicaciones
+  // Extraer parámetros de diferentes posibles ubicaciones
   let repoUrl = req.body.repoUrl || req.body.repositoryUrl || req.body.repo_url;
   const questionCount = req.body.count || req.body.questionCount || 5;
+  const difficulty = req.body.difficulty || 'mid';
+  const language = req.body.language || 'en';
 
   console.log('📥 repoUrl extraído:', repoUrl);
   console.log('📥 questionCount:', questionCount);
+  console.log('📥 difficulty:', difficulty);
+  console.log('📥 language:', language);
   console.log('📥 ============ generate-questions VALIDACIÓN ============');
 
   // Validar y limpiar repoUrl
@@ -39,13 +43,21 @@ router.post('/generate-questions', authMiddleware, async (req, res) => {
   repoUrl = repoUrl.trim();
 
   try {
-    console.log('✅ Llamando a gitinestController.generateTextAndQuestions con:', repoUrl);
-    // Usar la función de Gitinest para obtener preguntas
-    const result = await gitinestController.generateTextAndQuestions(repoUrl, questionCount);
-    // Formatear las preguntas para el frontend
-    const questions = result.questions.map(q => ({ question: q, difficulty: 'medium' }));
+    console.log('✅ Llamando a gitinestController.generateTextAndQuestions con:', { repoUrl, questionCount, difficulty, language });
+    // Usar la función de Gitinest para obtener preguntas usando IA
+    const result = await gitinestController.generateTextAndQuestions(repoUrl, questionCount, difficulty, language);
+
+    // Las preguntas ya vienen con el formato correcto {question: string, difficulty: string}
+    const questions = result.questions;
+
     console.log('✅ Preguntas generadas:', questions.length);
-    res.status(200).json({ message: 'Preguntas generadas por Gitinest', questions });
+    console.log('📝 Primera pregunta:', questions[0]);
+
+    res.status(200).json({
+      message: 'Preguntas generadas con IA desde repositorio',
+      questions,
+      repo: result.repo
+    });
   } catch (err) {
     console.error('❌ Error en generate-questions:', err.message);
     res.status(500).json({ error: err.message });
