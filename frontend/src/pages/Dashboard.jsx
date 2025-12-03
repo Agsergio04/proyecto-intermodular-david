@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { FiDownload, FiTrendingUp, FiAward, FiClock, FiPlus } from 'react-icons/fi';
+import { FiDownload, FiTrendingUp, FiAward, FiClock, FiPlus, FiTrash2 } from 'react-icons/fi';
 import { useDashboard } from '../hooks/useDashboard';
 import { useThemeStore } from '../store';
 import { StatCard } from '../components/StatCard';
@@ -19,10 +19,16 @@ const Dashboard = () => {
     showCreateForm,
     formLoading,
     formData,
-    downloadReport,
+    manualFormData,
+    newQuestion,
     handleCreateInterview,
+    handleCreateManualInterview,
+    handleAddQuestion,
+    handleRemoveQuestion,
     toggleCreateForm,
     updateFormData,
+    updateManualFormData,
+    updateNewQuestion,
     navigateToInterviews
   } = useDashboard();
 
@@ -59,89 +65,223 @@ const Dashboard = () => {
           </div>
 
           {showCreateForm && (
-              <div className={`dashboard__form ${isDark ? 'dashboard__form--dark' : ''}`}>
-                <h2 className={`dashboard__form-title ${isDark ? 'dashboard__form-title--dark' : ''}`}>
-                  {t('interview.newInterview')}
+              <div className={`dashboard__forms-wrapper ${isDark ? 'dashboard__forms-wrapper--dark' : ''}`}>
+                <h2 className={`dashboard__forms-wrapper-title ${isDark ? 'dashboard__forms-wrapper-title--dark' : ''}`}>
+                  🎯 Nueva Entrevista
                 </h2>
-                <form onSubmit={handleCreateInterview} className="dashboard__form-grid">
-                  <input
-                      type="text"
-                      placeholder="Título de la entrevista"
-                      value={formData.title}
-                      onChange={(e) => updateFormData('title', e.target.value)}
-                      className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
-                      required
-                      disabled={formLoading}
-                  />
-                  <input
-                      type="url"
-                      placeholder="URL del repositorio (GitHub, GitLab, etc.)"
-                      value={formData.repoUrl}
-                      onChange={(e) => updateFormData('repoUrl', e.target.value)}
-                      className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
-                      required
-                      disabled={formLoading}
-                  />
-                  <select
-                      value={formData.type}
-                      onChange={(e) => updateFormData('type', e.target.value)}
-                      className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
-                      disabled={formLoading}
-                  >
-                    <option value="ai_generated">AI Generated</option>
-                    <option value="custom">Custom</option>
-                  </select>
-                  <select
-                      value={formData.difficulty}
-                      onChange={(e) => updateFormData('difficulty', e.target.value)}
-                      className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
-                      disabled={formLoading}
-                  >
-                    <option value="junior">Junior</option>
-                    <option value="mid">Mid</option>
-                    <option value="senior">Senior</option>
-                  </select>
-                  <select
-                      value={formData.language}
-                      onChange={(e) => updateFormData('language', e.target.value)}
-                      className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
-                      disabled={formLoading}
-                  >
-                    <option value="en">English</option>
-                    <option value="es">Español</option>
-                    <option value="fr">Français</option>
-                    <option value="de">Deutsch</option>
-                  </select>
-                  <div className="dashboard__form-info" style={{gridColumn: '1 / -1', marginBottom: '8px'}}>
-                    <span style={{color: isDark ? '#fff' : '#333', fontWeight: 'bold'}}>
-                      Introduce la URL del repositorio (GitHub, GitLab, etc.) para generar preguntas técnicas con IA.
-                    </span>
-                  </div>
-                  <div className="dashboard__form-actions">
-                    <button
-                        type="submit"
+
+                {/* Card para Entrevistas por IA */}
+                <div className={`dashboard__form-card dashboard__form-card--ai ${isDark ? 'dashboard__form-card--dark' : ''}`}>
+                  <h3 className={`dashboard__form-title ${isDark ? 'dashboard__form-title--dark' : ''}`}>
+                    🤖 Generación por IA
+                  </h3>
+                  <p className={`dashboard__form-subtitle ${isDark ? 'dashboard__form-subtitle--dark' : ''}`}>
+                    Genera preguntas automáticamente usando IA
+                  </p>
+                  <form onSubmit={handleCreateInterview} className="dashboard__form-grid">
+                    <input
+                        type="text"
+                        placeholder="Título de la entrevista"
+                        value={formData.title}
+                        onChange={(e) => updateFormData('title', e.target.value)}
+                        className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
+                        required
                         disabled={formLoading}
-                        className="dashboard__button dashboard__button--save"
+                    />
+                    <input
+                        type="url"
+                        placeholder="URL del repositorio (GitHub, GitLab, etc.)"
+                        value={formData.repoUrl}
+                        onChange={(e) => updateFormData('repoUrl', e.target.value)}
+                        className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
+                        required
+                        disabled={formLoading}
+                    />
+                    <select
+                        value={formData.difficulty}
+                        onChange={(e) => updateFormData('difficulty', e.target.value)}
+                        className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
+                        disabled={formLoading}
                     >
-                      {formLoading ? (
-                          <>
-                            <div className="dashboard__spinner"></div>
-                            Creating...
-                          </>
-                      ) : (
-                          'Create Interview'
+                      <option value="junior">Junior</option>
+                      <option value="mid">Mid</option>
+                      <option value="senior">Senior</option>
+                    </select>
+                    <select
+                        value={formData.language}
+                        onChange={(e) => updateFormData('language', e.target.value)}
+                        className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
+                        disabled={formLoading}
+                    >
+                      <option value="en">English</option>
+                      <option value="es">Español</option>
+                      <option value="fr">Français</option>
+                      <option value="de">Deutsch</option>
+                    </select>
+                    <div className="dashboard__form-actions">
+                      <button
+                          type="submit"
+                          disabled={formLoading}
+                          className="dashboard__button dashboard__button--save"
+                      >
+                        {formLoading ? (
+                            <>
+                              <div className="dashboard__spinner"></div>
+                              Creando...
+                            </>
+                        ) : (
+                            '🚀 Crear Entrevista'
+                        )}
+                      </button>
+                      <button
+                          type="button"
+                          onClick={toggleCreateForm}
+                          disabled={formLoading}
+                          className="dashboard__button dashboard__button--cancel"
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                {/* Card para Entrevistas Manuales */}
+                <div className={`dashboard__form-card dashboard__form-card--manual ${isDark ? 'dashboard__form-card--dark' : ''}`}>
+                  <h3 className={`dashboard__form-title ${isDark ? 'dashboard__form-title--dark' : ''}`}>
+                    ✏️ Generación Manual
+                  </h3>
+                  <p className={`dashboard__form-subtitle ${isDark ? 'dashboard__form-subtitle--dark' : ''}`}>
+                    Crea tus propias preguntas manualmente
+                  </p>
+                  <form onSubmit={handleCreateManualInterview} className="dashboard__form-grid">
+                    <input
+                        type="text"
+                        placeholder="Título de la entrevista"
+                        value={manualFormData.title}
+                        onChange={(e) => updateManualFormData('title', e.target.value)}
+                        className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
+                        required
+                        disabled={formLoading}
+                    />
+                    <input
+                        type="url"
+                        placeholder="URL del repositorio (GitHub, GitLab, etc.)"
+                        value={manualFormData.repoUrl}
+                        onChange={(e) => updateManualFormData('repoUrl', e.target.value)}
+                        className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
+                        required
+                        disabled={formLoading}
+                    />
+                    <select
+                        value={manualFormData.difficulty}
+                        onChange={(e) => updateManualFormData('difficulty', e.target.value)}
+                        className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
+                        disabled={formLoading}
+                    >
+                      <option value="junior">Junior</option>
+                      <option value="mid">Mid</option>
+                      <option value="senior">Senior</option>
+                    </select>
+                    <select
+                        value={manualFormData.language}
+                        onChange={(e) => updateManualFormData('language', e.target.value)}
+                        className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
+                        disabled={formLoading}
+                    >
+                      <option value="en">English</option>
+                      <option value="es">Español</option>
+                      <option value="fr">Français</option>
+                      <option value="de">Deutsch</option>
+                    </select>
+
+                    {/* Sección para añadir preguntas */}
+                    <div className="dashboard__questions-section">
+                      <h3 className={`dashboard__questions-title ${isDark ? 'dashboard__questions-title--dark' : ''}`}>
+                        📝 Preguntas ({manualFormData.questions.length})
+                      </h3>
+
+                      <div className="dashboard__add-question">
+                        <textarea
+                            placeholder="Escribe tu pregunta aquí..."
+                            value={newQuestion.questionText}
+                            onChange={(e) => updateNewQuestion('questionText', e.target.value)}
+                            className={`dashboard__question-input ${isDark ? 'dashboard__question-input--dark' : ''}`}
+                            rows="3"
+                            disabled={formLoading}
+                        />
+                        <div className="dashboard__add-question-footer">
+                          <select
+                              value={newQuestion.difficulty}
+                              onChange={(e) => updateNewQuestion('difficulty', e.target.value)}
+                              className={`dashboard__question-difficulty ${isDark ? 'dashboard__question-difficulty--dark' : ''}`}
+                              disabled={formLoading}
+                          >
+                            <option value="easy">Fácil</option>
+                            <option value="medium">Media</option>
+                            <option value="hard">Difícil</option>
+                          </select>
+                          <button
+                              type="button"
+                              onClick={handleAddQuestion}
+                              disabled={formLoading}
+                              className="dashboard__add-question-button"
+                          >
+                            <FiPlus /> Añadir Pregunta
+                          </button>
+                        </div>
+                      </div>
+
+                      {manualFormData.questions.length > 0 && (
+                          <div className="dashboard__questions-list">
+                            {manualFormData.questions.map((q, index) => (
+                                <div key={index} className={`dashboard__question-item ${isDark ? 'dashboard__question-item--dark' : ''}`}>
+                                  <div className="dashboard__question-header">
+                                    <span className="dashboard__question-number">{index + 1}</span>
+                                    <span className={`dashboard__question-badge dashboard__question-badge--${q.difficulty}`}>
+                                      {q.difficulty}
+                                    </span>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleRemoveQuestion(index)}
+                                        disabled={formLoading}
+                                        className="dashboard__question-remove"
+                                    >
+                                      <FiTrash2 />
+                                    </button>
+                                  </div>
+                                  <p className="dashboard__question-text">{q.question}</p>
+                                </div>
+                            ))}
+                          </div>
                       )}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={toggleCreateForm}
-                        disabled={formLoading}
-                        className="dashboard__button dashboard__button--cancel"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
+                    </div>
+
+                    <div className="dashboard__form-actions">
+                      <button
+                          type="submit"
+                          disabled={formLoading || manualFormData.questions.length === 0}
+                          className="dashboard__button dashboard__button--save"
+                      >
+                        {formLoading ? (
+                            <>
+                              <div className="dashboard__spinner"></div>
+                              Creando...
+                            </>
+                        ) : (
+                            '🚀 Crear Entrevista'
+                        )}
+                      </button>
+                      <button
+                          type="button"
+                          onClick={toggleCreateForm}
+                          disabled={formLoading}
+                          className="dashboard__button dashboard__button--cancel"
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </div>
           )}
 

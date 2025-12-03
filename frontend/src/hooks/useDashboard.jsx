@@ -19,6 +19,20 @@ export const useDashboard = () => {
         language: 'en'
     });
 
+    // Estados para formulario manual
+    const [manualFormData, setManualFormData] = useState({
+        title: '',
+        repoUrl: '',
+        difficulty: 'mid',
+        language: 'en',
+        questions: []
+    });
+
+    const [newQuestion, setNewQuestion] = useState({
+        questionText: '',
+        difficulty: 'medium'
+    });
+
     useEffect(() => {
         // Verificar autenticación
         const token = localStorage.getItem('token');
@@ -186,6 +200,91 @@ export const useDashboard = () => {
 
     const navigateToInterviews = () => navigate('/interviews');
 
+    const handleAddQuestion = () => {
+        if (!newQuestion.questionText.trim()) {
+            toast.warning('Por favor, escribe una pregunta');
+            return;
+        }
+
+        setManualFormData(prev => ({
+            ...prev,
+            questions: [...prev.questions, {
+                question: newQuestion.questionText,
+                difficulty: newQuestion.difficulty
+            }]
+        }));
+
+        setNewQuestion({
+            questionText: '',
+            difficulty: 'medium'
+        });
+    };
+
+    const handleRemoveQuestion = (index) => {
+        setManualFormData(prev => ({
+            ...prev,
+            questions: prev.questions.filter((_, i) => i !== index)
+        }));
+    };
+
+    const updateManualFormData = (field, value) => {
+        setManualFormData(prev => ({ ...prev, [field]: value }));
+    };
+
+    const updateNewQuestion = (field, value) => {
+        setNewQuestion(prev => ({ ...prev, [field]: value }));
+    };
+
+    const handleCreateManualInterview = async (e) => {
+        e.preventDefault();
+
+        if (!manualFormData.title.trim() || !manualFormData.repoUrl.trim()) {
+            toast.warning('Por favor, rellena el título y la URL del repositorio');
+            return;
+        }
+
+        if (manualFormData.questions.length === 0) {
+            toast.warning('Añade al menos una pregunta');
+            return;
+        }
+
+        setFormLoading(true);
+
+        try {
+            const response = await interviewService.createInterview({
+                title: manualFormData.title,
+                repoUrl: manualFormData.repoUrl,
+                type: 'custom',
+                difficulty: manualFormData.difficulty,
+                language: manualFormData.language,
+                questions: manualFormData.questions
+            });
+
+            toast.success('Entrevista creada correctamente!');
+            setShowCreateForm(false);
+            setManualFormData({
+                title: '',
+                repoUrl: '',
+                difficulty: 'mid',
+                language: 'en',
+                questions: []
+            });
+
+            await fetchStats();
+
+            const interviewId = response.data.interview.id || response.data.interview._id;
+            setTimeout(() => {
+                navigate(`/interview/${interviewId}`);
+            }, 500);
+        } catch (error) {
+            console.error('Error creando entrevista:', error);
+            const errorMessage = error.response?.data?.message || 'Error creando entrevista';
+            toast.error(errorMessage);
+        } finally {
+            setFormLoading(false);
+        }
+    };
+
     return {
         stats,
         trends,
@@ -194,10 +293,17 @@ export const useDashboard = () => {
         showCreateForm,
         formLoading,
         formData,
+        manualFormData,
+        newQuestion,
         downloadReport,
         handleCreateInterview,
+        handleCreateManualInterview,
+        handleAddQuestion,
+        handleRemoveQuestion,
         toggleCreateForm,
         updateFormData,
+        updateManualFormData,
+        updateNewQuestion,
         navigateToInterviews
     };
 };
