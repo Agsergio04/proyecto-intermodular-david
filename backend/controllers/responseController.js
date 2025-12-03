@@ -151,6 +151,9 @@ FORMATO DE SALIDA: JSON con:
     // Update question with response
     question.responses.push(response._id);
     await question.save();
+    
+    console.log(`✅ Response added to question. Question now has ${question.responses.length} responses`);
+    console.log(`📝 Response IDs:`, question.responses);
 
     // Update interview statistics
     const allResponses = await Response.find({ interviewId });

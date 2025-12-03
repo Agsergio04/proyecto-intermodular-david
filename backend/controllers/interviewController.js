@@ -255,11 +255,13 @@ exports.getInterview = async (req, res) => {
     if (interview.questions && interview.questions.length > 0) {
       console.log('📝 First question:', JSON.stringify(interview.questions[0], null, 2));
       console.log('📝 First question text:', interview.questions[0]?.questionText);
+      console.log('📝 First question responses count:', interview.questions[0]?.responses?.length || 0);
       console.log('📝 All questions:', interview.questions.map((q, i) => ({
         index: i,
         id: q._id,
         text: q.questionText,
-        difficulty: q.difficulty
+        difficulty: q.difficulty,
+        responsesCount: q.responses?.length || 0
       })));
     } else {
       console.log('⚠️ No questions found in interview!');
