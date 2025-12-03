@@ -40,6 +40,10 @@ exports.submitResponse = async (req, res) => {
     // Generate AI feedback and scoring with Gemini
     if (responseText && genAI) {
       try {
+        console.log('🤖 Iniciando evaluación con IA...');
+        console.log('📝 Pregunta:', question.questionText.substring(0, 100));
+        console.log('💬 Respuesta:', responseText.substring(0, 100));
+        
         // Obtener el contexto del repositorio si existe
         const repoContext = interview.repoContext;
         let contextInfo = '';
@@ -51,6 +55,9 @@ ${repoContext.readmeContent.slice(0, 3000)}
 
 Este contexto debe ser usado para evaluar si la respuesta del candidato demuestra comprensión real del proyecto, sus tecnologías y funcionalidades específicas.
 `;
+          console.log('📚 Usando contexto del repositorio:', repoContext.owner, '/', repoContext.repo);
+        } else {
+          console.log('⚠️  Sin contexto del repositorio');
         }
 
         const languageMap = {
@@ -62,43 +69,78 @@ Este contexto debe ser usado para evaluar si la respuesta del candidato demuestr
 
         const evaluationLanguage = languageMap[interview.language] || 'English';
 
-        const prompt = `Eres un entrevistador técnico experto evaluando a un candidato. Tu objetivo es evaluar la respuesta de manera justa, precisa y HUMANA.
+        const prompt = `Eres un entrevistador técnico amable y comprensivo evaluando a un candidato para un puesto de desarrollador. Tu enfoque es FORMATIVO y ALENTADOR, valorando el esfuerzo y el conocimiento demostrado.
 
 ${contextInfo}
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 PREGUNTA TÉCNICA:
 "${question.questionText}"
 
 RESPUESTA DEL CANDIDATO:
 "${responseText}"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-INSTRUCCIONES PARA LA EVALUACIÓN:
-1. Evalúa la profundidad técnica de la respuesta
-2. Si hay contexto del repositorio, verifica si el candidato demuestra conocimiento específico del proyecto
-3. Considera la claridad y estructura de la respuesta
-4. Valora ejemplos prácticos y experiencia real
-5. Sé justo pero exigente - una respuesta superficial debe tener nota baja
-6. Una respuesta completa, técnica y bien explicada debe tener nota alta (80-100)
-7. La puntuación debe reflejar:
-   - 90-100: Respuesta excelente, completa, con ejemplos y conocimiento profundo
-   - 70-89: Respuesta buena, correcta pero puede mejorar en profundidad
-   - 50-69: Respuesta aceptable pero con carencias importantes
-   - 30-49: Respuesta incompleta o con errores conceptuales
-   - 0-29: Respuesta muy deficiente o incorrecta
+FILOSOFÍA DE EVALUACIÓN:
+Eres COMPRENSIVO y GENEROSO. Valoras el esfuerzo, la iniciativa y cualquier conocimiento demostrado. Los errores menores NO deben penalizar severamente. Enfócate en lo POSITIVO que el candidato muestra.
 
-IMPORTANTE: El feedback debe ser en ${evaluationLanguage} y tener un tono profesional pero cercano, como un mentor que quiere ayudar al candidato a mejorar.
+CRITERIOS DE EVALUACIÓN (con enfoque positivo):
+
+1. **CONOCIMIENTO DEL PROYECTO** (25 puntos):
+   ${repoContext ? `
+   - Si menciona CUALQUIER aspecto relacionado con ${repoContext.owner}/${repoContext.repo}, otorga puntos generosamente
+   - Valora positivamente incluso referencias generales al tipo de tecnología
+   - No penalices si la conexión con el proyecto es parcial
+   ` : '- Valora cualquier conocimiento técnico relevante'}
+
+2. **COMPRENSIÓN TÉCNICA** (25 puntos):
+   - ¿Demuestra entendimiento básico del concepto? → Da puntos
+   - ¿Intenta explicar aunque sea de forma simple? → Da puntos
+   - ¿Menciona términos técnicos relevantes? → Da puntos
+   - Errores menores NO deben restar mucho
+
+3. **ESFUERZO Y CLARIDAD** (25 puntos):
+   - ¿Se nota que pensó la respuesta? → Da puntos
+   - ¿Intenta estructurar su explicación? → Da puntos
+   - ¿Proporciona algún ejemplo aunque sea básico? → Da puntos
+
+4. **ACTITUD Y APLICABILIDAD** (25 puntos):
+   - ¿La respuesta es sincera y muestra interés? → Da puntos
+   - ¿Intenta aplicar conocimiento práctico? → Da puntos
+   - Valora el intento aunque no sea perfecto
+
+ESCALA DE PUNTUACIÓN (GENEROSA):
+- **85-100**: Excelente. Respuesta bien pensada que demuestra conocimiento y esfuerzo. Puede tener pequeños errores pero el concepto general es sólido.
+- **70-84**: Muy buena. Respuesta correcta con entendimiento claro del tema. Algunos detalles podrían mejorarse pero está bien.
+- **55-69**: Buena. Respuesta válida que muestra comprensión básica. Aunque simple, demuestra que entiende el concepto.
+- **40-54**: Aceptable. Respuesta incompleta pero muestra algo de conocimiento. Hay esfuerzo visible.
+- **25-39**: Necesita mejorar. Respuesta muy básica o con varios errores, pero hay algún intento de responder.
+- **0-24**: Insuficiente. Respuesta muy alejada del tema o sin contenido relevante.
+
+REGLAS IMPORTANTES:
+- SÉ GENEROSO con la puntuación - errores menores no deben bajar mucho la nota
+- Si el candidato demuestra CUALQUIER conocimiento relevante, la nota debe ser al menos 55-60
+- Una respuesta con esfuerzo visible debe estar en 65-75 mínimo
+- Solo da notas bajas (<50) si realmente no hay contenido relevante
+- El feedback debe ser ALENTADOR y CONSTRUCTIVO
+- EXPLICA CLARAMENTE por qué diste esa puntuación específica
+- Menciona primero lo bueno, luego sugerencias de mejora
 
 FORMATO DE SALIDA: JSON con:
-- score (número 0-100): Puntuación objetiva
-- strengths (array de strings): Fortalezas específicas de la respuesta
-- improvements (array de strings): Áreas concretas de mejora
-- keywords (array de strings): Conceptos técnicos clave mencionados
-- feedback (string): Retroalimentación detallada y constructiva en ${evaluationLanguage}`;
+- score (número 0-100): Puntuación GENEROSA basada en lo positivo de la respuesta
+- strengths (array de 2-4 strings): Fortalezas específicas - SÉ GENEROSO, encuentra lo bueno
+- improvements (array de 2-3 strings): Sugerencias constructivas y amables para mejorar
+- keywords (array de strings): Conceptos técnicos mencionados (da crédito por intentarlo)
+- feedback (string): Retroalimentación DETALLADA (200-300 palabras) en ${evaluationLanguage} que:
+  * Empiece destacando lo positivo
+  * EXPLIQUE CLARAMENTE por qué obtuviste esta puntuación (ej: "Te he dado 75 puntos porque...")
+  * Detalle los criterios evaluados y cómo los cumplió
+  * Termine con sugerencias constructivas para mejorar`;
 
-        console.log('🤖 Evaluando respuesta con Gemini usando contexto del repositorio...');
+        console.log('🤖 Llamando a Gemini API...');
 
         const result = await genAI.models.generateContent({
-            model: 'gemini-pro',
+            model: 'gemini-2.5-flash',
             contents: prompt,
             config: {
                 responseMimeType: 'application/json',
@@ -125,9 +167,12 @@ FORMATO DE SALIDA: JSON con:
             }
         });
 
+        console.log('📥 Respuesta recibida de Gemini');
         const analysis = JSON.parse(result.text.trim());
 
         console.log('✅ Evaluación completada. Score:', analysis.score);
+        console.log('💪 Fortalezas:', analysis.strengths?.length || 0);
+        console.log('📈 Mejoras:', analysis.improvements?.length || 0);
 
         response.score = Math.min(100, Math.max(0, analysis.score || 0));
         response.feedback = analysis.feedback || '';
@@ -137,11 +182,18 @@ FORMATO DE SALIDA: JSON con:
           keywords: analysis.keywords || []
         };
       } catch (error) {
-        console.error('Error getting feedback:', error);
+        console.error('❌ Error en evaluación con IA:', error.message);
+        console.error('📋 Detalles del error:', error);
         response.score = 50;
-        response.feedback = 'Unable to generate feedback at this time';
+        response.feedback = 'No se pudo generar feedback en este momento. Puntuación asignada por defecto.';
       }
     } else {
+      if (!responseText) {
+        console.log('⚠️  Sin texto de respuesta, asignando score por defecto');
+      }
+      if (!genAI) {
+        console.log('⚠️  Gemini AI no disponible, asignando score por defecto');
+      }
       response.score = 50;
     }
 
