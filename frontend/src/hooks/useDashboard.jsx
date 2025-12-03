@@ -20,8 +20,15 @@ export const useDashboard = () => {
     });
 
     useEffect(() => {
+        // Verificar autenticación
+        const token = localStorage.getItem('token');
+        if (!token) {
+            toast.error('Debes iniciar sesión para acceder al dashboard');
+            navigate('/login');
+            return;
+        }
         fetchStats();
-    }, []);
+    }, [navigate]);
 
     const fetchStats = async () => {
         try {
@@ -74,6 +81,7 @@ export const useDashboard = () => {
 
         try {
             let questions = [];
+            let repoContext = null; // ✅ Declarar al inicio del scope
 
             if (formData.type === 'ai_generated') {
                 toast.info('Generando preguntas con IA...');
@@ -91,6 +99,9 @@ export const useDashboard = () => {
                     const questionsResponse = await interviewService.generateQuestions(requestBody);
 
                     questions = questionsResponse.data?.questions || [];
+                    repoContext = questionsResponse.data?.repoContext || null; // ✅ Obtener contexto
+
+                    console.log('📦 Contexto del repositorio recibido:', repoContext ? 'Sí' : 'No');
 
                     if (!questions || questions.length === 0) {
                         toast.error('No se pudieron generar preguntas. Inténtalo de nuevo.');
@@ -121,7 +132,8 @@ export const useDashboard = () => {
                 type: formData.type,
                 difficulty: formData.difficulty,
                 language: formData.language,
-                questions: questions
+                questions: questions,
+                repoContext: repoContext // ✅ Incluir el contexto del repositorio
             });
 
             toast.success('Entrevista creada correctamente!');
@@ -144,6 +156,16 @@ export const useDashboard = () => {
 
         } catch (error) {
             console.error('❌ Error creando entrevista:', error);
+
+            // Verificar si el error es por falta de autenticación
+            if (error.response?.status === 401 || error.response?.data?.message === 'No token provided') {
+                toast.error('Tu sesión ha expirado. Por favor, inicia sesión nuevamente');
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                navigate('/login');
+                return;
+            }
+
             const errorMessage = error.message || error.response?.data?.message || 'Error creando entrevista';
             toast.error(errorMessage);
         } finally {

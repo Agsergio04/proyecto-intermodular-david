@@ -1,14 +1,11 @@
 const Response = require('../models/Response');
 const Question = require('../models/Question');
 const Interview = require('../models/Interview');
-const { GoogleGenAI, Type } = require("@google/genai");
+const { GoogleGenAI } = require("@google/genai");
 
-const API_KEY = process.env.GEMINI_API_KEY;
-let ai = null;
+const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-if (API_KEY) {
-    ai = new GoogleGenAI({ apiKey: API_KEY });
-} else {
+if (!process.env.GEMINI_API_KEY) {
     console.warn("⚠️  GEMINI_API_KEY not set. AI features will be disabled.");
 }
 
@@ -41,48 +38,98 @@ exports.submitResponse = async (req, res) => {
     });
 
     // Generate AI feedback and scoring with Gemini
-    if (responseText && ai) {
+    if (responseText && genAI) {
       try {
-        const aiResponse = await ai.models.generateContent({
-          model: 'gemini-2.5-flash',
-          contents: `As an expert interviewer, evaluate this interview response and provide feedback.
+        // Obtener el contexto del repositorio si existe
+        const repoContext = interview.repoContext;
+        let contextInfo = '';
 
-Question: "${question.questionText}"
-Response: "${responseText}"
+        if (repoContext && repoContext.readmeContent) {
+          contextInfo = `
+CONTEXTO DEL REPOSITORIO (${repoContext.owner}/${repoContext.repo}):
+${repoContext.readmeContent.slice(0, 3000)}
 
-Provide evaluation in JSON format with:
-- score (0-100): Overall score for the response
-- strengths (array of strings): Key strengths of the response
-- improvements (array of strings): Areas for improvement
-- keywords (array of strings): Important keywords mentioned
-- feedback (string): Detailed feedback about the response`,
-          config: {
-            responseMimeType: 'application/json',
-            responseSchema: {
-              type: Type.OBJECT,
-              properties: {
-                score: { type: Type.NUMBER },
-                strengths: {
-                  type: Type.ARRAY,
-                  items: { type: Type.STRING }
-                },
-                improvements: {
-                  type: Type.ARRAY,
-                  items: { type: Type.STRING }
-                },
-                keywords: {
-                  type: Type.ARRAY,
-                  items: { type: Type.STRING }
-                },
-                feedback: { type: Type.STRING }
-              },
-              required: ['score', 'strengths', 'improvements', 'keywords', 'feedback']
+Este contexto debe ser usado para evaluar si la respuesta del candidato demuestra comprensión real del proyecto, sus tecnologías y funcionalidades específicas.
+`;
+        }
+
+        const languageMap = {
+          'en': 'English',
+          'es': 'Español',
+          'fr': 'Français',
+          'de': 'Deutsch'
+        };
+
+        const evaluationLanguage = languageMap[interview.language] || 'English';
+
+        const prompt = `Eres un entrevistador técnico experto evaluando a un candidato. Tu objetivo es evaluar la respuesta de manera justa, precisa y HUMANA.
+
+${contextInfo}
+
+PREGUNTA TÉCNICA:
+"${question.questionText}"
+
+RESPUESTA DEL CANDIDATO:
+"${responseText}"
+
+INSTRUCCIONES PARA LA EVALUACIÓN:
+1. Evalúa la profundidad técnica de la respuesta
+2. Si hay contexto del repositorio, verifica si el candidato demuestra conocimiento específico del proyecto
+3. Considera la claridad y estructura de la respuesta
+4. Valora ejemplos prácticos y experiencia real
+5. Sé justo pero exigente - una respuesta superficial debe tener nota baja
+6. Una respuesta completa, técnica y bien explicada debe tener nota alta (80-100)
+7. La puntuación debe reflejar:
+   - 90-100: Respuesta excelente, completa, con ejemplos y conocimiento profundo
+   - 70-89: Respuesta buena, correcta pero puede mejorar en profundidad
+   - 50-69: Respuesta aceptable pero con carencias importantes
+   - 30-49: Respuesta incompleta o con errores conceptuales
+   - 0-29: Respuesta muy deficiente o incorrecta
+
+IMPORTANTE: El feedback debe ser en ${evaluationLanguage} y tener un tono profesional pero cercano, como un mentor que quiere ayudar al candidato a mejorar.
+
+FORMATO DE SALIDA: JSON con:
+- score (número 0-100): Puntuación objetiva
+- strengths (array de strings): Fortalezas específicas de la respuesta
+- improvements (array de strings): Áreas concretas de mejora
+- keywords (array de strings): Conceptos técnicos clave mencionados
+- feedback (string): Retroalimentación detallada y constructiva en ${evaluationLanguage}`;
+
+        console.log('🤖 Evaluando respuesta con Gemini usando contexto del repositorio...');
+
+        const result = await genAI.models.generateContent({
+            model: 'gemini-pro',
+            contents: prompt,
+            config: {
+                responseMimeType: 'application/json',
+                responseSchema: {
+                    type: 'OBJECT',
+                    properties: {
+                        score: { type: 'NUMBER' },
+                        strengths: {
+                            type: 'ARRAY',
+                            items: { type: 'STRING' }
+                        },
+                        improvements: {
+                            type: 'ARRAY',
+                            items: { type: 'STRING' }
+                        },
+                        keywords: {
+                            type: 'ARRAY',
+                            items: { type: 'STRING' }
+                        },
+                        feedback: { type: 'STRING' }
+                    },
+                    required: ['score', 'strengths', 'improvements', 'keywords', 'feedback']
+                }
             }
-          }
         });
 
-        const analysis = JSON.parse(aiResponse.text);
-        response.score = analysis.score || 0;
+        const analysis = JSON.parse(result.text.trim());
+
+        console.log('✅ Evaluación completada. Score:', analysis.score);
+
+        response.score = Math.min(100, Math.max(0, analysis.score || 0));
         response.feedback = analysis.feedback || '';
         response.analysis = {
           strengths: analysis.strengths || [],

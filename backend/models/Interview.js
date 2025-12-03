@@ -68,6 +68,10 @@ const interviewSchema = new mongoose.Schema({
     type: String,
     default: null
   },
+  repoContext: {
+    type: mongoose.Schema.Types.Mixed,
+    default: null
+  },
   statistics: {
     totalQuestions: Number,
     answeredQuestions: Number,

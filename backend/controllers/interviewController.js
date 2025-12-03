@@ -4,19 +4,15 @@ const Response = require('../models/Response');
 const User = require('../models/User');
 const { GoogleGenAI } = require("@google/genai");
 
-const API_KEY = process.env.GEMINI_API_KEY;
-let ai = null;
+const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-if (API_KEY) {
-    ai = new GoogleGenAI({ apiKey: API_KEY });
-} else {
-    console.warn("⚠️  GEMINI_API_KEY not set. AI features will be disabled.");
+if (!process.env.GEMINI_API_KEY) {
+  console.warn("⚠️ GEMINI_API_KEY not set. AI features will be disabled.");
 }
 
 // ✅ Normalizar dificultad de Gemini a nuestro formato
 const normalizeDifficulty = (difficulty) => {
   const normalized = difficulty.toLowerCase().trim();
-  
   if (normalized === 'easy' || normalized === 'junior' || normalized === 'fácil' || normalized === 'facil') {
     return 'easy';
   }
@@ -26,14 +22,13 @@ const normalizeDifficulty = (difficulty) => {
   if (normalized === 'hard' || normalized === 'senior' || normalized === 'difícil' || normalized === 'dificil') {
     return 'hard';
   }
-  
   return 'medium';
 };
 
 // Generate AI questions based on repository
 exports.generateAIQuestions = async (req, res) => {
   try {
-    if (!ai) {
+    if (!genAI || !process.env.GEMINI_API_KEY) {
       return res.status(503).json({
         message: 'AI service not available. GEMINI_API_KEY not configured.'
       });
@@ -55,9 +50,19 @@ exports.generateAIQuestions = async (req, res) => {
     const languageText = lang === 'es' ? 'español' : lang === 'fr' ? 'francés' : lang === 'de' ? 'alemán' : 'inglés';
 
     try {
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: `Generate exactly ${questionCount} technical interview questions for a repository at ${repoUrl} for a ${difficultyLevel} level position in ${languageText} language. The questions should cover a range of topics relevant to the code and technologies found in the repository.`,
+      const prompt = `Generate exactly ${questionCount} technical interview questions for a repository at ${repoUrl} for a ${difficultyLevel} level position in ${languageText} language. The questions should cover a range of topics relevant to the code and technologies found in the repository.
+
+Return a JSON object with this format:
+
+{
+  "questions": [
+    {"question": "text", "difficulty": "easy|medium|hard"}
+  ]
+}`;
+
+      const result = await genAI.models.generateContent({
+        model: 'gemini-2.5-flash',  // ✅ CAMBIO: modelo correcto
+        contents: prompt,
         config: {
           responseMimeType: 'application/json',
           responseSchema: {
@@ -80,18 +85,20 @@ exports.generateAIQuestions = async (req, res) => {
         }
       });
 
-      const jsonText = response.text.trim();
-      const result = JSON.parse(jsonText);
-      const questions = result.questions || [];
+      const jsonText = result.text.trim();
+      const resultData = JSON.parse(jsonText);
+      const questions = resultData.questions || [];
 
       res.status(200).json({
         message: 'Questions generated successfully',
         questions
       });
+
     } catch (error) {
       console.error('Gemini API error:', error);
       res.status(500).json({ message: 'Error generating questions with AI', error: error.message });
     }
+
   } catch (error) {
     console.error('Generate questions error:', error);
     res.status(500).json({ message: 'Error generating questions', error: error.message });
@@ -101,11 +108,12 @@ exports.generateAIQuestions = async (req, res) => {
 // Create new interview
 exports.createInterview = async (req, res) => {
   try {
-    const { title, repoUrl, type, difficulty, language, questions } = req.body;
+    const { title, repoUrl, type, difficulty, language, questions, repoContext } = req.body;
 
-    console.log('📝 Creating interview with:', { title, repoUrl, difficulty, language, questions });
+    console.log('📝 Creating interview with:', { title, repoUrl, difficulty, language, questions, hasRepoContext: !!repoContext });
 
     const user = await User.findById(req.userId);
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -117,11 +125,12 @@ exports.createInterview = async (req, res) => {
       type,
       difficulty: difficulty || 'mid',
       language: language || user.language || 'en',
-      repositoryUrl: repoUrl || null
+      repositoryUrl: repoUrl || null,
+      repoContext: repoContext || null // ✅ Guardar el contexto del repositorio
     });
 
     await interview.save();
-    console.log('✅ Interview saved:', interview._id);
+    console.log('✅ Interview saved with repo context:', interview._id);
 
     let createdQuestions = [];
 
@@ -133,21 +142,21 @@ exports.createInterview = async (req, res) => {
         try {
           const questionText = questions[i].question || questions[i].questionText;
           const normalizedDifficulty = normalizeDifficulty(questions[i].difficulty || 'medium');
-          
+
           console.log(`Creating question ${i + 1}:`, questionText, `| Difficulty: ${questions[i].difficulty} -> ${normalizedDifficulty}`);
-          
+
           const question = new Question({
             interviewId: interview._id,
             questionText: questionText,
             order: i + 1,
             difficulty: normalizedDifficulty // USA LA DIFICULTAD NORMALIZADA
           });
-          
+
           await question.save();
           console.log(`✅ Question ${i + 1} saved:`, question._id);
-          
           createdQuestions.push(question);
           interview.questions.push(question._id);
+
         } catch (questionError) {
           console.error(`❌ Error creating question ${i + 1}:`, questionError.message);
           throw questionError;
@@ -161,13 +170,13 @@ exports.createInterview = async (req, res) => {
         averageResponseTime: 0,
         confidence: 0
       };
-      
+
       console.log(`✅ All ${createdQuestions.length} questions created`);
     }
 
     await interview.save();
     console.log('✅ Interview with questions saved');
-    
+
     user.interviews.push(interview._id);
     await user.save();
     console.log('✅ User updated');
@@ -191,10 +200,11 @@ exports.createInterview = async (req, res) => {
         questions: interview.questions // Ahora incluye los objetos completos de las preguntas
       }
     });
+
   } catch (error) {
     console.error('❌ Create interview error:', error.message);
-    res.status(500).json({ 
-      message: 'Error creating interview', 
+    res.status(500).json({
+      message: 'Error creating interview',
       error: error.message
     });
   }
@@ -204,13 +214,14 @@ exports.createInterview = async (req, res) => {
 exports.getInterviews = async (req, res) => {
   try {
     const interviews = await Interview.find({ userId: req.userId })
-      .populate('questions')
-      .sort({ createdAt: -1 });
+        .populate('questions')
+        .sort({ createdAt: -1 });
 
     res.status(200).json({
       count: interviews.length,
       interviews
     });
+
   } catch (error) {
     console.error('Get interviews error:', error);
     res.status(500).json({ message: 'Error fetching interviews', error: error.message });
@@ -223,12 +234,12 @@ exports.getInterview = async (req, res) => {
     const { interviewId } = req.params;
 
     const interview = await Interview.findById(interviewId)
-      .populate({
-        path: 'questions',
-        populate: {
-          path: 'responses'
-        }
-      });
+        .populate({
+          path: 'questions',
+          populate: {
+            path: 'responses'
+          }
+        });
 
     if (!interview) {
       return res.status(404).json({ message: 'Interview not found' });
@@ -240,6 +251,7 @@ exports.getInterview = async (req, res) => {
 
     console.log('✅ Interview retrieved:', interview._id);
     console.log('📊 Questions count:', interview.questions?.length || 0);
+
     if (interview.questions && interview.questions.length > 0) {
       console.log('📝 First question:', JSON.stringify(interview.questions[0], null, 2));
       console.log('📝 First question text:', interview.questions[0]?.questionText);
@@ -254,6 +266,7 @@ exports.getInterview = async (req, res) => {
     }
 
     res.status(200).json({ interview });
+
   } catch (error) {
     console.error('Get interview error:', error);
     res.status(500).json({ message: 'Error fetching interview', error: error.message });
@@ -267,6 +280,7 @@ exports.updateInterviewStatus = async (req, res) => {
     const { status } = req.body;
 
     const interview = await Interview.findById(interviewId);
+
     if (!interview) {
       return res.status(404).json({ message: 'Interview not found' });
     }
@@ -276,17 +290,19 @@ exports.updateInterviewStatus = async (req, res) => {
     }
 
     interview.status = status;
+
     if (status === 'completed') {
       interview.completedAt = Date.now();
     }
-    interview.updatedAt = Date.now();
 
+    interview.updatedAt = Date.now();
     await interview.save();
 
     res.status(200).json({
       message: 'Interview updated successfully',
       interview
     });
+
   } catch (error) {
     console.error('Update interview error:', error);
     res.status(500).json({ message: 'Error updating interview', error: error.message });
@@ -299,6 +315,7 @@ exports.deleteInterview = async (req, res) => {
     const { interviewId } = req.params;
 
     const interview = await Interview.findById(interviewId);
+
     if (!interview) {
       return res.status(404).json({ message: 'Interview not found' });
     }
@@ -318,6 +335,7 @@ exports.deleteInterview = async (req, res) => {
     });
 
     res.status(200).json({ message: 'Interview deleted successfully' });
+
   } catch (error) {
     console.error('Delete interview error:', error);
     res.status(500).json({ message: 'Error deleting interview', error: error.message });
@@ -331,6 +349,7 @@ exports.updateInterviewRepository = async (req, res) => {
     const { repositoryUrl } = req.body;
 
     const interview = await Interview.findById(interviewId);
+
     if (!interview) {
       return res.status(404).json({ message: 'Interview not found' });
     }
@@ -352,6 +371,7 @@ exports.updateInterviewRepository = async (req, res) => {
         repositoryUrl: interview.repositoryUrl
       }
     });
+
   } catch (error) {
     console.error('Update repository URL error:', error);
     res.status(500).json({ message: 'Error updating repository URL', error: error.message });

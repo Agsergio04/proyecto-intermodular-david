@@ -56,7 +56,8 @@ router.post('/generate-questions', authMiddleware, async (req, res) => {
     res.status(200).json({
       message: 'Preguntas generadas con IA desde repositorio',
       questions,
-      repo: result.repo
+      repo: result.repo,
+      repoContext: result.repoContext // ✅ Incluir contexto del repositorio
     });
   } catch (err) {
     console.error('❌ Error en generate-questions:', err.message);

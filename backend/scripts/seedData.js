@@ -69,8 +69,9 @@ const seedDatabase = async () => {
         title: 'Frontend Developer Interview',
         profession: 'Frontend Developer',
         type: 'ai_generated',
-        difficulty: 'medium',
+        difficulty: 'mid',
         language: 'en',
+        repoUrl: 'https://github.com/example/frontend-project',
         repositoryUrl: 'https://github.com/example/frontend-project',
         status: 'in_progress'
       },
@@ -79,8 +80,9 @@ const seedDatabase = async () => {
         title: 'React Developer Position',
         profession: 'React Developer',
         type: 'custom',
-        difficulty: 'hard',
+        difficulty: 'senior',
         language: 'en',
+        repoUrl: 'https://github.com/example/react-portfolio',
         repositoryUrl: 'https://github.com/example/react-portfolio',
         status: 'completed',
         completedAt: new Date()
@@ -90,19 +92,21 @@ const seedDatabase = async () => {
         title: 'Entrevista Backend Node.js',
         profession: 'Backend Developer',
         type: 'ai_generated',
-        difficulty: 'medium',
+        difficulty: 'mid',
         language: 'es',
+        repoUrl: 'https://github.com/ejemplo/api-nodejs',
         repositoryUrl: 'https://github.com/ejemplo/api-nodejs',
-        status: 'pending'
+        status: 'in_progress'
       },
       {
         userId: createdUsers[1]._id,
         title: 'Desarrollador Full Stack',
         profession: 'Full Stack Developer',
         type: 'custom',
-        difficulty: 'hard',
+        difficulty: 'senior',
         language: 'es',
-        repositoryUrl: null, // Sin repositorio
+        repoUrl: 'https://github.com/ejemplo/fullstack-app',
+        repositoryUrl: 'https://github.com/ejemplo/fullstack-app',
         status: 'in_progress'
       }
     ];

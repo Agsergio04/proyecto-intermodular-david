@@ -1,15 +1,34 @@
 // File: backend/controllers/GitinestController.js
+// ✅ VERSIÓN CORREGIDA - Usa gemini-2.5-flash (Modelo Actual)
+
 const fetch = global.fetch || require('node-fetch');
 const { GoogleGenAI } = require("@google/genai");
 
+// ✅ VALIDACIÓN EXPLÍCITA DE API KEY
 const API_KEY = process.env.GEMINI_API_KEY;
-let ai = null;
 
-if (API_KEY) {
-    ai = new GoogleGenAI({ apiKey: API_KEY });
+console.log('🔍 GitinestController initialization...');
+if (!API_KEY || API_KEY.trim() === '') {
+    console.error('❌ CRITICAL: GEMINI_API_KEY is not configured!');
+    console.error('   📝 Please add GEMINI_API_KEY to your .env file');
 } else {
-    console.warn("⚠️  GEMINI_API_KEY not set in GitinestController. AI features will be disabled.");
+    console.log('✅ GEMINI_API_KEY found (length:', API_KEY.length, ')');
 }
+
+// Solo crear genAI si existe clave válida
+let genAI = null;
+try {
+    if (API_KEY && API_KEY.trim() !== '') {
+        genAI = new GoogleGenAI({ apiKey: API_KEY });
+        console.log('✅ GoogleGenAI initialized successfully');
+    }
+} catch (err) {
+    console.error('❌ Error initializing GoogleGenAI:', err.message);
+}
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
 
 function parseGitHubUrl(repoUrl) {
     // acepta urls como https://github.com/owner/repo or git@github.com:owner/repo.git
@@ -31,7 +50,7 @@ async function fetchReadme(owner, repo) {
                 if (res.ok) {
                     const text = await res.text();
                     if (text && text.trim().length > 0) {
-                        console.log(`✅ README encontrado: ${branch}/${readmeFile}`);
+                        console.log(`✅ README found: ${branch}/${readmeFile}`);
                         return text;
                     }
                 }
@@ -41,11 +60,10 @@ async function fetchReadme(owner, repo) {
         }
     }
 
-    console.log(`⚠️ No se encontró README para ${owner}/${repo}`);
+    console.log(`⚠️ No README found for ${owner}/${repo}`);
     return null;
 }
 
-// Nueva función para obtener información del repositorio desde GitHub API
 async function fetchRepoInfo(owner, repo) {
     try {
         const apiUrl = `https://api.github.com/repos/${owner}/${repo}`;
@@ -58,7 +76,7 @@ async function fetchRepoInfo(owner, repo) {
 
         if (res.ok) {
             const data = await res.json();
-            console.log(`✅ Información del repositorio obtenida: ${data.name}`);
+            console.log(`✅ Repository info obtained: ${data.name}`);
             return {
                 name: data.name,
                 description: data.description || '',
@@ -70,170 +88,222 @@ async function fetchRepoInfo(owner, repo) {
             };
         }
     } catch (e) {
-        console.error('❌ Error obteniendo info del repo:', e.message);
+        console.error('❌ Error fetching repo info:', e.message);
     }
+
     return null;
 }
 
-// Función principal para generar texto y preguntas desde repo usando IA
+// ============================================
+// MAIN FUNCTION: Generate Questions with AI
+// ============================================
+
 async function generateTextAndQuestions(repoUrl, questionCount = 5, difficulty = 'mid', language = 'en') {
-    const parsed = parseGitHubUrl(repoUrl);
-    if (!parsed) throw new Error('Invalid GitHub repo URL');
+    try {
+        // ✅ Validate input
+        if (!repoUrl || typeof repoUrl !== 'string') {
+            throw new Error('repoUrl must be a non-empty string');
+        }
 
-    const readme = await fetchReadme(parsed.owner, parsed.repo);
-    let baseText = '';
-    let repoInfo = null;
+        console.log(`\n🚀 Starting question generation for: ${repoUrl}`);
+        console.log(`   Params: count=${questionCount}, difficulty=${difficulty}, language=${language}`);
 
-    if (readme && readme.trim().length > 0) {
-        baseText = readme.slice(0, 8000);
-        console.log(`📚 README obtenido para ${parsed.owner}/${parsed.repo}, longitud: ${baseText.length} caracteres`);
-    } else {
-        // Si no hay README, obtener información del repositorio
-        repoInfo = await fetchRepoInfo(parsed.owner, parsed.repo);
+        // ✅ Parse GitHub URL
+        const parsed = parseGitHubUrl(repoUrl);
+        if (!parsed) {
+            throw new Error(`Invalid GitHub URL format: ${repoUrl}`);
+        }
+        console.log(`📦 Repository: ${parsed.owner}/${parsed.repo}`);
 
-        if (repoInfo) {
-            baseText = `Repository: ${repoInfo.name}
+        // ✅ Fetch README or repo info
+        let baseText = '';
+        let repoInfo = null;
+
+        const readme = await fetchReadme(parsed.owner, parsed.repo);
+
+        if (readme && readme.trim().length > 0) {
+            baseText = readme.slice(0, 8000);
+            console.log(`📚 README obtained, length: ${baseText.length} chars`);
+        } else {
+            repoInfo = await fetchRepoInfo(parsed.owner, parsed.repo);
+            if (repoInfo) {
+                baseText = `Repository: ${repoInfo.name}
 Description: ${repoInfo.description || 'No description available'}
 Primary Language: ${repoInfo.language}
 Topics: ${repoInfo.topics.join(', ') || 'None'}
 Stars: ${repoInfo.stargazers_count}
 Forks: ${repoInfo.forks_count}
 Homepage: ${repoInfo.homepage || 'None'}
-
 This is a ${repoInfo.language} project${repoInfo.topics.length > 0 ? ` focused on ${repoInfo.topics.join(', ')}` : ''}.`;
-
-            console.log(`📚 Usando información de GitHub API para ${parsed.owner}/${parsed.repo}`);
-        } else {
-            console.log(`❌ No se pudo obtener información del repositorio ${parsed.owner}/${parsed.repo}`);
-            throw new Error(`Could not fetch information for repository ${parsed.owner}/${parsed.repo}. The repository may be private or does not exist.`);
+                console.log(`📚 Using GitHub API info, length: ${baseText.length} chars`);
+            } else {
+                throw new Error(`Could not fetch information for repository ${parsed.owner}/${parsed.repo}. The repository may be private or does not exist.`);
+            }
         }
-    }
 
-    // Si no hay IA configurada, lanzar error
-    if (!ai) {
-        console.warn('⚠️  Gemini no configurado');
-        throw new Error('AI service not available. Please configure GEMINI_API_KEY.');
-    }
+        // ✅ Check Gemini configuration
+        if (!genAI || !API_KEY) {
+            console.error('❌ GEMINI_API_KEY not available');
+            throw new Error(
+                'AI service not available. GEMINI_API_KEY is not configured. ' +
+                'Please add GEMINI_API_KEY to your .env file.'
+            );
+        }
 
-    // ✅ USAR GEMINI PARA GENERAR PREGUNTAS TÉCNICAS REALES
-    try {
-        console.log(`🤖 Generando ${questionCount} preguntas con Gemini para ${parsed.owner}/${parsed.repo}...`);
+        console.log(`\n🤖 Generating ${questionCount} questions with Gemini...`);
 
-        const languageText = language === 'es' ? 'español' : language === 'fr' ? 'francés' : language === 'de' ? 'alemán' : 'inglés';
-        const difficultyText = difficulty === 'junior' ? 'junior (fácil)' : difficulty === 'senior' ? 'senior (difícil)' : 'mid-level (medio a difícil)';
+        // ✅ Prepare language text
+        const languageText = language === 'es' ? 'español'
+            : language === 'fr' ? 'francés'
+                : language === 'de' ? 'alemán'
+                    : 'inglés';
 
-        const prompt = `Eres un entrevistador técnico experto. Analiza la siguiente información sobre un repositorio de GitHub y genera exactamente ${questionCount} preguntas técnicas de entrevista en ${languageText}.
+        const difficultyText = difficulty === 'junior' ? 'junior (easy)'
+            : difficulty === 'senior' ? 'senior (hard)'
+                : 'mid-level (medium)';
 
-INFORMACIÓN DEL REPOSITORIO: ${parsed.owner}/${parsed.repo}
+        // ✅ Build prompt
+        const prompt = `You are a senior technical interviewer with extensive experience. You have reviewed a GitHub repository and need to ask intelligent, technical questions that make sense.
+
+REPOSITORY ANALYZED: ${parsed.owner}/${parsed.repo}
+
+README/INFORMATION CONTENT:
 
 ${baseText}
 
-INSTRUCCIONES:
-1. Genera preguntas técnicas ESPECÍFICAS basadas en las tecnologías, frameworks y conceptos mencionados
-2. Las preguntas deben evaluar conocimientos prácticos y teóricos
-3. Nivel de dificultad objetivo: ${difficultyText}
-4. Varía la dificultad de las preguntas (algunas easy, medium, hard)
-5. Las preguntas deben ser respondibles por alguien familiarizado con el proyecto
-6. Incluye preguntas sobre:
-   - Arquitectura y diseño
-   - Tecnologías y frameworks específicos mencionados
-   - Mejores prácticas relacionadas
-   - Problemas y soluciones comunes
-   - Optimización y escalabilidad
+YOUR TASK:
 
-EJEMPLOS DE BUENAS PREGUNTAS TÉCNICAS:
-- "¿Qué es React y cómo funciona el Virtual DOM?"
-- "Explica la arquitectura de microservicios y sus ventajas"
-- "¿Cómo implementarías autenticación JWT en una API REST?"
-- "¿Cuáles son las ventajas de usar TypeScript sobre JavaScript?"
-- "¿Cómo optimizarías el rendimiento de una aplicación web?"
+Generate exactly ${questionCount} technical questions in ${languageText} that demonstrate whether the candidate really understands:
 
-NO generes preguntas vagas como:
-- "Explica el proyecto"
-- "¿Para qué sirve esto?"
-- "Describe el repositorio"
+1. The main functionality of the project
+2. The technologies and frameworks it uses
+3. Architecture and design decisions
+4. Problems it solves and how it solves them
+5. Specific technical aspects mentioned in the README
 
-Sé ESPECÍFICO, TÉCNICO y RELEVANTE al contenido proporcionado.
+DIFFICULTY LEVEL: ${difficultyText}
 
-IDIOMA DE LAS PREGUNTAS: ${languageText}
-FORMATO DE SALIDA: JSON con array de objetos {question: string, difficulty: string}`;
+QUESTION CHARACTERISTICS:
 
-        console.log('📤 Llamando a Gemini API...');
+✅ Specific to the project (mention technologies, functionalities or concepts from README)
+✅ With human sense (like a real interviewer would ask)
+✅ Evaluate deep understanding, not just memorization
+✅ Mix of: conceptual, practical, design and implementation questions
+✅ Vary difficulty: some easy, medium, hard
 
-        // Usar gemini-1.5-flash que tiene mejor cuota gratuita
-        const model = ai.getGenerativeModel({ model: 'gemini-1.5-flash' });
+OUTPUT FORMAT: JSON with array of objects {question: string, difficulty: string}`;
 
-        const result = await model.generateContent({
-            contents: [{ role: 'user', parts: [{ text: prompt }] }],
-            generationConfig: {
-                responseMimeType: 'application/json',
-                responseSchema: {
-                    type: 'object',
-                    properties: {
-                        questions: {
-                            type: 'array',
-                            items: {
-                                type: 'object',
-                                properties: {
-                                    question: { type: 'string' },
-                                    difficulty: { type: 'string' }
-                                },
-                                required: ['question', 'difficulty']
+        console.log('📤 Calling Gemini API using gemini-2.5-flash...');
+
+        // ✅ Call Gemini API with CORRECT MODEL
+        let result;
+        try {
+            result = await genAI.models.generateContent({
+                model: 'gemini-2.5-flash',  // ✅ CAMBIO: Usar modelo actual
+                contents: prompt,
+                config: {
+                    responseMimeType: 'application/json',
+                    responseSchema: {
+                        type: 'OBJECT',
+                        properties: {
+                            questions: {
+                                type: 'ARRAY',
+                                items: {
+                                    type: 'OBJECT',
+                                    properties: {
+                                        question: { type: 'STRING' },
+                                        difficulty: { type: 'STRING' }
+                                    },
+                                    required: ['question', 'difficulty']
+                                }
                             }
-                        }
-                    },
-                    required: ['questions']
+                        },
+                        required: ['questions']
+                    }
                 }
-            }
-        });
+            });
+        } catch (geminiError) {
+            console.error('❌ Gemini API call failed:', geminiError.message);
+            console.error('❌ Error status:', geminiError.status);
+            throw new Error(`Gemini API error: ${geminiError.message}`);
+        }
 
-        const response = await result.response;
-        const text = response.text();
-        console.log('📥 Respuesta de Gemini recibida, longitud:', text.length);
+        // ✅ Validate response
+        if (!result || !result.text) {
+            throw new Error('Gemini returned empty response');
+        }
 
-        const parsedResult = JSON.parse(text);
+        // ✅ Parse JSON
+        const jsonText = result.text.trim();
+        console.log('📥 Gemini response received, parsing...');
+
+        let parsedResult;
+        try {
+            parsedResult = JSON.parse(jsonText);
+        } catch (parseErr) {
+            console.error('❌ JSON parse error. Raw response (first 300 chars):', jsonText.substring(0, 300));
+            throw new Error(`Failed to parse Gemini response as JSON: ${parseErr.message}`);
+        }
+
+        // ✅ Extract and validate questions
         const questions = parsedResult.questions || [];
 
-        console.log(`✅ Gemini generó ${questions.length} preguntas exitosamente`);
-
-        if (questions.length > 0) {
-            console.log('📝 Primera pregunta generada:', questions[0]);
+        if (!Array.isArray(questions)) {
+            throw new Error('Questions field is not an array');
         }
 
         if (questions.length === 0) {
-            throw new Error('Gemini no generó preguntas');
+            throw new Error('Gemini did not generate any questions');
         }
 
+        console.log(`✅ Generated ${questions.length} questions successfully`);
+        if (questions.length > 0) {
+            console.log('📝 First question:', questions[0].question?.substring(0, 80) + '...');
+        }
+
+        // ✅ Return result
         return {
             repo: `${parsed.owner}/${parsed.repo}`,
+            repoUrl: repoUrl,
             generatedText: baseText,
+            repoContext: {
+                owner: parsed.owner,
+                repo: parsed.repo,
+                readmeContent: baseText,
+                repoInfo: repoInfo,
+                url: repoUrl
+            },
             questions: questions.slice(0, questionCount)
         };
 
-    } catch (aiError) {
-        console.error('❌ Error al generar preguntas con Gemini:', aiError.message);
-        console.error('❌ Error completo:', aiError);
-
-        // No usar fallback, lanzar error para que el usuario sepa que algo falló
-        throw new Error(`Failed to generate questions with AI: ${aiError.message}`);
+    } catch (error) {
+        console.error('❌ generateTextAndQuestions error:', error.message);
+        throw error;
     }
 }
 
-// Exportar funciones
+// ============================================
+// EXPORTS
+// ============================================
+
 exports.parseGitHubUrl = parseGitHubUrl;
 exports.fetchReadme = fetchReadme;
 exports.generateTextAndQuestions = generateTextAndQuestions;
 
-// Endpoint Express para API
+// Express endpoint
 exports.generateTextFromRepo = async (req, res) => {
     const { repoUrl, questionCount = 5, difficulty = 'mid', language = 'en' } = req.body || {};
-    if (!repoUrl) return res.status(400).json({ error: 'repoUrl is required' });
+
+    if (!repoUrl) {
+        return res.status(400).json({ error: 'repoUrl is required' });
+    }
+
     try {
-        console.log(`📝 Endpoint generateTextFromRepo llamado con: repoUrl=${repoUrl}, questionCount=${questionCount}, difficulty=${difficulty}, language=${language}`);
+        console.log(`📝 generateTextFromRepo endpoint called with: repoUrl=${repoUrl}, questionCount=${questionCount}`);
         const result = await generateTextAndQuestions(repoUrl, questionCount, difficulty, language);
         return res.json(result);
     } catch (err) {
-        console.error('❌ Error en generateTextFromRepo:', err.message);
+        console.error('❌ Error in generateTextFromRepo:', err.message);
         return res.status(400).json({ error: err.message });
     }
 };
