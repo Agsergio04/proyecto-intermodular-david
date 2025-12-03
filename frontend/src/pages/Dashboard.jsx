@@ -55,12 +55,6 @@ const Dashboard = () => {
               >
                 <FiAward /> {t('interview.myInterviews')}
               </button>
-              <button
-                  onClick={downloadReport}
-                  className="dashboard__button dashboard__button--download"
-              >
-                <FiDownload /> {t('dashboard.downloadReport')}
-              </button>
             </div>
           </div>
 

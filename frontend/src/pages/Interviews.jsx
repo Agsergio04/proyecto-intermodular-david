@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { interviewService } from '../api';
-import { FiPlus, FiSearch, FiTrash2, FiEye } from 'react-icons/fi';
+import { FiSearch, FiTrash2, FiEye, FiDownload } from 'react-icons/fi';
 import { useThemeStore } from '../store';
 import '../assets/styles/Interviews.css';
 
@@ -14,15 +14,6 @@ const Interviews = () => {
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [showCreateForm, setShowCreateForm] = useState(false);
-  const [formLoading, setFormLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    title: '',
-    repoUrl: '',
-    type: 'ai_generated',
-    difficulty: 'mid',
-    language: 'en'
-  });
 
   const fetchInterviews = useCallback(async () => {
     try {
@@ -40,70 +31,14 @@ const Interviews = () => {
     fetchInterviews();
   }, [fetchInterviews]);
 
-  const handleCreateInterview = async (e) => {
-    e.preventDefault();
-    
-    if (!formData.title.trim() || !formData.repoUrl.trim()) {
-      toast.warning('Por favor, rellena el título y la URL del repositorio');
-      return;
-    }
-    
-    setFormLoading(true);
-    
+  const handleDownloadReport = async (interviewId) => {
     try {
-      let questions = [];
-      
-      if (formData.type === 'ai_generated') {
-        toast.info('Generating questions with AI...');
-        
-        // ✅ LLAMAR AL BACKEND con repoUrl
-        const questionsResponse = await interviewService.generateQuestions({
-          repoUrl: formData.repoUrl,
-          difficulty: formData.difficulty,
-          language: formData.language,
-          count: 5
-        });
-        
-        questions = questionsResponse.data.questions;
-        
-        if (!questions || questions.length === 0) {
-          toast.error('Failed to generate questions. Please try again.');
-          setFormLoading(false);
-          return;
-        }
-        
-        toast.success(`${questions.length} questions generated!`);
-      }
-
-      const response = await interviewService.createInterview({
-        title: formData.title,
-        repoUrl: formData.repoUrl,
-        type: formData.type,
-        difficulty: formData.difficulty,
-        language: formData.language,
-        questions
-      });
-
-      toast.success('Interview created successfully!');
-      setInterviews([response.data.interview, ...interviews]);
-      setShowCreateForm(false);
-      setFormData({
-        title: '',
-        repoUrl: '',
-        type: 'ai_generated',
-        difficulty: 'mid',
-        language: 'en'
-      });
-
-      setTimeout(() => {
-        navigate(`/interview/${response.data.interview.id || response.data.interview._id}`);
-      }, 500);
+      toast.info('Preparando reporte para descargar...');
+      // Aquí iría la lógica para descargar el reporte
+      // Por ahora solo mostramos un mensaje
+      toast.success('Funcionalidad de descarga disponible próximamente');
     } catch (error) {
-      console.error('Error creating interview:', error);
-      const errorMessage = error.response?.data?.message || 'Error creating interview';
-      toast.error(errorMessage);
-    } finally {
-      setFormLoading(false);
+      toast.error('Error al descargar el reporte');
     }
   };
 
@@ -139,97 +74,8 @@ const Interviews = () => {
             >
               ← {t('dashboard.title')}
             </button>
-            <button
-              onClick={() => setShowCreateForm(!showCreateForm)}
-              disabled={showCreateForm}
-              className="interviews__button interviews__button--new"
-            >
-              <FiPlus /> {t('interview.newInterview')}
-            </button>
           </div>
         </div>
-
-        {showCreateForm && (
-          <div className={`interviews__form ${isDark ? 'interviews__form--dark' : ''}`}>
-            <h2 className={`interviews__form-title ${isDark ? 'interviews__form-title--dark' : ''}`}>
-              {t('interview.newInterview')}
-            </h2>
-            <form onSubmit={handleCreateInterview} className="interviews__form-grid">
-              <input
-                type="text"
-                placeholder={t('interview.interviewTitle')}
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className={`interviews__form-input ${isDark ? 'interviews__form-input--dark' : ''}`}
-                required
-                disabled={formLoading}
-              />
-              <input
-                type="url"
-                placeholder="URL del repositorio (GitHub, GitLab, etc.)"
-                value={formData.repoUrl}
-                onChange={(e) => setFormData({ ...formData, repoUrl: e.target.value })}
-                className={`interviews__form-input ${isDark ? 'interviews__form-input--dark' : ''}`}
-                required
-                disabled={formLoading}
-              />
-              <select
-                value={formData.type}
-                onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                className={`interviews__form-input ${isDark ? 'interviews__form-input--dark' : ''}`}
-                disabled={formLoading}
-              >
-                <option value="ai_generated">{t('interview.aiGenerated')}</option>
-                <option value="custom">{t('interview.custom')}</option>
-              </select>
-              <select
-                value={formData.difficulty}
-                onChange={(e) => setFormData({ ...formData, difficulty: e.target.value })}
-                className={`interviews__form-input ${isDark ? 'interviews__form-input--dark' : ''}`}
-                disabled={formLoading}
-              >
-                <option value="junior">{t('interview.junior')}</option>
-                <option value="mid">{t('interview.mid')}</option>
-                <option value="senior">{t('interview.senior')}</option>
-              </select>
-              <select
-                value={formData.language}
-                onChange={(e) => setFormData({ ...formData, language: e.target.value })}
-                className={`interviews__form-input ${isDark ? 'interviews__form-input--dark' : ''}`}
-                disabled={formLoading}
-              >
-                <option value="en">English</option>
-                <option value="es">Español</option>
-                <option value="fr">Français</option>
-                <option value="de">Deutsch</option>
-              </select>
-              <div className="interviews__form-actions">
-                <button
-                  type="submit"
-                  disabled={formLoading}
-                  className="interviews__form-button interviews__form-button--submit"
-                >
-                  {formLoading ? (
-                    <>
-                      <div className="interviews__form-spinner"></div>
-                      {t('interview.creating')}
-                    </>
-                  ) : (
-                    t('interview.createInterview')
-                  )}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowCreateForm(false)}
-                  disabled={formLoading}
-                  className="interviews__form-button interviews__form-button--cancel"
-                >
-                  {t('common.cancel')}
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
 
         <div className="interviews__search">
           <div className="interviews__search-wrapper">
@@ -293,6 +139,13 @@ const Interviews = () => {
                     className="interview-card__button interview-card__button--view"
                   >
                     <FiEye /> {t('interview.view')}
+                  </button>
+                  <button
+                    onClick={() => handleDownloadReport(interview._id)}
+                    className="interview-card__button interview-card__button--download"
+                    disabled={interview.status !== 'completed'}
+                  >
+                    <FiDownload /> {t('dashboard.downloadReport')}
                   </button>
                   <button
                     onClick={() => handleDeleteInterview(interview._id)}
