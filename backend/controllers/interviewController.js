@@ -110,7 +110,7 @@ exports.createInterview = async (req, res) => {
   try {
     const { title, repoUrl, type, difficulty, language, questions, repoContext } = req.body;
 
-    console.log('📝 Creating interview with:', { title, repoUrl, difficulty, language, questions, hasRepoContext: !!repoContext });
+    console.log('📝 Creating interview with:', { title, repoUrl, type, difficulty, language, questions, hasRepoContext: !!repoContext });
 
     const user = await User.findById(req.userId);
 
@@ -118,19 +118,26 @@ exports.createInterview = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const interview = new Interview({
+    // Para entrevistas custom (manuales), no se requiere difficulty
+    const interviewData = {
       userId: req.userId,
       title,
       repoUrl,
       type,
-      difficulty: difficulty || 'mid',
       language: language || user.language || 'en',
       repositoryUrl: repoUrl || null,
-      repoContext: repoContext || null // ✅ Guardar el contexto del repositorio
-    });
+      repoContext: repoContext || null
+    };
+
+    // Solo agregar difficulty si es una entrevista de IA o si se proporciona
+    if (type === 'ai_generated' || difficulty) {
+      interviewData.difficulty = difficulty || 'mid';
+    }
+
+    const interview = new Interview(interviewData);
 
     await interview.save();
-    console.log('✅ Interview saved with repo context:', interview._id);
+    console.log('✅ Interview saved:', interview._id);
 
     let createdQuestions = [];
 
@@ -141,15 +148,19 @@ exports.createInterview = async (req, res) => {
       for (let i = 0; i < questions.length; i++) {
         try {
           const questionText = questions[i].question || questions[i].questionText;
-          const normalizedDifficulty = normalizeDifficulty(questions[i].difficulty || 'medium');
+          
+          // Para entrevistas manuales, usar 'manual', para IA normalizar la dificultad
+          const questionDifficulty = type === 'custom' 
+            ? 'manual'
+            : normalizeDifficulty(questions[i].difficulty || 'medium');
 
-          console.log(`Creating question ${i + 1}:`, questionText, `| Difficulty: ${questions[i].difficulty} -> ${normalizedDifficulty}`);
+          console.log(`Creating question ${i + 1}:`, questionText, `| Difficulty: ${questionDifficulty}`);
 
           const question = new Question({
             interviewId: interview._id,
             questionText: questionText,
             order: i + 1,
-            difficulty: normalizedDifficulty // USA LA DIFICULTAD NORMALIZADA
+            difficulty: questionDifficulty
           });
 
           await question.save();

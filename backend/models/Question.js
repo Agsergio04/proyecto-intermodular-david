@@ -20,8 +20,8 @@ const questionSchema = new mongoose.Schema({
   },
   difficulty: {
     type: String,
-    enum: ['easy', 'medium', 'hard'],
-    default: 'medium'
+    enum: ['easy', 'medium', 'hard', 'manual'],
+    default: 'manual'
   },
   responses: [{
     type: mongoose.Schema.Types.ObjectId,

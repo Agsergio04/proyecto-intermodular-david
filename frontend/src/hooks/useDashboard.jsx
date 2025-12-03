@@ -23,14 +23,12 @@ export const useDashboard = () => {
     const [manualFormData, setManualFormData] = useState({
         title: '',
         repoUrl: '',
-        difficulty: 'mid',
         language: 'en',
         questions: []
     });
 
     const [newQuestion, setNewQuestion] = useState({
-        questionText: '',
-        difficulty: 'medium'
+        questionText: ''
     });
 
     useEffect(() => {
@@ -214,14 +212,12 @@ export const useDashboard = () => {
         setManualFormData(prev => ({
             ...prev,
             questions: [...prev.questions, {
-                question: newQuestion.questionText,
-                difficulty: newQuestion.difficulty
+                question: newQuestion.questionText
             }]
         }));
 
         setNewQuestion({
-            questionText: '',
-            difficulty: 'medium'
+            questionText: ''
         });
     };
 
@@ -260,7 +256,6 @@ export const useDashboard = () => {
                 title: manualFormData.title,
                 repoUrl: manualFormData.repoUrl,
                 type: 'custom',
-                difficulty: manualFormData.difficulty,
                 language: manualFormData.language,
                 questions: manualFormData.questions
             });
@@ -270,7 +265,6 @@ export const useDashboard = () => {
             setManualFormData({
                 title: '',
                 repoUrl: '',
-                difficulty: 'mid',
                 language: 'en',
                 questions: []
             });

@@ -126,7 +126,11 @@ const Interviews = () => {
                   </div>
                   <div className={`interview-card__info-item ${isDark ? 'interview-card__info-item--dark' : ''}`}>
                     <span className="interview-card__info-label">{t('interview.difficulty')}:</span>
-                    <span>{interview.difficulty}</span>
+                    <span>
+                      {interview.difficulty === 'junior' ? 'Fácil' : 
+                       interview.difficulty === 'mid' ? 'Intermedio' : 
+                       interview.difficulty === 'senior' ? 'Difícil' : 'Manual'}
+                    </span>
                   </div>
                   <div className={`interview-card__info-item ${isDark ? 'interview-card__info-item--dark' : ''}`}>
                     <span className="interview-card__info-label">{t('interview.score')}:</span>

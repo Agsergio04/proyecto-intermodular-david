@@ -103,9 +103,9 @@ const Dashboard = () => {
                         className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
                         disabled={formLoading}
                     >
-                      <option value="junior">Junior (5 preguntas)</option>
-                      <option value="mid">Mid (10 preguntas)</option>
-                      <option value="senior">Senior (20 preguntas)</option>
+                      <option value="junior">Fácil (5 preguntas)</option>
+                      <option value="mid">Intermedio (10 preguntas)</option>
+                      <option value="senior">Difícil (20 preguntas)</option>
                     </select>
                     <select
                         value={formData.language}
@@ -173,16 +173,6 @@ const Dashboard = () => {
                         disabled={formLoading}
                     />
                     <select
-                        value={manualFormData.difficulty}
-                        onChange={(e) => updateManualFormData('difficulty', e.target.value)}
-                        className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
-                        disabled={formLoading}
-                    >
-                      <option value="junior">Junior</option>
-                      <option value="mid">Mid</option>
-                      <option value="senior">Senior</option>
-                    </select>
-                    <select
                         value={manualFormData.language}
                         onChange={(e) => updateManualFormData('language', e.target.value)}
                         className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
@@ -199,25 +189,6 @@ const Dashboard = () => {
                       <h3 className={`dashboard__questions-title ${isDark ? 'dashboard__questions-title--dark' : ''}`}>
                         📝 Preguntas ({manualFormData.questions.length})
                       </h3>
-                      
-                      {/* Indicador de recomendación según dificultad */}
-                      <div className={`dashboard__questions-recommendation ${isDark ? 'dashboard__questions-recommendation--dark' : ''}`}>
-                        <span>💡 Recomendado: </span>
-                        {manualFormData.difficulty === 'junior' && <strong>5 preguntas</strong>}
-                        {manualFormData.difficulty === 'mid' && <strong>10 preguntas</strong>}
-                        {manualFormData.difficulty === 'senior' && <strong>20 preguntas</strong>}
-                        <span className={`dashboard__questions-count ${
-                          (manualFormData.difficulty === 'junior' && manualFormData.questions.length >= 5) ||
-                          (manualFormData.difficulty === 'mid' && manualFormData.questions.length >= 10) ||
-                          (manualFormData.difficulty === 'senior' && manualFormData.questions.length >= 20)
-                            ? 'dashboard__questions-count--complete'
-                            : ''
-                        }`}>
-                          {manualFormData.difficulty === 'junior' && ` (${manualFormData.questions.length}/5)`}
-                          {manualFormData.difficulty === 'mid' && ` (${manualFormData.questions.length}/10)`}
-                          {manualFormData.difficulty === 'senior' && ` (${manualFormData.questions.length}/20)`}
-                        </span>
-                      </div>
 
                       <div className="dashboard__add-question">
                         <textarea
@@ -229,16 +200,6 @@ const Dashboard = () => {
                             disabled={formLoading}
                         />
                         <div className="dashboard__add-question-footer">
-                          <select
-                              value={newQuestion.difficulty}
-                              onChange={(e) => updateNewQuestion('difficulty', e.target.value)}
-                              className={`dashboard__question-difficulty ${isDark ? 'dashboard__question-difficulty--dark' : ''}`}
-                              disabled={formLoading}
-                          >
-                            <option value="easy">Fácil</option>
-                            <option value="medium">Media</option>
-                            <option value="hard">Difícil</option>
-                          </select>
                           <button
                               type="button"
                               onClick={handleAddQuestion}
@@ -256,9 +217,6 @@ const Dashboard = () => {
                                 <div key={index} className={`dashboard__question-item ${isDark ? 'dashboard__question-item--dark' : ''}`}>
                                   <div className="dashboard__question-header">
                                     <span className="dashboard__question-number">{index + 1}</span>
-                                    <span className={`dashboard__question-badge dashboard__question-badge--${q.difficulty}`}>
-                                      {q.difficulty}
-                                    </span>
                                     <button
                                         type="button"
                                         onClick={() => handleRemoveQuestion(index)}
