@@ -351,11 +351,37 @@
   font-size: 1.125rem;
   font-weight: 600;
   color: var(--text-dark);
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
 }
 
 .dashboard__questions-title--dark {
   color: var(--text-light);
+}
+
+.dashboard__questions-recommendation {
+  background-color: rgba(59, 130, 246, 0.1);
+  border-left: 4px solid var(--blue-primary);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
+  font-size: 0.875rem;
+  color: var(--text-dark);
+}
+
+.dashboard__questions-recommendation--dark {
+  background-color: rgba(227, 178, 60, 0.15);
+  border-left-color: var(--xanthous);
+  color: var(--text-light);
+}
+
+.dashboard__questions-count {
+  margin-left: var(--spacing-sm);
+  color: var(--text-muted);
+}
+
+.dashboard__questions-count--complete {
+  color: var(--color-success);
+  font-weight: 600;
 }
 
 .dashboard__add-question {

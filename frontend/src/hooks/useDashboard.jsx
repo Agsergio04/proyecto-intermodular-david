@@ -95,25 +95,30 @@ export const useDashboard = () => {
 
         try {
             let questions = [];
-            let repoContext = null; // ✅ Declarar al inicio del scope
+            let repoContext = null;
+
+            // Determinar el número de preguntas según la dificultad
+            const questionCount = formData.difficulty === 'junior' ? 5 : 
+                                 formData.difficulty === 'mid' ? 10 : 20;
 
             if (formData.type === 'ai_generated') {
-                toast.info('Generando preguntas con IA...');
+                toast.info(`Generando ${questionCount} preguntas con IA...`);
 
                 try {
                     const requestBody = {
                         repoUrl: formData.repoUrl.trim(),
                         difficulty: formData.difficulty,
                         language: formData.language,
-                        count: 5
+                        count: questionCount
                     };
                     console.log('📤 Body enviado a generateQuestions:', requestBody);
                     console.log('📤 repoUrl específicamente:', requestBody.repoUrl);
+                    console.log('📤 Número de preguntas:', questionCount);
 
                     const questionsResponse = await interviewService.generateQuestions(requestBody);
 
                     questions = questionsResponse.data?.questions || [];
-                    repoContext = questionsResponse.data?.repoContext || null; // ✅ Obtener contexto
+                    repoContext = questionsResponse.data?.repoContext || null;
 
                     console.log('📦 Contexto del repositorio recibido:', repoContext ? 'Sí' : 'No');
 
