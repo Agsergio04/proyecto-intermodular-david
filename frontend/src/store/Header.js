@@ -5,6 +5,7 @@ import { useAuthStore, useThemeStore, useLanguageStore } from './index';
 import { FiLogOut, FiMoon, FiSun, FiGlobe, FiMenu, FiX, FiUser } from 'react-icons/fi';
 import { useState } from 'react';
 
+
 const Header = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
@@ -16,6 +17,7 @@ const Header = () => {
   const { language, setLanguage } = useLanguageStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+
   const handleLogout = () => {
     logout();
     localStorage.removeItem('token');
@@ -23,14 +25,17 @@ const Header = () => {
     navigate('/login');
   };
 
+
   const handleLanguageChange = (lang) => {
     setLanguage(lang);
     i18n.changeLanguage(lang);
   };
 
+
   const handleThemeToggle = () => {
     toggleTheme();
   };
+
 
   return (
     <header className="bg-white dark:bg-gray-800 shadow-lg">
@@ -49,6 +54,7 @@ const Header = () => {
             </span>
           </div>
 
+
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-4">
             {/* Language Selector */}
@@ -63,6 +69,7 @@ const Header = () => {
               <option value="de">DE</option>
             </select>
 
+
             {/* Theme Toggle */}
             <button
               onClick={handleThemeToggle}
@@ -74,6 +81,7 @@ const Header = () => {
                 <FiMoon className="text-gray-700 text-xl" />
               )}
             </button>
+
 
             {/* User Info */}
             {user && (
@@ -87,6 +95,8 @@ const Header = () => {
             )}
 
 
+
+
             {/* Logout */}
             <button
               onClick={handleLogout}
@@ -96,6 +106,7 @@ const Header = () => {
             </button>
           </div>
 
+
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -104,6 +115,7 @@ const Header = () => {
             {mobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
           </button>
         </div>
+
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
@@ -119,6 +131,7 @@ const Header = () => {
               <option value="de">Deutsch</option>
             </select>
 
+
             <button
               onClick={handleThemeToggle}
               className="flex items-center gap-2 text-gray-700 dark:text-gray-300"
@@ -126,6 +139,7 @@ const Header = () => {
               {isDark ? <FiSun /> : <FiMoon />}
               {isDark ? 'Light Mode' : 'Dark Mode'}
             </button>
+
 
             <button
               onClick={handleLogout}
@@ -139,5 +153,6 @@ const Header = () => {
     </header>
   );
 };
+
 
 export default Header;

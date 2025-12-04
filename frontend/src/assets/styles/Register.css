@@ -1,106 +1,103 @@
-/* Register Component - BEM Nomenclature con Variables CSS */
+/* ========================================
+   REGISTER COMPONENT - DISEÑO PROFESIONAL
+   ======================================== */
 
-:root {
-  /* Paleta de colores personalizada */
-  --black-olive: #423e37;
-  --xanthous: #e3b23c;
-  --eggshell: #edebd7;
-  --taupe-gray: #a39594;
-  --dim-gray: #6e675f;
-
-  /* Azul para modo claro */
-  --blue-primary: #3b82f6;
-  --blue-primary-hover: #2563eb;
-
-  /* Colores principales - Modo claro usa azul, modo oscuro usa amarillo */
-  --color-primary-light: var(--blue-primary);
-  --color-primary-light-hover: var(--blue-primary-hover);
-  --color-primary-dark: var(--xanthous);
-  --color-primary-dark-hover: #d4a02e;
-  --color-secondary: var(--dim-gray);
-  --color-secondary-hover: #5d5651;
-  --color-success: #10b981;
-  --color-success-hover: #059669;
-  --color-danger: #ef4444;
-  --color-danger-hover: #dc2626;
-  --color-warning: var(--xanthous);
-  --color-warning-hover: #d4a02e;
-  --color-purple: var(--dim-gray);
-  --color-purple-hover: #5d5651;
-
-  /* Colores de fondo */
-  --bg-light: var(--eggshell);
-  --bg-dark: var(--black-olive);
-  --bg-card-light: #ffffff;
-  --bg-card-dark: var(--dim-gray);
-  --bg-input-dark: #5d5651;
-
-  /* Colores de texto - Mayor contraste */
-  --text-dark: #2d2a25;
-  --text-light: #ffffff;
-  --text-muted: #8a7f7e;
-  --text-muted-dark: #e8e3e2;
-
-  /* Colores de borde - Más visibles */
-  --border-light: #8a7f7e;
-  --border-dark: #5d5651;
-
-  /* Degradados */
-  --gradient-blue: var(--xanthous);
-  --gradient-green: #10b981;
-  --gradient-purple: var(--dim-gray);
-  --gradient-orange: var(--xanthous);
-
-  /* Sombras */
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-
-  /* Espaciado */
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-
-  /* Bordes redondeados */
-  --radius-md: 0.5rem;
-}
 
 .register {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--bg-light) 0%, var(--eggshell) 100%);
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4facfe 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--spacing-lg);
+  position: relative;
+  overflow: hidden;
 }
 
-.register--dark {
-  background: linear-gradient(135deg, var(--bg-dark) 0%, var(--black-olive) 100%);
+
+/* Círculos decorativos animados */
+.register::before,
+.register::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  animation: float 20s infinite;
 }
+
+
+.register::before {
+  width: 500px;
+  height: 500px;
+  top: -250px;
+  left: -250px;
+  animation-delay: 0s;
+}
+
+
+.register::after {
+  width: 600px;
+  height: 600px;
+  bottom: -300px;
+  right: -300px;
+  animation-delay: 10s;
+}
+
+
+html.dark .register {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #0f172a 100%);
+}
+
+
+/* ========================================
+   CONTAINER - GLASSMORPHISM
+   ======================================== */
+
 
 .register__container {
-  background-color: var(--bg-card-light);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  padding: var(--spacing-xl);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  padding: var(--spacing-2xl);
   width: 100%;
   max-width: 28rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  z-index: 1;
+  animation: slideInUp 0.4s ease-out;
 }
 
-.register__container--dark {
-  background-color: var(--bg-card-dark);
+
+html.dark .register__container {
+  background: rgba(30, 41, 59, 0.9);
+  border-color: rgba(148, 163, 184, 0.1);
 }
+
+
+/* ========================================
+   TITLE
+   ======================================== */
+
 
 .register__title {
-  font-size: 1.875rem;
-  font-weight: bold;
+  font-size: 2rem;
+  font-weight: 800;
   text-align: center;
-  margin-bottom: var(--spacing-xl);
-  color: var(--text-dark);
+  margin-bottom: var(--spacing-2xl);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
 }
 
-.register__title--dark {
-  color: var(--text-light);
-}
+
+/* ========================================
+   FORM
+   ======================================== */
+
 
 .register__form {
   display: flex;
@@ -108,139 +105,214 @@
   gap: var(--spacing-lg);
 }
 
+
 .register__field {
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-sm);
 }
+
 
 .register__label {
-  display: block;
   font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text-dark);
-  margin-bottom: var(--spacing-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-left: var(--spacing-xs);
 }
 
-.register__label--dark {
-  color: var(--text-muted-dark);
-}
 
 .register__input-wrapper {
+  position: relative;
   display: flex;
   align-items: center;
   border: 2px solid var(--border-light);
   border-radius: var(--radius-md);
-  padding: var(--spacing-sm) var(--spacing-md);
-  background-color: #fafafa;
+  padding: 0.875rem 1.125rem;
+  background: var(--bg-primary);
+  transition: all var(--transition-base);
 }
 
-.register__input-wrapper--dark {
-  border-color: var(--border-dark);
-  background-color: var(--bg-input-dark);
+
+.register__input-wrapper:focus-within {
+  border-color: var(--primary);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  transform: translateY(-2px);
 }
+
+
+.register__input-wrapper:hover {
+  border-color: var(--border-medium);
+}
+
 
 .register__icon {
-  color: var(--text-muted);
+  color: var(--text-tertiary);
   margin-right: var(--spacing-sm);
+  transition: color var(--transition-base);
+  font-size: 1.125rem;
 }
+
+
+.register__input-wrapper:focus-within .register__icon {
+  color: var(--primary);
+}
+
 
 .register__input {
   width: 100%;
-  background-color: transparent;
+  background: transparent;
+  border: none;
   outline: none;
-  color: var(--text-dark);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
-.register__input--dark {
-  color: var(--text-light);
-}
 
 .register__input::placeholder {
-  color: var(--text-muted);
+  color: var(--text-tertiary);
 }
+
 
 .register__select {
   width: 100%;
+  padding: 0.875rem 1.125rem;
   border: 2px solid var(--border-light);
   border-radius: var(--radius-md);
-  padding: var(--spacing-sm) var(--spacing-md);
-  background-color: #fafafa;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  outline: none;
 }
 
-.register__select--dark {
-  border-color: var(--border-dark);
-  background-color: var(--bg-input-dark);
-  color: var(--text-light);
+
+.register__select:focus {
+  border-color: var(--primary);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  transform: translateY(-2px);
 }
+
+
+.register__select:hover {
+  border-color: var(--border-medium);
+}
+
+
+/* ========================================
+   SUBMIT BUTTON
+   ======================================== */
+
 
 .register__submit {
   width: 100%;
-  background: var(--color-primary-light);
-  color: var(--text-light);
-  font-weight: bold;
-  padding: var(--spacing-sm);
-  border-radius: var(--radius-md);
-  transition: all 0.2s;
+  padding: 0.875rem;
   border: none;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  font-weight: 700;
+  font-size: 0.875rem;
   cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  position: relative;
+  overflow: hidden;
 }
 
-.register--dark .register__submit {
-  background: var(--color-primary-dark);
-  color: var(--text-dark);
+
+.register__submit::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
 }
+
+
+.register__submit:hover:not(:disabled)::before {
+  left: 100%;
+}
+
 
 .register__submit:hover:not(:disabled) {
-  background: var(--color-primary-light-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
 }
 
-.register--dark .register__submit:hover:not(:disabled) {
-  background: var(--color-primary-dark-hover);
+
+.register__submit:active:not(:disabled) {
+  transform: translateY(0);
 }
+
 
 .register__submit:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
-.register__divider {
-  text-align: center;
-  color: var(--text-muted);
-  margin: var(--spacing-lg) 0;
-  font-size: 0.875rem;
-}
 
-.register__divider--dark {
-  color: var(--text-muted-dark);
-}
+/* ========================================
+   LINK
+   ======================================== */
+
 
 .register__link {
   text-align: center;
   font-size: 0.875rem;
-  color: var(--text-muted);
+  color: var(--text-secondary);
+  margin-top: var(--spacing-md);
 }
 
-.register__link--dark {
-  color: var(--text-muted-dark);
-}
 
 .register__link-text {
-  color: var(--color-primary);
-  font-weight: 600;
+  color: var(--primary);
+  font-weight: 700;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: all var(--transition-base);
+  margin-left: var(--spacing-xs);
 }
+
 
 .register__link-text:hover {
-  color: var(--color-primary-hover);
+  color: var(--primary-hover);
+  text-decoration: underline;
 }
 
-.register__link-text--dark {
-  color: var(--color-primary);
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+  }
 }
 
-.register__link-text--dark:hover {
-  color: var(--color-primary-hover);
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+
+@media (max-width: 480px) {
+  .register__container {
+    padding: var(--spacing-xl);
+  }
+ 
+  .register__title {
+    font-size: 1.75rem;
+  }
 }

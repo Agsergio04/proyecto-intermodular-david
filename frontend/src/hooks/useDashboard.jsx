@@ -14,15 +14,24 @@ export const useDashboard = () => {
     const [formLoading, setFormLoading] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
-        repository: '',
+        repoUrl: '',
         type: 'ai_generated',
         difficulty: 'mid',
         language: 'en'
     });
 
+
     useEffect(() => {
+        // Verificar autenticación
+        const token = localStorage.getItem('token');
+        if (!token) {
+            toast.error('Debes iniciar sesión para acceder al dashboard');
+            navigate('/login');
+            return;
+        }
         fetchStats();
-    }, []);
+    }, [navigate]);
+
 
     const fetchStats = async () => {
         try {
@@ -30,8 +39,10 @@ export const useDashboard = () => {
             const response = await statsService.getUserStats();
             setStats(response.data.stats);
 
+
             const trendsResponse = await statsService.getPerformanceTrends();
             setTrends(trendsResponse.data.trends);
+
 
             const user = JSON.parse(localStorage.getItem('user'));
             setIsPremium(user?.subscriptionStatus === 'premium');
@@ -50,6 +61,7 @@ export const useDashboard = () => {
         }
     };
 
+
     const downloadReport = async () => {
         if (!isPremium) {
             toast.warning('dashboard.needPremium');
@@ -58,98 +70,151 @@ export const useDashboard = () => {
         toast.info('Download feature coming soon');
     };
 
+
     const handleCreateInterview = async (e) => {
         e.preventDefault();
 
-        if (!formData.title.trim() || !formData.repository.trim()) {
-            toast.warning('Please fill in all required fields');
+
+        console.log('🔍 FormData completo:', formData);
+        console.log('🔍 repoUrl value:', formData.repoUrl);
+        console.log('🔍 repoUrl length:', formData.repoUrl?.length);
+        console.log('🔍 repoUrl trimmed:', formData.repoUrl?.trim());
+
+
+        if (!formData.title.trim() || !formData.repoUrl.trim()) {
+            toast.warning('Por favor, rellena el título y la URL del repositorio');
             return;
         }
 
+
         setFormLoading(true);
+
 
         try {
             let questions = [];
+            let repoContext = null; // ✅ Declarar al inicio del scope
+
 
             if (formData.type === 'ai_generated') {
-                toast.info('Generating questions with AI...');
+                toast.info('Generando preguntas con IA...');
+
 
                 try {
-                    const questionsResponse = await interviewService.generateQuestions({
-                        repository: formData.repository,
+                    const requestBody = {
+                        repoUrl: formData.repoUrl.trim(),
                         difficulty: formData.difficulty,
                         language: formData.language,
                         count: 5
-                    });
+                    };
+                    console.log('📤 Body enviado a generateQuestions:', requestBody);
+                    console.log('📤 repoUrl específicamente:', requestBody.repoUrl);
+
+
+                    const questionsResponse = await interviewService.generateQuestions(requestBody);
+
 
                     questions = questionsResponse.data?.questions || [];
+                    repoContext = questionsResponse.data?.repoContext || null; // ✅ Obtener contexto
+
+
+                    console.log('📦 Contexto del repositorio recibido:', repoContext ? 'Sí' : 'No');
+
 
                     if (!questions || questions.length === 0) {
-                        toast.error('Failed to generate questions. Please try again.');
+                        toast.error('No se pudieron generar preguntas. Inténtalo de nuevo.');
                         setFormLoading(false);
                         return;
                     }
 
-                    toast.success(`${questions.length} questions generated!`);
+
+                    toast.success(`${questions.length} preguntas generadas!`);
                 } catch (genError) {
-                    console.error('❌ Error generating questions:', genError);
-                    toast.error('Error generating questions: ' + genError.message);
+                    console.error('❌ Error generando preguntas:', genError);
+                    toast.error('Error generando preguntas: ' + genError.message);
                     setFormLoading(false);
                     return;
                 }
             } else {
                 questions = [
-                    { question: "Question 1", difficulty: formData.difficulty },
-                    { question: "Question 2", difficulty: formData.difficulty },
-                    { question: "Question 3", difficulty: formData.difficulty },
-                    { question: "Question 4", difficulty: formData.difficulty },
-                    { question: "Question 5", difficulty: formData.difficulty }
+                    { question: "Pregunta 1", difficulty: formData.difficulty },
+                    { question: "Pregunta 2", difficulty: formData.difficulty },
+                    { question: "Pregunta 3", difficulty: formData.difficulty },
+                    { question: "Pregunta 4", difficulty: formData.difficulty },
+                    { question: "Pregunta 5", difficulty: formData.difficulty }
                 ];
             }
 
+
             const createResponse = await interviewService.createInterview({
                 title: formData.title,
-                repository: formData.repository,
+                repoUrl: formData.repoUrl,
                 type: formData.type,
                 difficulty: formData.difficulty,
                 language: formData.language,
-                questions: questions
+                questions: questions,
+                repoContext: repoContext // ✅ Incluir el contexto del repositorio
             });
 
-            toast.success('Interview created successfully!');
+
+            toast.success('Entrevista creada correctamente!');
             setShowCreateForm(false);
             setFormData({
                 title: '',
-                repository: '',
+                repoUrl: '',
                 type: 'ai_generated',
                 difficulty: 'mid',
                 language: 'en'
             });
 
+
             await fetchStats();
 
+
             const interviewId = createResponse.data.interview.id || createResponse.data.interview._id;
+
 
             setTimeout(() => {
                 navigate(`/interview/${interviewId}`);
             }, 500);
 
+
         } catch (error) {
-            console.error('❌ Error creating interview:', error);
-            const errorMessage = error.message || error.response?.data?.message || 'Error creating interview';
+            console.error('❌ Error creando entrevista:', error);
+
+
+            // Verificar si el error es por falta de autenticación
+            if (error.response?.status === 401 || error.response?.data?.message === 'No token provided') {
+                toast.error('Tu sesión ha expirado. Por favor, inicia sesión nuevamente');
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                navigate('/login');
+                return;
+            }
+
+
+            const errorMessage = error.message || error.response?.data?.message || 'Error creando entrevista';
             toast.error(errorMessage);
         } finally {
             setFormLoading(false);
         }
     };
 
+
     const toggleCreateForm = () => setShowCreateForm(!showCreateForm);
 
+
     const updateFormData = (field, value) => {
-        setFormData(prev => ({ ...prev, [field]: value }));
+        console.log(`🔄 Actualizando campo: ${field} = ${value}`);
+        setFormData(prev => {
+            const newData = { ...prev, [field]: value };
+            console.log('🔄 FormData actualizado:', newData);
+            return newData;
+        });
     };
 
+
     const navigateToInterviews = () => navigate('/interviews');
+
 
     return {
         stats,

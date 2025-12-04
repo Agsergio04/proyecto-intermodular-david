@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguageStore, useThemeStore } from '../store';
 import { toast } from 'react-toastify';
 import { authService } from '../api';
-import { FiArrowLeft, FiCheckCircle } from 'react-icons/fi';
+import { FiArrowLeft, FiCheckCircle, FiLogOut } from 'react-icons/fi';
 import '../assets/styles/Settings.css';
+
 
 // Planes de suscripción
 const SubscriptionPlans = [
@@ -34,12 +35,14 @@ const SubscriptionPlans = [
   },
 ];
 
+
 const Settings = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { language, setLanguage } = useLanguageStore();
   const { isDark } = useThemeStore();
   const [loading, setLoading] = useState(false);
+
 
   // Carga inicial desde localStorage solo si no hay usuario
   const [user, setUser] = useState(() => {
@@ -48,17 +51,19 @@ const Settings = () => {
   });
   const [showPlans, setShowPlans] = useState(false);
 
+
   const [profileData, setProfileData] = useState({
     firstName: user?.firstName || '',
     lastName: user?.lastName || '',
-    profession: user?.profession || '',
   });
+
 
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
     confirmNewPassword: '',
   });
+
 
   // GET actual del usuario SIEMPRE desde backend al cargar Settings
   useEffect(() => {
@@ -69,8 +74,7 @@ const Settings = () => {
         localStorage.setItem('user', JSON.stringify(res.data.user));
         setProfileData({
           firstName: res.data.user?.firstName || '',
-          lastName: res.data.user?.lastName || '',
-          profession: res.data.user?.profession || ''
+          lastName: res.data.user?.lastName || ''
         });
       } catch (error) {
         toast.error('No se pudo actualizar el usuario.');
@@ -79,8 +83,10 @@ const Settings = () => {
     fetchProfile();
   }, []);
 
+
   // Suscripción
   const subscription = user?.subscriptionStatus || 'free';
+
 
   const handleProfileChange = (e) => {
     const { name, value } = e.target;
@@ -90,6 +96,7 @@ const Settings = () => {
     }));
   };
 
+
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
     setPasswordData((prev) => ({
@@ -98,8 +105,10 @@ const Settings = () => {
     }));
   };
 
+
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
+
 
     if (!profileData.firstName.trim() || !profileData.lastName.trim()) {
       toast.warning('Please fill in all required fields');
@@ -112,7 +121,6 @@ const Settings = () => {
         ...user,
         firstName: profileData.firstName,
         lastName: profileData.lastName,
-        profession: profileData.profession,
         ...response.data,
       };
       setUser(updatedUser);
@@ -127,6 +135,7 @@ const Settings = () => {
       setLoading(false);
     }
   };
+
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
@@ -163,6 +172,7 @@ const Settings = () => {
     }
   };
 
+
   const handleLanguageChange = (lang) => {
     setLanguage(lang);
     i18n.changeLanguage(lang);
@@ -171,10 +181,12 @@ const Settings = () => {
     toast.success(`Language changed to ${lang}`);
   };
 
+
   // Upgrade usuario (solo lógica de frontend)
   const handleUpgrade = () => {
     toast.info('Redirigir a gestión de pago / upgrade');
   };
+
 
   return (
     <div className={`settings ${isDark ? 'settings--dark' : ''}`}>
@@ -190,6 +202,7 @@ const Settings = () => {
             {t('settings.title')}
           </h1>
         </div>
+
 
         {/* SUSCRIPCIÓN */}
         <div className={`settings__subscription ${isDark ? 'settings__subscription--dark' : ''}`}>
@@ -251,6 +264,7 @@ const Settings = () => {
           )}
         </div>
 
+
         <div className="settings__grid">
           {/* Perfil */}
           <div className={`settings__form-card ${isDark ? 'settings__form-card--dark' : ''}`}>
@@ -284,18 +298,6 @@ const Settings = () => {
                   required
                 />
               </div>
-              <div className="settings__field">
-                <label className={`settings__label ${isDark ? 'settings__label--dark' : ''}`}>
-                  {t('common.profession')}
-                </label>
-                <input
-                  type="text"
-                  name="profession"
-                  value={profileData.profession}
-                  onChange={handleProfileChange}
-                  className={`settings__input ${isDark ? 'settings__input--dark' : ''}`}
-                />
-              </div>
               <button
                 type="submit"
                 disabled={loading}
@@ -312,6 +314,8 @@ const Settings = () => {
               </button>
             </form>
           </div>
+
+
           {/* Contraseña */}
           <div className={`settings__form-card ${isDark ? 'settings__form-card--dark' : ''}`}>
             <h2 className={`settings__section-title ${isDark ? 'settings__section-title--dark' : ''}`}>
@@ -375,6 +379,7 @@ const Settings = () => {
           </div>
         </div>
 
+
         {/* Preferencias */}
         <div className={`settings__language-section ${isDark ? 'settings__language-section--dark' : ''}`}>
           <h2 className={`settings__section-title ${isDark ? 'settings__section-title--dark' : ''}`}>
@@ -397,6 +402,7 @@ const Settings = () => {
           </div>
         </div>
 
+
         {/* Current User Info */}
         <div className={`settings__full-section ${isDark ? 'settings__full-section--dark' : ''}`}>
           <p className={`settings__label ${isDark ? 'settings__label--dark' : ''}`}>
@@ -407,8 +413,20 @@ const Settings = () => {
           </p>
         </div>
 
-        {/* Cerrar Sesión */}
-        <div className={`settings__full-section ${isDark ? 'settings__full-section--dark' : ''}`}>
+
+        {/* Cerrar Sesión - Zona de Peligro */}
+        <div className={`settings__danger-zone ${isDark ? 'settings__danger-zone--dark' : ''}`}>
+          <div className="settings__danger-header">
+            <div className="settings__danger-icon">⚠️</div>
+            <div>
+              <h3 className={`settings__danger-title ${isDark ? 'settings__danger-title--dark' : ''}`}>
+                {t('settings.logoutZone') || 'Zona de cierre de sesión'}
+              </h3>
+              <p className={`settings__danger-description ${isDark ? 'settings__danger-description--dark' : ''}`}>
+                {t('settings.logoutWarning') || 'Esta acción cerrará tu sesión actual. Tendrás que iniciar sesión nuevamente.'}
+              </p>
+            </div>
+          </div>
           <button
             onClick={() => {
               localStorage.removeItem('token');
@@ -416,10 +434,9 @@ const Settings = () => {
               toast.success(t('common.logoutSuccess'));
               navigate('/login');
             }}
-            className="settings__submit-button"
-            style={{ backgroundColor: 'var(--color-danger)', width: '100%' }}
+            className="settings__logout-button"
           >
-            <FiArrowLeft className="rotate-180" />
+            <FiLogOut />
             {t('common.logout')}
           </button>
         </div>
@@ -427,5 +444,6 @@ const Settings = () => {
     </div>
   );
 };
+
 
 export default Settings;

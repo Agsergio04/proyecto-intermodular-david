@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuthStore, useThemeStore, useLanguageStore } from './store';
 
+
 // Pages
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -14,8 +15,10 @@ import InterviewSession from './pages/InterviewSession';
 import Subscription from './pages/Subscription';
 import Settings from './pages/Settings';
 
+
 // Components
 import Header from './components/Header';
+
 
 // Protected Route
 const ProtectedRoute = ({ children }) => {
@@ -23,10 +26,12 @@ const ProtectedRoute = ({ children }) => {
   return token ? children : <Navigate to="/login" />;
 };
 
+
 function App() {
   const { initializeAuth } = useAuthStore();
   const { initializeTheme } = useThemeStore();
   const { initializeLanguage } = useLanguageStore();
+
 
   useEffect(() => {
     initializeAuth();
@@ -35,7 +40,6 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const token = localStorage.getItem('token');
 
   return (
     <Router>
@@ -46,6 +50,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+
 
           {/* Protected Routes */}
           <Route
@@ -90,6 +95,7 @@ function App() {
           />
         </Routes>
 
+
         {/* Toast Notifications */}
         <ToastContainer
           position="bottom-right"
@@ -107,5 +113,6 @@ function App() {
     </Router>
   );
 }
+
 
 export default App;

@@ -1,5 +1,6 @@
 /* Home Component - BEM Nomenclature con Variables CSS */
 
+
 :root {
   /* Paleta de colores personalizada */
   --black-olive: #423e37;
@@ -8,6 +9,7 @@
   --taupe-gray: #a39594;
   --dim-gray: #6e675f;
 
+
   /* Colores específicos de Home */
   --home-primary: var(--xanthous);
   --home-primary-hover: #d4a02e;
@@ -15,6 +17,7 @@
   --home-primary-light: #ead16f;
   --home-secondary: var(--dim-gray);
   --home-success: #10b981;
+
 
   /* Backgrounds Home */
   --home-bg-gradient-light: linear-gradient(to bottom right, var(--eggshell), #f5f3e8);
@@ -27,6 +30,7 @@
   --home-bg-cta: var(--xanthous);
   --home-bg-footer: var(--black-olive);
 
+
   /* Textos Home */
   --home-text-dark: var(--black-olive);
   --home-text-gray: var(--dim-gray);
@@ -36,10 +40,12 @@
   --home-text-white: var(--eggshell);
   --home-text-cta: #f5f3e8;
 
+
   /* Sombras Home */
   --home-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   --home-shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
+
 
 .home {
   min-height: 100vh;
@@ -47,10 +53,12 @@
   color: var(--home-text-dark);
 }
 
+
 .home--dark {
   background: var(--home-bg-gradient-dark);
   color: var(--home-text-white);
 }
+
 
 /* Navigation */
 .home__nav {
@@ -58,9 +66,11 @@
   box-shadow: var(--home-shadow-sm);
 }
 
+
 .home__nav--dark {
   background-color: var(--home-bg-dark);
 }
+
 
 .home__nav-container {
   max-width: 80rem;
@@ -71,12 +81,14 @@
   align-items: center;
 }
 
+
 @media (min-width: 640px) {
   .home__nav-container {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
 }
+
 
 @media (min-width: 1024px) {
   .home__nav-container {
@@ -85,20 +97,24 @@
   }
 }
 
+
 .home__logo {
   font-size: 1.5rem;
   font-weight: bold;
   color: var(--home-primary-hover);
 }
 
+
 .home__logo--dark {
   color: var(--home-primary-light);
 }
+
 
 .home__nav-actions {
   display: flex;
   gap: 1rem;
 }
+
 
 .home__nav-button {
   padding: 0.5rem 1.5rem;
@@ -110,39 +126,48 @@
   background: none;
 }
 
+
 .home__nav-button--login {
   color: var(--home-text-gray);
 }
+
 
 .home__nav-button--login:hover {
   color: var(--home-primary-hover);
 }
 
+
 .home__nav-button--login--dark {
   color: var(--home-text-light);
 }
 
+
 .home__nav-button--login--dark:hover {
   color: var(--home-primary-light);
 }
+
 
 .home__nav-button--register {
   background-color: var(--home-primary);
   color: var(--home-text-white);
 }
 
+
 .home__nav-button--register:hover {
   background-color: var(--home-primary-hover);
 }
+
 
 .home__nav-button--dashboard {
   background-color: var(--home-primary);
   color: var(--home-text-white);
 }
 
+
 .home__nav-button--dashboard:hover {
   background-color: var(--home-primary-hover);
 }
+
 
 /* Hero Section */
 .home__hero {
@@ -152,12 +177,14 @@
   text-align: center;
 }
 
+
 @media (min-width: 640px) {
   .home__hero {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
 }
+
 
 @media (min-width: 1024px) {
   .home__hero {
@@ -166,6 +193,7 @@
   }
 }
 
+
 .home__hero-title {
   font-size: 3rem;
   font-weight: bold;
@@ -173,9 +201,11 @@
   margin-bottom: 1.5rem;
 }
 
+
 .home__hero-title--dark {
   color: var(--home-text-white);
 }
+
 
 .home__hero-description {
   font-size: 1.25rem;
@@ -186,9 +216,11 @@
   margin-right: auto;
 }
 
+
 .home__hero-description--dark {
   color: var(--home-text-light);
 }
+
 
 .home__hero-button {
   background-color: var(--home-primary-hover);
@@ -207,10 +239,12 @@
   cursor: pointer;
 }
 
+
 .home__hero-button:hover {
   background-color: var(--home-primary-dark);
   transform: scale(1.05);
 }
+
 
 /* Features Section */
 .home__features {
@@ -218,15 +252,18 @@
   padding: 5rem 0;
 }
 
+
 .home__features--dark {
   background-color: var(--home-bg-dark);
 }
+
 
 .home__features-container {
   max-width: 80rem;
   margin: 0 auto;
   padding: 0 1rem;
 }
+
 
 @media (min-width: 640px) {
   .home__features-container {
@@ -235,12 +272,14 @@
   }
 }
 
+
 @media (min-width: 1024px) {
   .home__features-container {
     padding-left: 2rem;
     padding-right: 2rem;
   }
 }
+
 
 .home__features-title {
   font-size: 1.875rem;
@@ -250,9 +289,11 @@
   color: var(--home-text-dark);
 }
 
+
 .home__features-title--dark {
   color: var(--home-text-white);
 }
+
 
 .home__features-grid {
   display: grid;
@@ -260,11 +301,13 @@
   gap: 2rem;
 }
 
+
 @media (min-width: 768px) {
   .home__features-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
 
 /* Feature Card */
 .feature-card {
@@ -275,19 +318,23 @@
   transition: transform 0.2s;
 }
 
+
 .feature-card:hover {
   transform: translateY(-0.5rem);
 }
 
+
 .feature-card--dark {
   background-color: var(--home-bg-dark-alt);
 }
+
 
 .feature-card__icon {
   color: var(--home-primary);
   font-size: 1.875rem;
   margin-bottom: 1rem;
 }
+
 
 .feature-card__title {
   font-size: 1.25rem;
@@ -296,28 +343,34 @@
   color: var(--home-text-dark);
 }
 
+
 .feature-card__title--dark {
   color: var(--home-text-white);
 }
+
 
 .feature-card__description {
   color: var(--home-text-gray-light);
 }
 
+
 .feature-card__description--dark {
   color: var(--home-text-light);
 }
+
 
 /* Pricing Section */
 .home__pricing {
   padding: 5rem 0;
 }
 
+
 .home__pricing-container {
   max-width: 80rem;
   margin: 0 auto;
   padding: 0 1rem;
 }
+
 
 @media (min-width: 640px) {
   .home__pricing-container {
@@ -326,12 +379,14 @@
   }
 }
 
+
 @media (min-width: 1024px) {
   .home__pricing-container {
     padding-left: 2rem;
     padding-right: 2rem;
   }
 }
+
 
 .home__pricing-title {
   font-size: 1.875rem;
@@ -341,9 +396,11 @@
   color: var(--home-text-dark);
 }
 
+
 .home__pricing-title--dark {
   color: var(--home-text-white);
 }
+
 
 .home__pricing-grid {
   display: grid;
@@ -351,11 +408,13 @@
   gap: 2rem;
 }
 
+
 @media (min-width: 768px) {
   .home__pricing-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
 
 /* Pricing Card */
 .pricing-card {
@@ -366,18 +425,22 @@
   transition: transform 0.2s;
 }
 
+
 .pricing-card:hover {
   transform: scale(1.05);
 }
+
 
 .pricing-card--dark {
   background-color: var(--home-bg-dark);
 }
 
+
 .pricing-card--featured {
   background: var(--home-bg-featured);
   color: var(--home-text-white);
 }
+
 
 .pricing-card__plan {
   font-size: 1.5rem;
@@ -386,13 +449,16 @@
   color: var(--home-text-dark);
 }
 
+
 .pricing-card__plan--dark {
   color: var(--home-text-white);
 }
 
+
 .pricing-card__plan--featured {
   color: var(--home-text-white);
 }
+
 
 .pricing-card__price {
   font-size: 2.25rem;
@@ -401,32 +467,39 @@
   color: var(--home-primary);
 }
 
+
 .pricing-card__price--dark {
   color: var(--home-primary-light);
 }
 
+
 .pricing-card__price--featured {
   color: var(--home-text-white);
 }
+
 
 .pricing-card__period {
   color: var(--home-text-gray-light);
   margin-bottom: 1.5rem;
 }
 
+
 .pricing-card__period--dark {
   color: var(--home-text-light);
 }
 
+
 .pricing-card__period--featured {
   color: rgba(237, 235, 215, 0.8);
 }
+
 
 .pricing-card__features {
   list-style: none;
   padding: 0;
   margin: 0 0 1.5rem 0;
 }
+
 
 .pricing-card__feature {
   padding: 0.5rem 0;
@@ -436,13 +509,16 @@
   gap: 0.5rem;
 }
 
+
 .pricing-card__feature--dark {
   color: var(--home-text-light);
 }
 
+
 .pricing-card__feature--featured {
   color: rgba(237, 235, 215, 0.9);
 }
+
 
 .pricing-card__feature::before {
   content: "✓";
@@ -450,9 +526,11 @@
   font-weight: bold;
 }
 
+
 .pricing-card__feature--featured::before {
   color: var(--home-text-white);
 }
+
 
 .pricing-card__button {
   width: 100%;
@@ -464,29 +542,35 @@
   cursor: pointer;
 }
 
+
 .pricing-card__button--free {
   background-color: var(--home-primary);
   color: var(--home-text-white);
 }
 
+
 .pricing-card__button--free:hover {
   background-color: var(--home-primary-hover);
 }
+
 
 .pricing-card__button--premium {
   background-color: var(--home-bg-white);
   color: var(--home-primary);
 }
 
+
 .pricing-card__button--premium:hover {
   background-color: var(--home-bg-light);
 }
+
 
 /* CTA Section */
 .home__cta {
   background: var(--home-bg-cta);
   padding: 4rem 0;
 }
+
 
 .home__cta-container {
   max-width: 56rem;
@@ -495,6 +579,7 @@
   padding: 0 1rem;
 }
 
+
 .home__cta-title {
   font-size: 1.875rem;
   font-weight: bold;
@@ -502,11 +587,13 @@
   margin-bottom: 1.5rem;
 }
 
+
 .home__cta-description {
   color: var(--home-text-cta);
   margin-bottom: 2rem;
   font-size: 1.125rem;
 }
+
 
 .home__cta-button {
   background-color: var(--home-bg-white);
@@ -521,10 +608,12 @@
   cursor: pointer;
 }
 
+
 .home__cta-button:hover {
   background-color: var(--home-bg-light);
   transform: scale(1.05);
 }
+
 
 /* Footer */
 .home__footer {
@@ -533,10 +622,10 @@
   padding: 2rem 0;
 }
 
+
 .home__footer-container {
   max-width: 80rem;
   margin: 0 auto;
   padding: 0 1rem;
   text-align: center;
 }
-

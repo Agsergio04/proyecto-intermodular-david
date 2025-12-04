@@ -5,12 +5,14 @@ import es from './es.json';
 import fr from './fr.json';
 import de from './de.json';
 
+
 const resources = {
   en: { translation: en },
   es: { translation: es },
   fr: { translation: fr },
   de: { translation: de }
 };
+
 
 i18n
   .use(initReactI18next)
@@ -22,5 +24,6 @@ i18n
       escapeValue: false
     }
   });
+
 
 export default i18n;

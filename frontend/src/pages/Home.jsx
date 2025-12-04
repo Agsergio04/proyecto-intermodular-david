@@ -1,69 +1,93 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { FiArrowRight, FiMic, FiBarChart2, FiLock } from 'react-icons/fi';
 import { useHome } from '../hooks/useHome';
 import { useThemeStore } from '../store';
 import '../assets/styles/Home.css';
 
+
 const Home = () => {
+  const { t } = useTranslation();
   const { isDark } = useThemeStore();
   const {
     isAuthenticated,
-    navigateToRegister,
-    freePlan,
-    premiumPlan
+    navigateToRegister
   } = useHome();
+
+
+  const freePlan = {
+    plan: t('home.freePlan'),
+    price: t('home.freePrice'),
+    period: t('home.freePeriod'),
+    features: t('home.freeFeatures', { returnObjects: true }),
+    cta: t('home.freeButton'),
+    featured: false
+  };
+
+
+  const premiumPlan = {
+    plan: t('home.premiumPlan'),
+    price: t('home.premiumPrice'),
+    period: t('home.premiumPeriod'),
+    features: t('home.premiumFeatures', { returnObjects: true }),
+    cta: t('home.premiumButton'),
+    featured: true
+  };
+
 
   return (
     <div className={`home ${isDark ? 'home--dark' : ''}`}>
       {/* Hero Section */}
       <section className="home__hero">
         <h2 className={`home__hero-title ${isDark ? 'home__hero-title--dark' : ''}`}>
-          Master Your Interview Skills with AI
+          {t('home.heroTitle')}
         </h2>
         <p className={`home__hero-description ${isDark ? 'home__hero-description--dark' : ''}`}>
-          Practice with realistic AI-generated questions, get instant feedback, and track your progress. Perfect preparation for your dream job.
+          {t('home.heroDescription')}
         </p>
         {!isAuthenticated && (
           <button
             onClick={navigateToRegister}
             className="home__hero-button"
           >
-            Get Started Free <FiArrowRight />
+            {t('home.getStartedFree')} <FiArrowRight />
           </button>
         )}
       </section>
+
 
       {/* Features Section */}
       <section className={`home__features ${isDark ? 'home__features--dark' : ''}`}>
         <div className="home__features-container">
           <h3 className={`home__features-title ${isDark ? 'home__features-title--dark' : ''}`}>
-            Why Choose Our Platform?
+            {t('home.featuresTitle')}
           </h3>
           <div className="home__features-grid">
             <FeatureCard
               icon={<FiMic className="text-3xl" />}
-              title="Voice Interviews"
-              description="Practice with real-time voice interaction and get transcribed feedback"
+              title={t('home.voiceInterviews')}
+              description={t('home.voiceInterviewsDesc')}
             />
             <FeatureCard
               icon={<FiBarChart2 className="text-3xl" />}
-              title="Analytics & Tracking"
-              description="Monitor your progress with detailed statistics and performance trends"
+              title={t('home.analyticsTracking')}
+              description={t('home.analyticsTrackingDesc')}
             />
             <FeatureCard
               icon={<FiLock className="text-3xl" />}
-              title="Secure & Private"
-              description="Your data is encrypted and secure with industry-standard security"
+              title={t('home.securePrivate')}
+              description={t('home.securePrivateDesc')}
             />
           </div>
         </div>
       </section>
 
+
       {/* Pricing Section */}
       <section className="home__pricing">
         <div className="home__pricing-container">
           <h3 className={`home__pricing-title ${isDark ? 'home__pricing-title--dark' : ''}`}>
-            Simple, Transparent Pricing
+            {t('home.pricingTitle')}
           </h3>
           <div className="home__pricing-grid">
             <PricingCard {...freePlan} />
@@ -72,35 +96,38 @@ const Home = () => {
         </div>
       </section>
 
+
       {/* CTA Section */}
       <section className="home__cta">
         <div className="home__cta-container">
           <h3 className="home__cta-title">
-            Ready to Transform Your Interview Skills?
+            {t('home.ctaTitle')}
           </h3>
           <p className="home__cta-description">
-            Join thousands of professionals already practicing with our AI-powered interview platform
+            {t('home.ctaDescription')}
           </p>
           {!isAuthenticated && (
             <button
               onClick={navigateToRegister}
               className="home__cta-button"
             >
-              Get Started Free Now
+              {t('home.ctaButton')}
             </button>
           )}
         </div>
       </section>
 
+
       {/* Footer */}
       <footer className="home__footer">
         <div className="home__footer-container">
-          <p>&copy; 2024 AI Interview Platform. All rights reserved.</p>
+          <p>{t('home.footerCopyright')}</p>
         </div>
       </footer>
     </div>
   );
 };
+
 
 const FeatureCard = ({ icon, title, description }) => (
   <div className="feature-card feature-card--dark">
@@ -115,6 +142,7 @@ const FeatureCard = ({ icon, title, description }) => (
     </p>
   </div>
 );
+
 
 const PricingCard = ({ plan, price, period, features, cta, featured }) => (
   <div className={`pricing-card ${featured ? 'pricing-card--featured' : 'pricing-card--dark'}`}>
@@ -142,5 +170,5 @@ const PricingCard = ({ plan, price, period, features, cta, featured }) => (
   </div>
 );
 
-export default Home;
 
+export default Home;

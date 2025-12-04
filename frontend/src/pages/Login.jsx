@@ -7,6 +7,7 @@ import { useAuthStore, useThemeStore } from '../store';
 import { FiMail, FiLock } from 'react-icons/fi';
 import '../assets/styles/Login.css';
 
+
 const Login = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -17,6 +18,7 @@ const Login = () => {
     password: ''
   });
 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -25,24 +27,26 @@ const Login = () => {
     }));
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+   
     if (!formData.email || !formData.password) {
       toast.error(t('errors.fillAllFields'));
       return;
     }
 
+
     setLoading(true);
     try {
       const response = await authService.login(formData);
       const { token, user } = response.data;
-      
+     
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
-      
+     
       useAuthStore.setState({ user, token });
-      
+     
       toast.success(t('auth.loginSuccess'));
       navigate('/dashboard');
     } catch (error) {
@@ -53,12 +57,14 @@ const Login = () => {
     }
   };
 
+
   return (
     <div className={`login ${isDark ? 'login--dark' : ''}`}>
       <div className={`login__container ${isDark ? 'login__container--dark' : ''}`}>
         <h2 className={`login__title ${isDark ? 'login__title--dark' : ''}`}>
           {t('auth.loginTitle')}
         </h2>
+
 
         <form onSubmit={handleSubmit} className="login__form">
           <div className="login__field">
@@ -78,6 +84,7 @@ const Login = () => {
             </div>
           </div>
 
+
           <div className="login__field">
             <label className={`login__label ${isDark ? 'login__label--dark' : ''}`}>
               {t('common.password')}
@@ -95,6 +102,7 @@ const Login = () => {
             </div>
           </div>
 
+
           <button
             type="submit"
             disabled={loading}
@@ -103,6 +111,7 @@ const Login = () => {
             {loading ? t('common.loading') : t('common.login')}
           </button>
         </form>
+
 
         <p className={`login__link ${isDark ? 'login__link--dark' : ''}`}>
           {t('auth.noAccount')}
@@ -117,5 +126,6 @@ const Login = () => {
     </div>
   );
 };
+
 
 export default Login;

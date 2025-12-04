@@ -3,6 +3,7 @@ import { FiMoon, FiSun, FiMenu, FiX, FiUser, FiClock } from 'react-icons/fi';
 import { useHeader } from '../hooks/useHeader';
 import '../assets/styles/Header.css';
 
+
 const Header = () => {
   const {
     isAuthenticated,
@@ -16,6 +17,7 @@ const Header = () => {
     navigateTo
   } = useHeader();
 
+
   return (
     <header className={`header ${isDark ? 'header--dark' : ''}`}>
       <div className="header__container">
@@ -28,27 +30,20 @@ const Header = () => {
           </span>
         </div>
 
+
         {/* Desktop Menu */}
         <div className="header__menu">
           {isAuthenticated ? (
-            // Authenticated User Menu
+            // Authenticated User Menu - Botón Perfil
             <>
-              <div className="header__nav-buttons">
-                <button
-                  onClick={() => navigateTo('/interviews')}
-                  className={`header__nav-button ${isDark ? 'header__nav-button--dark' : ''}`}
-                >
-                  <FiClock />
-                  {t('interview.myInterviews')}
-                </button>
-                <button
-                  onClick={() => navigateTo('/settings')}
-                  className={`header__nav-button ${isDark ? 'header__nav-button--dark' : ''}`}
-                >
-                  <FiUser />
-                  {t('settings.profile')}
-                </button>
-              </div>
+              <button
+                onClick={() => navigateTo('/settings')}
+                className={`header__nav-button ${isDark ? 'header__nav-button--dark' : ''}`}
+              >
+                <FiUser />
+                {t('settings.profile')}
+              </button>
+
 
               {/* Language Selector */}
               <select
@@ -61,6 +56,7 @@ const Header = () => {
                 <option value="fr">FR</option>
                 <option value="de">DE</option>
               </select>
+
 
               {/* Theme Toggle */}
               <button
@@ -75,8 +71,8 @@ const Header = () => {
               </button>
             </>
           ) : (
-            // Non-Authenticated User Menu
-            <div className="header__auth-buttons">
+            // Non-Authenticated User Menu - Botones Login/Register
+            <>
               {/* Language Selector */}
               <select
                 value={language}
@@ -88,6 +84,7 @@ const Header = () => {
                 <option value="fr">FR</option>
                 <option value="de">DE</option>
               </select>
+
 
               {/* Theme Toggle */}
               <button
@@ -101,6 +98,7 @@ const Header = () => {
                 )}
               </button>
 
+
               <button
                 onClick={() => navigateTo('/login')}
                 className={`header__login-button ${isDark ? 'header__login-button--dark' : ''}`}
@@ -109,13 +107,14 @@ const Header = () => {
               </button>
               <button
                 onClick={() => navigateTo('/register')}
-                className="header__register-button"
+                className={`header__register-button ${isDark ? 'header__register-button--dark' : ''}`}
               >
-                {t('common.register')}
+                <span>{t('common.register')}</span>
               </button>
-            </div>
+            </>
           )}
         </div>
+
 
         {/* Mobile Menu Button */}
         <button
@@ -126,81 +125,85 @@ const Header = () => {
         </button>
       </div>
 
+
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className={`header__mobile-menu ${isDark ? 'header__mobile-menu--dark' : ''}`}>
-          {isAuthenticated ? (
-            <>
-              <button
-                onClick={() => navigateTo('/interviews')}
-                className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
-              >
-                <FiClock />
-                {t('interview.myInterviews')}
-              </button>
-              <button
-                onClick={() => navigateTo('/settings')}
-                className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
-              >
-                <FiUser />
-                {t('settings.profile')}
-              </button>
-              <select
-                value={language}
-                onChange={(e) => handleLanguageChange(e.target.value)}
-                className={`header__language-select ${isDark ? 'header__language-select--dark' : ''}`}
-              >
-                <option value="en">English</option>
-                <option value="es">Español</option>
-                <option value="fr">Français</option>
-                <option value="de">Deutsch</option>
-              </select>
-              <button
-                onClick={handleThemeToggle}
-                className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
-              >
-                {isDark ? <FiSun /> : <FiMoon />}
-                {isDark ? 'Light Mode' : 'Dark Mode'}
-              </button>
-            </>
-          ) : (
-            <>
-              <select
-                value={language}
-                onChange={(e) => handleLanguageChange(e.target.value)}
-                className={`header__language-select ${isDark ? 'header__language-select--dark' : ''}`}
-              >
-                <option value="en">English</option>
-                <option value="es">Español</option>
-                <option value="fr">Français</option>
-                <option value="de">Deutsch</option>
-              </select>
-              <button
-                onClick={handleThemeToggle}
-                className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
-              >
-                {isDark ? <FiSun /> : <FiMoon />}
-                {isDark ? 'Light Mode' : 'Dark Mode'}
-              </button>
-              <button
-                onClick={() => navigateTo('/login')}
-                className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
-              >
-                {t('common.login')}
-              </button>
-              <button
-                onClick={() => navigateTo('/register')}
-                className="header__register-button"
-              >
-                {t('common.register')}
-              </button>
-            </>
-          )}
+          <div className="header__mobile-menu-content">
+            {isAuthenticated ? (
+              <>
+                <button
+                  onClick={() => navigateTo('/interviews')}
+                  className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
+                >
+                  <FiClock />
+                  {t('interview.myInterviews')}
+                </button>
+                <button
+                  onClick={() => navigateTo('/settings')}
+                  className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
+                >
+                  <FiUser />
+                  {t('settings.profile')}
+                </button>
+                <select
+                  value={language}
+                  onChange={(e) => handleLanguageChange(e.target.value)}
+                  className={`header__language-select ${isDark ? 'header__language-select--dark' : ''}`}
+                  style={{ marginTop: '0.5rem' }}
+                >
+                  <option value="en">English</option>
+                  <option value="es">Español</option>
+                  <option value="fr">Français</option>
+                  <option value="de">Deutsch</option>
+                </select>
+                <button
+                  onClick={handleThemeToggle}
+                  className={`header__mobile-menu-button ${isDark ? 'header__mobile-menu-button--dark' : ''}`}
+                >
+                  {isDark ? <FiSun /> : <FiMoon />}
+                  {isDark ? 'Light Mode' : 'Dark Mode'}
+                </button>
+              </>
+            ) : (
+              <>
+                <select
+                  value={language}
+                  onChange={(e) => handleLanguageChange(e.target.value)}
+                  className={`header__language-select ${isDark ? 'header__language-select--dark' : ''}`}
+                >
+                  <option value="en">English</option>
+                  <option value="es">Español</option>
+                  <option value="fr">Français</option>
+                  <option value="de">Deutsch</option>
+                </select>
+                <button
+                  onClick={handleThemeToggle}
+                  className={`header__mobile-menu-button ${isDark ? 'header__mobile-menu-button--dark' : ''}`}
+                >
+                  {isDark ? <FiSun /> : <FiMoon />}
+                  {isDark ? 'Light Mode' : 'Dark Mode'}
+                </button>
+                <button
+                  onClick={() => navigateTo('/login')}
+                  className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
+                >
+                  {t('common.login')}
+                </button>
+                <button
+                  onClick={() => navigateTo('/register')}
+                  className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
+                >
+                  {t('common.register')}
+                </button>
+              </>
+            )}
+          </div>
         </div>
       )}
     </header>
   );
 };
 
-export default Header;
 
+export default Header;

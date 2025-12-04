@@ -1,128 +1,189 @@
-/* StatCard Component - Con paleta unificada */
+/* ========================================
+   STAT CARD COMPONENT - DISEÑO PROFESIONAL
+   ======================================== */
 
-:root {
-  /* Paleta de colores personalizada */
-  --black-olive: #423e37;
-  --xanthous: #e3b23c;
-  --eggshell: #edebd7;
-  --taupe-gray: #a39594;
-  --dim-gray: #6e675f;
-
-  /* Azul para modo claro */
-  --blue-primary: #3b82f6;
-  --blue-primary-hover: #2563eb;
-  --blue-light: #60a5fa;
-  --blue-lighter: #93c5fd;
-
-  /* Colores principales - Modo claro usa azul, modo oscuro usa amarillo/gris */
-  --color-primary-light: var(--blue-primary);
-  --color-primary-light-hover: var(--blue-primary-hover);
-  --color-primary-dark: var(--xanthous);
-  --color-primary-dark-hover: #d4a02e;
-
-  /* Colores secundarios */
-  --color-secondary: var(--dim-gray);
-  --color-secondary-hover: #5d5651;
-  --color-success: #10b981;
-  --color-success-hover: #059669;
-
-  /* Colores de fondo */
-  --bg-light: var(--eggshell);
-  --bg-dark: var(--black-olive);
-  --bg-card-light: #ffffff;
-  --bg-card-dark: var(--dim-gray);
-  --bg-input-dark: #5d5651;
-
-  /* Colores de texto - Mayor contraste */
-  --text-dark: #2d2a25;
-  --text-light: #ffffff;
-  --text-muted: #8a7f7e;
-  --text-muted-dark: #e8e3e2;
-
-  /* Colores de borde - Más visibles */
-  --border-light: #8a7f7e;
-  --border-dark: #5d5651;
-
-  /* Degradados */
-  --gradient-blue: var(--xanthous);
-  --gradient-green: #10b981;
-  --gradient-purple: var(--dim-gray);
-  --gradient-orange: var(--xanthous);
-
-  /* Sombras */
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-
-  /* Espaciado */
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-
-  /* Bordes redondeados */
-  --radius-md: 0.5rem;
-}
 
 .stat-card {
-  padding: 1.5rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  position: relative;
+  padding: 1.75rem;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: slideInUp 0.4s ease-out;
+  animation-fill-mode: both;
 }
 
-/* Modo Claro - Todas las cards en azul */
+
+/* Efecto de brillo al hover */
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+
+.stat-card:hover::before {
+  opacity: 1;
+}
+
+
+.stat-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+}
+
+
+/* ========================================
+   GRADIENTES MODO CLARO
+   ======================================== */
+
+
 .stat-card--gray {
-  background: linear-gradient(135deg, var(--blue-primary), var(--blue-primary-hover));
-}
-
-.stat-card--yellow {
-  background: linear-gradient(135deg, var(--blue-light), var(--blue-primary));
-}
-
-.stat-card--purple {
-  background: linear-gradient(135deg, var(--blue-primary), var(--blue-primary-hover));
-}
-
-.stat-card--orange {
-  background: linear-gradient(135deg, var(--blue-light), var(--blue-primary));
-}
-
-/* Modo Oscuro - Gris y amarillo */
-.stat-card--gray.stat-card--dark-mode {
-  background: linear-gradient(135deg, var(--dim-gray), var(--color-secondary-hover));
-}
-
-.stat-card--yellow.stat-card--dark-mode {
-  background: linear-gradient(135deg, var(--xanthous), #d4a02e);
-}
-
-.stat-card--purple.stat-card--dark-mode {
-  background: linear-gradient(135deg, var(--dim-gray), var(--color-secondary-hover));
-}
-
-.stat-card--orange.stat-card--dark-mode {
-  background: linear-gradient(135deg, var(--xanthous), #d4a02e);
-}
-
-/* Contenido de la card */
-.stat-card__content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
 }
 
+
+.stat-card--yellow {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}
+
+
+.stat-card--purple {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+}
+
+
+.stat-card--orange {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  color: white;
+}
+
+
+/* ========================================
+   GRADIENTES MODO OSCURO
+   ======================================== */
+
+
+html.dark .stat-card--gray {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border-color: rgba(148, 163, 184, 0.1);
+}
+
+
+html.dark .stat-card--yellow {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+}
+
+
+html.dark .stat-card--purple {
+  background: linear-gradient(135deg, #3730a3 0%, #4f46e5 100%);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+
+html.dark .stat-card--orange {
+  background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
+}
+
+
+/* ========================================
+   CONTENIDO
+   ======================================== */
+
+
+.stat-card__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  z-index: 1;
+}
+
+
 .stat-card__title {
   font-size: 0.875rem;
+  font-weight: 600;
   opacity: 0.9;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--spacing-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
+
 
 .stat-card__value {
-  font-size: 2rem;
-  font-weight: bold;
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-top: var(--spacing-sm);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+
 .stat-card__icon {
-  font-size: 2rem;
+  font-size: 2.5rem;
   opacity: 0.8;
+  transition: all 0.3s;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+
+.stat-card:hover .stat-card__icon {
+  opacity: 1;
+  transform: scale(1.1) rotate(5deg);
+}
+
+
+/* ========================================
+   ANIMACIONES ESCALONADAS
+   ======================================== */
+
+
+.stat-card:nth-child(1) {
+  animation-delay: 0s;
+}
+
+
+.stat-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+
+.stat-card:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+
+.stat-card:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+
+@media (max-width: 640px) {
+  .stat-card {
+    padding: 1.25rem;
+  }
+ 
+  .stat-card__value {
+    font-size: 2rem;
+  }
+ 
+  .stat-card__icon {
+    font-size: 2rem;
+  }
 }

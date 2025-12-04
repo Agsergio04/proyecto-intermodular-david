@@ -7,7 +7,9 @@ import { useThemeStore } from '../store';
 import { StatCard } from '../components/StatCard';
 import '../assets/styles/Dashboard.css';
 
+
 const COLORS = ['#3b82f6', '#8b5cf6', '#ef4444', '#10b981'];
+
 
 const Dashboard = () => {
   const { t } = useTranslation();
@@ -26,6 +28,7 @@ const Dashboard = () => {
     navigateToInterviews
   } = useDashboard();
 
+
   if (loading) {
     return (
         <div className="dashboard__loading">
@@ -33,6 +36,7 @@ const Dashboard = () => {
         </div>
     );
   }
+
 
   return (
       <div className={`dashboard ${isDark ? 'dashboard--dark' : ''}`}>
@@ -64,6 +68,7 @@ const Dashboard = () => {
             </div>
           </div>
 
+
           {showCreateForm && (
               <div className={`dashboard__form ${isDark ? 'dashboard__form--dark' : ''}`}>
                 <h2 className={`dashboard__form-title ${isDark ? 'dashboard__form-title--dark' : ''}`}>
@@ -72,7 +77,7 @@ const Dashboard = () => {
                 <form onSubmit={handleCreateInterview} className="dashboard__form-grid">
                   <input
                       type="text"
-                      placeholder="Interview Title"
+                      placeholder="Título de la entrevista"
                       value={formData.title}
                       onChange={(e) => updateFormData('title', e.target.value)}
                       className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
@@ -80,14 +85,23 @@ const Dashboard = () => {
                       disabled={formLoading}
                   />
                   <input
-                      type="text"
-                      placeholder="Repository URL (e.g., https://github.com/user/repo)"
-                      value={formData.repository}
-                      onChange={(e) => updateFormData('repository', e.target.value)}
+                      type="url"
+                      placeholder="URL del repositorio (GitHub, GitLab, etc.)"
+                      value={formData.repoUrl}
+                      onChange={(e) => updateFormData('repoUrl', e.target.value)}
                       className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
                       required
                       disabled={formLoading}
                   />
+                  <select
+                      value={formData.type}
+                      onChange={(e) => updateFormData('type', e.target.value)}
+                      className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
+                      disabled={formLoading}
+                  >
+                    <option value="ai_generated">AI Generated</option>
+                    <option value="custom">Custom</option>
+                  </select>
                   <select
                       value={formData.difficulty}
                       onChange={(e) => updateFormData('difficulty', e.target.value)}
@@ -109,6 +123,11 @@ const Dashboard = () => {
                     <option value="fr">Français</option>
                     <option value="de">Deutsch</option>
                   </select>
+                  <div className="dashboard__form-info" style={{gridColumn: '1 / -1', marginBottom: '8px'}}>
+                    <span style={{color: isDark ? '#fff' : '#333', fontWeight: 'bold'}}>
+                      Introduce la URL del repositorio (GitHub, GitLab, etc.) para generar preguntas técnicas con IA.
+                    </span>
+                  </div>
                   <div className="dashboard__form-actions">
                     <button
                         type="submit"
@@ -136,6 +155,7 @@ const Dashboard = () => {
                 </form>
               </div>
           )}
+
 
           <div className="dashboard__stats-grid">
             <StatCard
@@ -168,6 +188,7 @@ const Dashboard = () => {
             />
           </div>
 
+
           <div className="dashboard__charts-grid">
             <div className={`dashboard__chart-card ${isDark ? 'dashboard__chart-card--dark' : ''}`}>
               <h2 className={`dashboard__chart-title ${isDark ? 'dashboard__chart-title--dark' : ''}`}>
@@ -188,6 +209,7 @@ const Dashboard = () => {
                   <p className={`dashboard__chart-empty ${isDark ? 'dashboard__chart-empty--dark' : ''}`}>{t('interview.noInterviews')}</p>
               )}
             </div>
+
 
             <div className={`dashboard__chart-card ${isDark ? 'dashboard__chart-card--dark' : ''}`}>
               <h2 className={`dashboard__chart-title ${isDark ? 'dashboard__chart-title--dark' : ''}`}>
@@ -225,5 +247,6 @@ const Dashboard = () => {
       </div>
   );
 };
+
 
 export default Dashboard;

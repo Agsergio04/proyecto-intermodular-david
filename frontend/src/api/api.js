@@ -1,12 +1,15 @@
 import axios from 'axios';
 
+
 // Asegurar que siempre haya una URL válida
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
+
 
 console.log('🔧 API Configuration:', {
   REACT_APP_API_URL: process.env.REACT_APP_API_URL,
   API_URL: API_URL
 });
+
 
 const api = axios.create({
   baseURL: API_URL,
@@ -14,6 +17,7 @@ const api = axios.create({
     'Content-Type': 'application/json'
   }
 });
+
 
 // Add token to requests
 api.interceptors.request.use(
@@ -23,6 +27,13 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
     console.log('📤 API Request:', config.method?.toUpperCase(), config.url);
+    if (config.data) {
+      console.log('📤 Request Body:', JSON.stringify(config.data));
+      if (config.url?.includes('generate-questions')) {
+        console.log('📤 GENERATE-QUESTIONS - Body keys:', Object.keys(config.data));
+        console.log('📤 GENERATE-QUESTIONS - repoUrl:', config.data.repoUrl);
+      }
+    }
     return config;
   },
   error => {
@@ -30,6 +41,7 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
 
 // Add response interceptor for better error handling
 api.interceptors.response.use(
@@ -48,5 +60,6 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
 
 export default api;

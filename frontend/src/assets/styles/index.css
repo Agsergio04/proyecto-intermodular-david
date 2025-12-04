@@ -2,11 +2,133 @@
 @tailwind components;
 @tailwind utilities;
 
+
+/* ========================================
+   VARIABLES CSS - PALETA PROFESIONAL
+   ======================================== */
+
+
+:root {
+  /* Colores Principales - Modo Claro */
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --primary-light: #818cf8;
+  --primary-dark: #3730a3;
+ 
+  --secondary: #8b5cf6;
+  --secondary-hover: #7c3aed;
+  --secondary-light: #a78bfa;
+ 
+  --accent: #06b6d4;
+  --accent-hover: #0891b2;
+ 
+  --success: #10b981;
+  --success-hover: #059669;
+ 
+  --warning: #f59e0b;
+  --warning-hover: #d97706;
+ 
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+ 
+  /* Backgrounds - Modo Claro */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+ 
+  /* Text - Modo Claro */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #94a3b8;
+ 
+  /* Borders */
+  --border-light: #e2e8f0;
+  --border-medium: #cbd5e1;
+ 
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+ 
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+ 
+  /* Border Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+ 
+  /* Transitions */
+  --transition-fast: 150ms;
+  --transition-base: 200ms;
+  --transition-slow: 300ms;
+}
+
+
+/* Modo Oscuro */
+html.dark {
+  --primary: #818cf8;
+  --primary-hover: #6366f1;
+  --primary-light: #a5b4fc;
+  --primary-dark: #4f46e5;
+ 
+  --secondary: #a78bfa;
+  --secondary-hover: #8b5cf6;
+  --secondary-light: #c4b5fd;
+ 
+  --accent: #22d3ee;
+  --accent-hover: #06b6d4;
+ 
+  --success: #34d399;
+  --success-hover: #10b981;
+ 
+  --warning: #fbbf24;
+  --warning-hover: #f59e0b;
+ 
+  --danger: #f87171;
+  --danger-hover: #ef4444;
+ 
+  /* Backgrounds - Modo Oscuro */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+ 
+  /* Text - Modo Oscuro */
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+ 
+  /* Borders - Modo Oscuro */
+  --border-light: #334155;
+  --border-medium: #475569;
+ 
+  /* Shadows - Modo Oscuro */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+}
+
+
+/* ========================================
+   ESTILOS GLOBALES
+   ======================================== */
+
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -14,37 +136,58 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: transparent;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background var(--transition-base), color var(--transition-base);
 }
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-/* Dark mode styles */
-html.dark {
-  color-scheme: dark;
-}
 
-html.dark body {
-  @apply bg-gray-900 text-white;
-}
+/* ========================================
+   SCROLLBAR PERSONALIZADO
+   ======================================== */
 
-/* Custom scrollbar */
+
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
+
 
 ::-webkit-scrollbar-track {
-  @apply bg-gray-200 dark:bg-gray-800;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-full);
 }
+
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-400 dark:bg-gray-600 rounded-full hover:bg-gray-500 dark:hover:bg-gray-500;
+  background: var(--primary);
+  border-radius: var(--radius-full);
+  transition: background var(--transition-base);
 }
 
-/* Animations */
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
+}
+
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--bg-secondary);
+}
+
+
+/* ========================================
+   ANIMACIONES
+   ======================================== */
+
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -53,6 +196,7 @@ html.dark body {
     opacity: 1;
   }
 }
+
 
 @keyframes slideInUp {
   from {
@@ -65,10 +209,182 @@ html.dark body {
   }
 }
 
-.fade-in {
-  animation: fadeIn 0.3s ease-in-out;
+
+@keyframes slideInDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+
+/* Clases de utilidad para animaciones */
+.fade-in {
+  animation: fadeIn var(--transition-base) ease-in-out;
+}
+
+
 .slide-in-up {
-  animation: slideInUp 0.3s ease-in-out;
+  animation: slideInUp var(--transition-base) ease-in-out;
+}
+
+
+.slide-in-down {
+  animation: slideInDown var(--transition-base) ease-in-out;
+}
+
+
+.slide-in-left {
+  animation: slideInLeft var(--transition-base) ease-in-out;
+}
+
+
+.slide-in-right {
+  animation: slideInRight var(--transition-base) ease-in-out;
+}
+
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+
+.animate-bounce {
+  animation: bounce 1s infinite;
+}
+
+
+/* ========================================
+   UTILIDADES DE GLASSMORPHISM
+   ======================================== */
+
+
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+
+html.dark .glass {
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+/* ========================================
+   UTILIDADES DE GRADIENTES
+   ======================================== */
+
+
+.gradient-primary {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+
+.gradient-accent {
+  background: linear-gradient(135deg, var(--accent), var(--primary));
+}
+
+
+.gradient-success {
+  background: linear-gradient(135deg, var(--success), var(--accent));
+}
+
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+
+/* ========================================
+   FOCUS STATES ACCESIBLES
+   ======================================== */
+
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+
+/* ========================================
+   SELECCIÓN DE TEXTO
+   ======================================== */
+
+
+::selection {
+  background: var(--primary-light);
+  color: var(--bg-primary);
+}
+
+
+::-moz-selection {
+  background: var(--primary-light);
+  color: var(--bg-primary);
 }

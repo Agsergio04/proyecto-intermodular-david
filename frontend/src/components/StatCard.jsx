@@ -1,6 +1,7 @@
 import React from 'react';
 import '../assets/styles/StatCard.css';
 
+
 export const StatCard = ({ title, value, icon, color, isDark }) => {
   return (
     <div className={`stat-card ${color} ${isDark ? 'stat-card--dark-mode' : ''}`}>

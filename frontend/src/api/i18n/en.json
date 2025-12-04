@@ -20,11 +20,50 @@
     "delete": "Delete",
     "edit": "Edit",
     "loading": "Loading...",
+    "processing": "Processing...",
     "error": "Error",
     "success": "Success",
     "confirm": "Confirm",
+    "confirmDelete": "Are you sure?",
     "close": "Close",
     "back": "Back"
+  },
+  "home": {
+    "heroTitle": "Master Your Interview Skills with AI",
+    "heroDescription": "Practice with realistic AI-generated questions, get instant feedback, and track your progress. Perfect preparation for your dream job.",
+    "getStartedFree": "Get Started Free",
+    "featuresTitle": "Why Choose Our Platform?",
+    "voiceInterviews": "Voice Interviews",
+    "voiceInterviewsDesc": "Practice with real-time voice interaction and get transcribed feedback",
+    "analyticsTracking": "Analytics & Tracking",
+    "analyticsTrackingDesc": "Monitor your progress with detailed statistics and performance trends",
+    "securePrivate": "Secure & Private",
+    "securePrivateDesc": "Your data is encrypted and secure with industry-standard security",
+    "pricingTitle": "Simple, Transparent Pricing",
+    "freePlan": "Free",
+    "freePrice": "$0",
+    "freePeriod": "",
+    "freeFeatures": [
+      "Unlimited voice interviews",
+      "AI-generated questions",
+      "7 days free trial",
+      "Basic feedback"
+    ],
+    "freeButton": "Start Free",
+    "premiumPlan": "Premium",
+    "premiumPrice": "$9.99",
+    "premiumPeriod": "per month",
+    "premiumFeatures": [
+      "Everything in Free",
+      "Download reports",
+      "Advanced analytics",
+      "Priority support"
+    ],
+    "premiumButton": "Upgrade Now",
+    "ctaTitle": "Ready to Transform Your Interview Skills?",
+    "ctaDescription": "Join thousands of professionals already practicing with our AI-powered interview platform",
+    "ctaButton": "Get Started Free Now",
+    "footerCopyright": "© 2024 AI Interview Platform. All rights reserved."
   },
   "auth": {
     "loginTitle": "Welcome Back",
@@ -93,7 +132,14 @@
     "listening": "Listening...",
     "responseTime": "Response Time",
     "totalTime": "Total Time",
-    "unansweredQuestion": "Unanswered question."
+    "unansweredQuestion": "Unanswered question.",
+    "repositoryUrl": "Repository URL",
+    "repositoryInfo": "Enter the repository URL (GitHub, GitLab, etc.) to generate technical questions with AI.",
+    "repository": "Repository",
+    "created": "Interview created successfully",
+    "deleted": "Interview deleted",
+    "generatingQuestions": "Generating questions with AI...",
+    "questionsGenerated": "questions generated"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -110,19 +156,34 @@
   },
   "subscription": {
     "title": "Subscription",
-    "freePlan": "Free Plan",
-    "premiumPlan": "Premium Plan",
+    "subtitle": "Choose the plan that best suits your needs",
+    "freePlan": "Free Account",
+    "freeDescription": "Basic and limited access to AI questions",
+    "premiumPlan": "Premium",
+    "premiumDescription": "Full access to all features",
     "features": "Features",
+    "mostPopular": "Most Popular",
+    "currentPlan": "Current Plan",
+    "limitedAI": "Limited AI questions",
+    "unlimitedAI": "Unlimited AI questions",
+    "basicInterviews": "Basic interview management",
+    "noAdvancedStats": "No advanced statistics",
+    "advancedStats": "Advanced statistics",
+    "reportDownload": "Report download",
+    "prioritySupport": "Priority support",
     "viewStatistics": "View Statistics",
     "downloadReports": "Download Reports",
     "aiGeneratedQuestions": "AI Generated Questions",
     "voiceInterview": "Voice Interview",
     "customInterviews": "Custom Interviews",
     "upgrade": "Upgrade to Premium",
-    "currentPlan": "Current Plan",
+    "cancel": "Cancel Subscription",
+    "confirmCancel": "Are you sure you want to cancel your subscription?",
+    "cancelSuccess": "Subscription cancelled successfully",
+    "endsOn": "Your subscription ends on",
     "trialEndsIn": "Trial ends in",
     "price": "Price",
-    "perMonth": "per month",
+    "perMonth": "/month",
     "buyNow": "Buy Now"
   },
   "settings": {
@@ -141,7 +202,9 @@
     "subscription": "Subscription",
     "manageSubscription": "Manage Subscription",
     "upgradeToPremium": "Upgrade to Premium",
-    "currentPlan": "Current Plan"
+    "currentPlan": "Current Plan",
+    "logoutZone": "Logout Zone",
+    "logoutWarning": "This action will log you out of your current session. You will need to log in again."
   },
   "errors": {
     "networkError": "Network error. Please try again.",
@@ -149,6 +212,9 @@
     "unauthorized": "Unauthorized access",
     "notFound": "Resource not found",
     "serverError": "Server error. Please try again later.",
-    "fillAllFields": "Please fill all required fields"
+    "fillAllFields": "Please fill all required fields",
+    "fillFields": "Please fill in the title and repository URL",
+    "questionsGeneration": "Could not generate questions. Please try again",
+    "creatingInterview": "Error creating interview"
   }
 }

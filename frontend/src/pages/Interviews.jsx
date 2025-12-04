@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { interviewService } from '../api';
-import { FiPlus, FiSearch, FiTrash2, FiEye } from 'react-icons/fi';
+import { FiPlus, FiSearch, FiTrash2, FiEye, FiX } from 'react-icons/fi';
 import { useThemeStore } from '../store';
 import '../assets/styles/Interviews.css';
+
 
 const Interviews = () => {
   const { t } = useTranslation();
@@ -18,16 +19,14 @@ const Interviews = () => {
   const [formLoading, setFormLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
-    repository: '',
+    repoUrl: '',
+    type: 'ai_generated',
     difficulty: 'mid',
     language: 'en'
   });
 
-  useEffect(() => {
-    fetchInterviews();
-  }, []);
 
-  const fetchInterviews = async () => {
+  const fetchInterviews = useCallback(async () => {
     try {
       setLoading(true);
       const response = await interviewService.getInterviews();
@@ -37,86 +36,103 @@ const Interviews = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
+
+
+  useEffect(() => {
+    fetchInterviews();
+  }, [fetchInterviews]);
+
 
   const handleCreateInterview = async (e) => {
     e.preventDefault();
-    
-    if (!formData.title.trim() || !formData.repository.trim()) {
-      toast.warning('Please fill in all required fields');
+   
+    if (!formData.title.trim() || !formData.repoUrl.trim()) {
+      toast.warning(t('errors.fillFields') || 'Por favor, rellena el título y la URL del repositorio');
       return;
     }
-    
+   
     setFormLoading(true);
-    
+   
     try {
-      toast.info('Generating questions from repository with AI...');
-      
-      const questionsResponse = await interviewService.generateQuestions({
-        repository: formData.repository,
-        difficulty: formData.difficulty,
-        language: formData.language,
-        count: 5
-      });
-      
-      const questions = questionsResponse.data.questions;
-      
-      if (!questions || questions.length === 0) {
-        toast.error('Failed to generate questions. Please try again.');
-        setFormLoading(false);
-        return;
+      let questions = [];
+     
+      if (formData.type === 'ai_generated') {
+        toast.info(t('interview.generatingQuestions') || 'Generating questions with AI...');
+       
+        const questionsResponse = await interviewService.generateQuestions({
+          repoUrl: formData.repoUrl,
+          difficulty: formData.difficulty,
+          language: formData.language,
+          count: 5
+        });
+       
+        questions = questionsResponse.data.questions;
+       
+        if (!questions || questions.length === 0) {
+          toast.error(t('errors.questionsGeneration') || 'Failed to generate questions. Please try again.');
+          setFormLoading(false);
+          return;
+        }
+       
+        toast.success(`${questions.length} ${t('interview.questionsGenerated') || 'questions generated'}!`);
       }
-      
-      toast.success(`${questions.length} questions generated!`);
+
 
       const response = await interviewService.createInterview({
         title: formData.title,
-        repository: formData.repository,
-        type: 'ai_generated',
+        repoUrl: formData.repoUrl,
+        type: formData.type,
         difficulty: formData.difficulty,
         language: formData.language,
-        questions: questions
+        questions
       });
 
-      toast.success('Interview created successfully!');
+
+      toast.success(t('interview.created') || 'Interview created successfully!');
       setInterviews([response.data.interview, ...interviews]);
       setShowCreateForm(false);
       setFormData({
         title: '',
-        repository: '',
+        repoUrl: '',
+        type: 'ai_generated',
         difficulty: 'mid',
         language: 'en'
       });
+
 
       setTimeout(() => {
         navigate(`/interview/${response.data.interview.id || response.data.interview._id}`);
       }, 500);
     } catch (error) {
       console.error('Error creating interview:', error);
-      const errorMessage = error.response?.data?.message || 'Error creating interview';
+      const errorMessage = error.response?.data?.message || t('errors.creatingInterview') || 'Error creating interview';
       toast.error(errorMessage);
     } finally {
       setFormLoading(false);
     }
   };
 
+
   const handleDeleteInterview = async (id) => {
-    if (window.confirm('Are you sure?')) {
+    if (window.confirm(t('common.confirmDelete') || 'Are you sure?')) {
       try {
         await interviewService.deleteInterview(id);
         setInterviews(interviews.filter(i => i._id !== id));
-        toast.success('Interview deleted');
+        toast.success(t('interview.deleted') || 'Interview deleted');
       } catch (error) {
         toast.error(t('errors.serverError'));
       }
     }
   };
 
+
   const filteredInterviews = interviews.filter(i =>
     i.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (i.repository && i.repository.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    (i.profession && i.profession.toLowerCase().includes(searchTerm.toLowerCase()))
+    (i.repoUrl && i.repoUrl.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (i.repositoryUrl && i.repositoryUrl.toLowerCase().includes(searchTerm.toLowerCase()))
   );
+
 
   return (
     <div className={`interviews ${isDark ? 'interviews--dark' : ''}`}>
@@ -142,78 +158,154 @@ const Interviews = () => {
           </div>
         </div>
 
+
         {showCreateForm && (
-          <div className={`interviews__form ${isDark ? 'interviews__form--dark' : ''}`}>
-            <h2 className={`interviews__form-title ${isDark ? 'interviews__form-title--dark' : ''}`}>
-              {t('interview.newInterview')}
-            </h2>
-            <form onSubmit={handleCreateInterview} className="interviews__form-grid">
-              <input
-                type="text"
-                placeholder={t('interview.interviewTitle')}
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className={`interviews__form-input ${isDark ? 'interviews__form-input--dark' : ''}`}
-                required
-                disabled={formLoading}
-              />
-              <input
-                type="text"
-                placeholder="Repository URL (e.g., https://github.com/user/repo)"
-                value={formData.repository}
-                onChange={(e) => setFormData({ ...formData, repository: e.target.value })}
-                className={`interviews__form-input ${isDark ? 'interviews__form-input--dark' : ''}`}
-                required
-                disabled={formLoading}
-              />
-              <select
-                value={formData.difficulty}
-                onChange={(e) => setFormData({ ...formData, difficulty: e.target.value })}
-                className={`interviews__form-input ${isDark ? 'interviews__form-input--dark' : ''}`}
-                disabled={formLoading}
-              >
-                <option value="junior">{t('interview.junior')}</option>
-                <option value="mid">{t('interview.mid')}</option>
-                <option value="senior">{t('interview.senior')}</option>
-              </select>
-              <select
-                value={formData.language}
-                onChange={(e) => setFormData({ ...formData, language: e.target.value })}
-                className={`interviews__form-input ${isDark ? 'interviews__form-input--dark' : ''}`}
-                disabled={formLoading}
-              >
-                <option value="en">English</option>
-                <option value="es">Español</option>
-                <option value="fr">Français</option>
-                <option value="de">Deutsch</option>
-              </select>
-              <div className="interviews__form-actions">
-                <button
-                  type="submit"
-                  disabled={formLoading}
-                  className="interviews__form-button interviews__form-button--submit"
-                >
-                  {formLoading ? (
-                    <>
-                      <div className="interviews__form-spinner"></div>
-                      {t('interview.creating')}
-                    </>
-                  ) : (
-                    t('interview.createInterview')
-                  )}
-                </button>
+          <div className={`interviews__form-overlay ${isDark ? 'interviews__form-overlay--dark' : ''}`} onClick={() => setShowCreateForm(false)}>
+            <div className={`interviews__modal ${isDark ? 'interviews__modal--dark' : ''}`} onClick={(e) => e.stopPropagation()}>
+              <div className="interviews__modal-header">
+                <h2 className={`interviews__modal-title ${isDark ? 'interviews__modal-title--dark' : ''}`}>
+                  {t('interview.newInterview')}
+                </h2>
                 <button
                   type="button"
                   onClick={() => setShowCreateForm(false)}
                   disabled={formLoading}
-                  className="interviews__form-button interviews__form-button--cancel"
+                  className={`interviews__modal-close ${isDark ? 'interviews__modal-close--dark' : ''}`}
                 >
-                  {t('common.cancel')}
+                  <FiX />
                 </button>
               </div>
-            </form>
+             
+              <form onSubmit={handleCreateInterview} className="interviews__modal-form">
+                <div className="interviews__modal-grid">
+                  {/* Título */}
+                  <div className="interviews__modal-field interviews__modal-field--full">
+                    <label className={`interviews__modal-label ${isDark ? 'interviews__modal-label--dark' : ''}`}>
+                      {t('interview.interviewTitle')}
+                    </label>
+                    <input
+                      type="text"
+                      placeholder={t('interview.interviewTitle')}
+                      value={formData.title}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      className={`interviews__modal-input ${isDark ? 'interviews__modal-input--dark' : ''}`}
+                      required
+                      disabled={formLoading}
+                    />
+                  </div>
+
+
+                  {/* URL del Repositorio */}
+                  <div className="interviews__modal-field interviews__modal-field--full">
+                    <label className={`interviews__modal-label ${isDark ? 'interviews__modal-label--dark' : ''}`}>
+                      {t('interview.repositoryUrl')}
+                    </label>
+                    <input
+                      type="url"
+                      placeholder="https://github.com/username/repository"
+                      value={formData.repoUrl}
+                      onChange={(e) => setFormData({ ...formData, repoUrl: e.target.value })}
+                      className={`interviews__modal-input ${isDark ? 'interviews__modal-input--dark' : ''}`}
+                      required
+                      disabled={formLoading}
+                    />
+                  </div>
+
+
+                  {/* Tipo de Entrevista */}
+                  <div className="interviews__modal-field">
+                    <label className={`interviews__modal-label ${isDark ? 'interviews__modal-label--dark' : ''}`}>
+                      {t('interview.type')}
+                    </label>
+                    <select
+                      value={formData.type}
+                      onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                      className={`interviews__modal-select ${isDark ? 'interviews__modal-select--dark' : ''}`}
+                      disabled={formLoading}
+                    >
+                      <option value="ai_generated">{t('interview.aiGenerated')}</option>
+                      <option value="custom">{t('interview.custom')}</option>
+                    </select>
+                  </div>
+
+
+                  {/* Dificultad */}
+                  <div className="interviews__modal-field">
+                    <label className={`interviews__modal-label ${isDark ? 'interviews__modal-label--dark' : ''}`}>
+                      {t('interview.difficulty')}
+                    </label>
+                    <select
+                      value={formData.difficulty}
+                      onChange={(e) => setFormData({ ...formData, difficulty: e.target.value })}
+                      className={`interviews__modal-select ${isDark ? 'interviews__modal-select--dark' : ''}`}
+                      disabled={formLoading}
+                    >
+                      <option value="junior">{t('interview.junior')}</option>
+                      <option value="mid">{t('interview.mid')}</option>
+                      <option value="senior">{t('interview.senior')}</option>
+                    </select>
+                  </div>
+
+
+                  {/* Idioma */}
+                  <div className="interviews__modal-field">
+                    <label className={`interviews__modal-label ${isDark ? 'interviews__modal-label--dark' : ''}`}>
+                      {t('interview.language')}
+                    </label>
+                    <select
+                      value={formData.language}
+                      onChange={(e) => setFormData({ ...formData, language: e.target.value })}
+                      className={`interviews__modal-select ${isDark ? 'interviews__modal-select--dark' : ''}`}
+                      disabled={formLoading}
+                    >
+                      <option value="en">English</option>
+                      <option value="es">Español</option>
+                      <option value="fr">Français</option>
+                      <option value="de">Deutsch</option>
+                    </select>
+                  </div>
+                </div>
+
+
+                {/* Nota informativa */}
+                <div className={`interviews__modal-info ${isDark ? 'interviews__modal-info--dark' : ''}`}>
+                  <p>{t('interview.repositoryInfo')}</p>
+                </div>
+
+
+                {/* Botones de acción */}
+                <div className="interviews__modal-actions">
+                  <button
+                    type="button"
+                    onClick={() => setShowCreateForm(false)}
+                    disabled={formLoading}
+                    className={`interviews__modal-button interviews__modal-button--cancel ${isDark ? 'interviews__modal-button--cancel--dark' : ''}`}
+                  >
+                    {t('common.cancel')}
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={formLoading}
+                    className="interviews__modal-button interviews__modal-button--submit"
+                  >
+                    {formLoading ? (
+                      <>
+                        <div className="interviews__modal-spinner"></div>
+                        {t('interview.creating')}
+                      </>
+                    ) : (
+                      <>
+                        <FiPlus />
+                        {t('interview.createInterview')}
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
+
 
         <div className="interviews__search">
           <div className="interviews__search-wrapper">
@@ -228,6 +320,7 @@ const Interviews = () => {
           </div>
         </div>
 
+
         {loading ? (
           <div className="interviews__loading">
             <div className="interviews__loading-spinner"></div>
@@ -238,9 +331,9 @@ const Interviews = () => {
           </div>
         ) : (
           <div className="interviews__grid">
-            {filteredInterviews.map(interview => (
+            {filteredInterviews.map((interview, index) => (
               <div
-                key={interview._id}
+                key={interview._id || interview.id || `interview-${index}`}
                 className={`interview-card ${isDark ? 'interview-card--dark' : ''}`}
               >
                 <div className="interview-card__header">
@@ -253,8 +346,14 @@ const Interviews = () => {
                 </div>
                 <div className="interview-card__info">
                   <div className={`interview-card__info-item ${isDark ? 'interview-card__info-item--dark' : ''}`}>
-                    <span className="interview-card__info-label">Repository:</span>
-                    <span>{interview.repository || interview.profession || 'N/A'}</span>
+                    <span className="interview-card__info-label">{t('interview.repository')}:</span>
+                    {interview.repoUrl || interview.repositoryUrl ? (
+                      <a href={interview.repoUrl || interview.repositoryUrl} target="_blank" rel="noopener noreferrer" style={{color: '#3b82f6', wordBreak: 'break-all'}}>
+                        {interview.repoUrl || interview.repositoryUrl}
+                      </a>
+                    ) : (
+                      <span>-</span>
+                    )}
                   </div>
                   <div className={`interview-card__info-item ${isDark ? 'interview-card__info-item--dark' : ''}`}>
                     <span className="interview-card__info-label">{t('interview.difficulty')}:</span>
@@ -287,5 +386,6 @@ const Interviews = () => {
     </div>
   );
 };
+
 
 export default Interviews;

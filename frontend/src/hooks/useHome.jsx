@@ -1,15 +1,18 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
+
 export const useHome = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const token = localStorage.getItem('token');
   const isAuthenticated = !!token;
 
+
   const navigateToRegister = () => {
     navigate('/register');
   };
+
 
   const features = [
     {
@@ -29,6 +32,7 @@ export const useHome = () => {
     }
   ];
 
+
   const freePlan = {
     plan: 'Free',
     price: '$0',
@@ -41,6 +45,7 @@ export const useHome = () => {
     cta: 'Start Free',
     featured: false
   };
+
 
   const premiumPlan = {
     plan: 'Premium',
@@ -56,6 +61,7 @@ export const useHome = () => {
     featured: true
   };
 
+
   return {
     t,
     isAuthenticated,
@@ -65,4 +71,3 @@ export const useHome = () => {
     premiumPlan
   };
 };
-
