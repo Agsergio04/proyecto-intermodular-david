@@ -265,5 +265,64 @@ Refactorizar los componentes docker-entrypoints.sh y verificar la creación de p
 
 ---
 
-*Total de issues: 10*
-*Estimación total: 33 horas*
+---
+
+# Issues de la Rama Proyecto_En_Curso_Frontend
+
+---
+
+## Issue 11: Actualización General del Frontend
+
+## Descripción
+Realizar actualización general del frontend con mejoras y correcciones necesarias para el funcionamiento óptimo de la aplicación.
+
+## Tareas
+- [ ] Revisar componentes del frontend
+- [ ] Actualizar dependencias si es necesario
+- [ ] Corregir bugs identificados
+- [ ] Mejorar rendimiento de la aplicación
+- [ ] Probar funcionalidades actualizadas
+
+## Criterios de Aceptación
+- El frontend funciona correctamente
+- No hay errores en consola
+- La aplicación responde de forma rápida
+- Todas las funcionalidades están operativas
+
+## Estimación
+**4 horas**
+
+## Asignado a
+@pablitoclavito04 (Frontend)
+
+---
+
+## Issue 12: Cambio de Campo Profession a Repository en Formularios
+
+## Descripción
+Modificar los formularios de entrevistas para cambiar el campo "profession" por "repository", permitiendo a los usuarios ingresar la URL del repositorio en lugar de la profesión.
+
+## Tareas
+- [ ] Identificar formularios que usan campo profession
+- [ ] Renombrar campo a repository
+- [ ] Actualizar labels y placeholders
+- [ ] Modificar validaciones del campo
+- [ ] Actualizar modelo de datos si es necesario
+- [ ] Probar formularios actualizados
+
+## Criterios de Aceptación
+- El campo se muestra como "Repository" en todos los formularios
+- La validación acepta URLs de repositorios
+- Los datos se guardan correctamente
+- La interfaz es clara para el usuario
+
+## Estimación
+**3 horas**
+
+## Asignado a
+@pablitoclavito04 (Frontend)
+
+---
+
+*Total de issues: 12*
+*Estimación total: 40 horas*
