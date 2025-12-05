@@ -15,15 +15,15 @@ services:
       - key: NODE_ENV
         value: production
       - key: MONGODB_URI
-        sync: false # Se configura manualmente en el dashboard
+        sync: false
       - key: JWT_SECRET
-        generateValue: true # Render genera un valor aleatorio
+        generateValue: true
       - key: FRONTEND_URL
-        sync: false # Se configura después de crear el frontend
+        sync: false
       - key: GEMINI_API_KEY
-        sync: false # Se configura manualmente
+        sync: false
       - key: OPENAI_API_KEY
-        sync: false # Se configura manualmente
+        sync: false
 
   # Frontend - React App (Static Site)
   - type: web
@@ -44,5 +44,4 @@ services:
         destination: /index.html
     envVars:
       - key: REACT_APP_API_URL
-        sync: false # URL del backend, se configura manualmente
-
+        sync: false
