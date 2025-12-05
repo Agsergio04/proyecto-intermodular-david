@@ -241,7 +241,7 @@
 }
 
 .feature-card--dark {
-  background-color: #5d5651;
+  background-color: #E2E8F0;
   border-color: transparent;
 }
 
@@ -272,7 +272,7 @@
 }
 
 .feature-card__title--dark {
-  color: #edebd7;
+  color: #1E293B;
 }
 
 .feature-card__description {
@@ -282,7 +282,7 @@
 }
 
 .feature-card__description--dark {
-  color: #dcd5d4;
+  color: #475569;
 }
 
 /* ========================================
@@ -364,7 +364,7 @@
 }
 
 .pricing-card--dark {
-  background-color: #6e675f;
+  background-color: #60A5FA;
 }
 
 .pricing-card--featured {
@@ -382,7 +382,7 @@
 }
 
 .pricing-card__plan--dark {
-  color: #edebd7;
+  color: #FFFFFF;
 }
 
 .pricing-card__plan--featured {
@@ -397,7 +397,7 @@
 }
 
 .pricing-card__price--dark {
-  color: #edebd7;
+  color: #FFFFFF;
 }
 
 .pricing-card__price--featured {
@@ -434,7 +434,7 @@
 }
 
 .pricing-card__feature--dark {
-  color: #dcd5d4;
+  color: #FFFFFF;
 }
 
 .pricing-card__feature--featured {
@@ -473,8 +473,8 @@
 }
 
 .pricing-card__button--free {
-  background-color: #64748b;
-  color: white;
+  background-color: #FFFFFF;
+  color: #3B82F6;
 }
 
 .pricing-card__button--free:hover {
@@ -499,7 +499,7 @@
                   CTA SECTION
    ======================================== */
 .home__cta {
-  background: #8b5cf6;
+  background: #EBF0FD;
   padding: 5rem 0;
   position: relative;
   overflow: hidden;
@@ -517,7 +517,7 @@
 .home__cta-title {
   font-size: 2rem;
   font-weight: 800;
-  color: white;
+  color: #1E293B;
   margin-bottom: 1.5rem;
 }
 
@@ -528,7 +528,7 @@
 }
 
 .home__cta-description {
-  color: rgba(255, 255, 255, 0.95);
+  color: #1E293B;
   margin-bottom: 2.5rem;
   font-size: 1.125rem;
   line-height: 1.7;
@@ -558,8 +558,8 @@
                    FOOTER
    ======================================== */
 .home__footer {
-  background-color: #334155;
-  color: #94a3b8;
+  background-color: #FFFFFF;
+  color: #1E293B;
   padding: 2.5rem 0;
 }
 
