@@ -125,6 +125,7 @@ exports.getPerformanceTrends = async (req, res) => {
       });
     });
 
+
     res.status(200).json(trends);
 
   } catch (error) {
