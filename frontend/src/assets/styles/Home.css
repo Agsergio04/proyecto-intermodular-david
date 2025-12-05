@@ -2,7 +2,7 @@
 
 :root {
   /* ==================================================
-      NUEVA PALETA MODO CLARO - Azul/Índigo profesional
+        NUEVA PALETA para el MODO CLARO y MODO OSCURO
      ================================================== */
 
 /* Colores principales MODO CLARO */
@@ -46,6 +46,7 @@
   --home-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   --home-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 
+  
   /* ========================================
                PALETA MODO OSCURO 
      ======================================== */
@@ -63,105 +64,13 @@
 }
 
 .home--dark {
-  background: var(--home-bg-gradient-dark);
-  color: var(--home-text-white);
-}
-
-/* Navigation */
-.home__hero {
-  background-color: var(--home-bg-white);
-  box-shadow: var(--home-shadow-sm);
-}
-
-.home__nav--dark {
-  background-color: var(--home-bg-dark);
-}
-
-.home__nav-container {
-  max-width: 80rem;
-  margin: 0 auto;
-  padding: 1rem 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-@media (min-width: 640px) {
-  .home__nav-container {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .home__nav-container {
-    padding-left: 2rem;
-    padding-right: 2rem;
-  }
-}
-
-.home__logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--home-primary-hover);
-}
-
-.home__logo--dark {
-  color: var(--home-primary-light);
-}
-
-.home__nav-actions {
-  display: flex;
-  gap: 1rem;
-}
-
-.home__nav-button {
-  padding: 0.5rem 1.5rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  transition: all 0.2s;
-  border: none;
-  cursor: pointer;
-  background: none;
-}
-
-.home__nav-button--login {
-  color: var(--home-text-gray);
-}
-
-.home__nav-button--login:hover {
-  color: var(--home-primary-hover);
-}
-
-.home__nav-button--login--dark {
-  color: var(--home-text-light);
-}
-
-.home__nav-button--login--dark:hover {
-  color: var(--home-primary-light);
-}
-
-.home__nav-button--register {
-  background-color: var(--home-primary);
-  color: var(--home-text-white);
-}
-
-.home__nav-button--register:hover {
-  background-color: var(--home-primary-hover);
-}
-
-.home__nav-button--dashboard {
-  background-color: var(--home-primary);
-  color: var(--home-text-white);
-}
-
-.home__nav-button--dashboard:hover {
-  background-color: var(--home-primary-hover);
+  background: linear-gradient(to bottom right, #423e37, #6e675f);
+  color: #edebd7;
 }
 
 
 /* ========================================
-                HERO SECTION
+               HERO SECTION
    ======================================== */
 
 .home__hero {
@@ -202,11 +111,11 @@
 }
 
 .home__hero-title--dark {
-  color: var(--home-text-white);
+  color: #edebd7;
 }
 
 .home__hero-description {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   color: var(--home-text-secondary-light);
   margin-bottom: 2.5rem;
   max-width: 42rem;
@@ -222,11 +131,11 @@
 }
 
 .home__hero-description--dark {
-  color: var(--home-text-light);
+  color: #dcd5d4;
 }
 
 .home__hero-button {
-  background-color: #84C59C;
+  background: #84C59C;
   color: white;
   padding: 1rem 2.5rem;
   border-radius: 0.75rem;
@@ -244,7 +153,7 @@
 }
 
 .home__hero-button:hover {
-  background-color: #6fb589;
+  background: #6fb589;
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 6px 20px rgba(132, 197, 156, 0.5);
 }
@@ -253,13 +162,14 @@
 /* ========================================
               FEATURES SECTION
    ======================================== */
+
 .home__features {
   background-color: var(--home-bg-white);
   padding: 5rem 0;
 }
 
 .home__features--dark {
-  background-color: var(--home-bg-dark);
+  background-color: #6e675f;
 }
 
 .home__features-container {
@@ -290,14 +200,14 @@
   color: var(--home-text-primary-light);
 }
 
-.home__features-title--dark {
-  color: var(--home-text-white);
-}
-
 @media (min-width: 768px) {
   .home__features-title {
     font-size: 2.5rem;
   }
+}
+
+.home__features-title--dark {
+  color: #edebd7;
 }
 
 .home__features-grid {
@@ -309,6 +219,7 @@
 @media (min-width: 768px) {
   .home__features-grid {
     grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
   }
 }
 
@@ -324,11 +235,7 @@
 }
 
 .feature-card:hover {
-  transform: translateY(-0.-8px);
-}
-
-.feature-card--dark {
-  background-color: var(--home-bg-dark-alt);
+  transform: translateY(-8px);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border-color: #94a3b8;
 }
@@ -339,8 +246,6 @@
 }
 
 .feature-card__icon {
-  color: white;
-  font-size: 1.875rem;
   width: 4rem;
   height: 4rem;
   margin: 0 auto 1.5rem;
@@ -349,6 +254,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: white;
+  font-size: 1.875rem;
 }
 
 .feature-card__title {
@@ -369,7 +276,7 @@
 }
 
 .feature-card__description {
-  color: var(---home-text-muted-light);
+  color: var(--home-text-muted-light);
   line-height: 1.6;
   font-size: 0.95rem;
 }
@@ -381,7 +288,6 @@
 /* ========================================
               PRICING SECTION
    ======================================== */
-
 .home__pricing {
   padding: 5rem 0;
   background-color: var(--home-pricing-bg-light);
@@ -439,7 +345,6 @@
     gap: 2.5rem;
   }
 }
-
 
 /* Pricing Card */
 .pricing-card {
@@ -538,15 +443,15 @@
 
 .pricing-card__feature::before {
   content: "✓";
-  color: white;
-  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 1.5rem;
   height: 1.5rem;
   background-color: #10b981;
+  color: white;
   border-radius: 50%;
+  font-weight: bold;
   font-size: 0.875rem;
   flex-shrink: 0;
 }
@@ -590,9 +495,8 @@
   box-shadow: 0 4px 12px rgba(255, 255, 255, 0.5);
 }
 
-
 /* ========================================
-                CTA SECTION
+                  CTA SECTION
    ======================================== */
 .home__cta {
   background: #8b5cf6;
@@ -651,9 +555,8 @@
 
 
 /* ========================================
-                    FOOTER
+                   FOOTER
    ======================================== */
-
 .home__footer {
   background-color: #334155;
   color: #94a3b8;
