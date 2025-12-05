@@ -6,7 +6,6 @@ services:
     name: ai-interview-backend
     runtime: node
     region: frankfurt
-    plan: free
     rootDir: backend
     buildCommand: npm install
     startCommand: node server.js
