@@ -1,50 +1,65 @@
 /* Home Component - BEM Nomenclature con Variables CSS */
 
 :root {
-  /* Paleta de colores personalizada */
+  /* ==================================================
+      NUEVA PALETA MODO CLARO - Azul/Índigo profesional
+     ================================================== */
+
+/* Colores principales MODO CLARO */
+  --home-primary-light: #84C59C;        /* Verde menta */
+  --home-primary-hover-light: #6fb589;  /* Verde menta oscuro */
+  --home-accent-light: #84C59C;         /* Verde menta para iconos */
+  
+  /* Backgrounds MODO CLARO */
+  --home-bg-main-light: linear-gradient(to bottom right, #f8fafc, #e0e7ff);
+  --home-bg-white: #ffffff;
+  --home-bg-section-light: #f1f5f9;
+  --home-card-light: #ffffff;
+  --home-card-hover-light: #f8fafc;
+  
+  /* Textos MODO CLARO */
+  --home-text-primary-light: #1e293b;
+  --home-text-secondary-light: #475569;
+  --home-text-muted-light: #64748b;
+  
+  /* Feature cards MODO CLARO */
+  --home-feature-bg-light: #E2E8F0;     /* Gris claro */
+  --home-feature-border-light: #cbd5e1;
+  --home-feature-icon-bg-light: #84C59C; /* Verde menta para iconos */
+  
+  /* Pricing MODO CLARO */
+  --home-pricing-bg-light: #f8fafc;
+  --home-free-card-light: #64748b;      /* Gris para Free */
+  --home-premium-card-light: #60a5fa;   /* Azul claro para Premium */
+  
+  /* CTA Section MODO CLARO */
+  --home-cta-bg-light: #8b5cf6;         /* Púrpura sólido */
+  
+  /* Footer MODO CLARO */
+  --home-footer-bg-light: #334155;      /* Gris oscuro diferente */
+  
+  /* Success color */
+  --home-success: #10b981;
+  
+  /* Sombras */
+  --home-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  --home-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --home-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+  /* ========================================
+               PALETA MODO OSCURO 
+     ======================================== */
+
   --black-olive: #423e37;
   --xanthous: #e3b23c;
   --eggshell: #edebd7;
-  --taupe-gray: #a39594;
   --dim-gray: #6e675f;
-
-  /* Colores específicos de Home */
-  --home-primary: var(--xanthous);
-  --home-primary-hover: #d4a02e;
-  --home-primary-dark: #c59025;
-  --home-primary-light: #ead16f;
-  --home-secondary: var(--dim-gray);
-  --home-success: #10b981;
-
-  /* Backgrounds Home */
-  --home-bg-gradient-light: linear-gradient(to bottom right, var(--eggshell), #f5f3e8);
-  --home-bg-gradient-dark: linear-gradient(to bottom right, var(--black-olive), var(--dim-gray));
-  --home-bg-white: #ffffff;
-  --home-bg-light: var(--eggshell);
-  --home-bg-dark: var(--dim-gray);
-  --home-bg-dark-alt: #5d5651;
-  --home-bg-featured: var(--xanthous);
-  --home-bg-cta: var(--xanthous);
-  --home-bg-footer: var(--black-olive);
-
-  /* Textos Home */
-  --home-text-dark: var(--black-olive);
-  --home-text-gray: var(--dim-gray);
-  --home-text-gray-medium: #7d756e;
-  --home-text-gray-light: var(--taupe-gray);
-  --home-text-light: #dcd5d4;
-  --home-text-white: var(--eggshell);
-  --home-text-cta: #f5f3e8;
-
-  /* Sombras Home */
-  --home-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  --home-shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .home {
   min-height: 100vh;
-  background: var(--home-bg-gradient-light);
-  color: var(--home-text-dark);
+  background: var(--home-bg-main-light);
+  color: var(--home-text-primary-light);
 }
 
 .home--dark {
@@ -53,7 +68,7 @@
 }
 
 /* Navigation */
-.home__nav {
+.home__hero {
   background-color: var(--home-bg-white);
   box-shadow: var(--home-shadow-sm);
 }
@@ -144,7 +159,11 @@
   background-color: var(--home-primary-hover);
 }
 
-/* Hero Section */
+
+/* ========================================
+                HERO SECTION
+   ======================================== */
+
 .home__hero {
   max-width: 80rem;
   margin: 0 auto;
@@ -163,14 +182,23 @@
   .home__hero {
     padding-left: 2rem;
     padding-right: 2rem;
+    padding-top: 6rem;
+    padding-bottom: 6rem;
   }
 }
 
 .home__hero-title {
-  font-size: 3rem;
-  font-weight: bold;
-  color: var(--home-text-dark);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--home-text-primary-light);
   margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .home__hero-title {
+    font-size: 3.5rem;
+  }
 }
 
 .home__hero-title--dark {
@@ -179,11 +207,18 @@
 
 .home__hero-description {
   font-size: 1.25rem;
-  color: var(--home-text-gray-medium);
-  margin-bottom: 2rem;
+  color: var(--home-text-secondary-light);
+  margin-bottom: 2.5rem;
   max-width: 42rem;
   margin-left: auto;
   margin-right: auto;
+  line-height: 1.7;
+}
+
+@media (min-width: 768px) {
+  .home__hero-description {
+    font-size: 1.25rem;
+  }
 }
 
 .home__hero-description--dark {
@@ -191,28 +226,33 @@
 }
 
 .home__hero-button {
-  background-color: var(--home-primary-hover);
-  color: var(--home-text-white);
-  padding: 0.75rem 2rem;
-  border-radius: 0.5rem;
-  font-weight: bold;
+  background-color: #84C59C;
+  color: white;
+  padding: 1rem 2.5rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
   font-size: 1.125rem;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   margin: 0 auto;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
   transform: scale(1);
   border: none;
   cursor: pointer;
+  box-shadow: 0 4px 14px 0 rgba(132, 197, 156, 0.39);
 }
 
 .home__hero-button:hover {
-  background-color: var(--home-primary-dark);
-  transform: scale(1.05);
+  background-color: #6fb589;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(132, 197, 156, 0.5);
 }
 
-/* Features Section */
+
+/* ========================================
+              FEATURES SECTION
+   ======================================== */
 .home__features {
   background-color: var(--home-bg-white);
   padding: 5rem 0;
@@ -243,15 +283,21 @@
 }
 
 .home__features-title {
-  font-size: 1.875rem;
-  font-weight: bold;
+  font-size: 2rem;
+  font-weight: 800;
   text-align: center;
   margin-bottom: 3rem;
-  color: var(--home-text-dark);
+  color: var(--home-text-primary-light);
 }
 
 .home__features-title--dark {
   color: var(--home-text-white);
+}
+
+@media (min-width: 768px) {
+  .home__features-title {
+    font-size: 2.5rem;
+  }
 }
 
 .home__features-grid {
@@ -268,49 +314,77 @@
 
 /* Feature Card */
 .feature-card {
-  background-color: var(--home-bg-light);
-  border-radius: 0.5rem;
-  padding: 2rem;
+  background-color: #E2E8F0;
+  border-radius: 1rem;
+  padding: 2.5rem 2rem;
   text-align: center;
-  transition: transform 0.2s;
+  transition: all 0.3s ease;
+  border: 2px solid #cbd5e1;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
 }
 
 .feature-card:hover {
-  transform: translateY(-0.5rem);
+  transform: translateY(-0.-8px);
 }
 
 .feature-card--dark {
   background-color: var(--home-bg-dark-alt);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-color: #94a3b8;
+}
+
+.feature-card--dark {
+  background-color: #5d5651;
+  border-color: transparent;
 }
 
 .feature-card__icon {
-  color: var(--home-primary);
+  color: white;
   font-size: 1.875rem;
-  margin-bottom: 1rem;
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1.5rem;
+  background: #84C59C;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .feature-card__title {
   font-size: 1.25rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  color: var(--home-text-dark);
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--home-text-primary-light);
+}
+
+@media (min-width: 768px) {
+  .feature-card__title {
+    font-size: 1.5rem;
+  }
 }
 
 .feature-card__title--dark {
-  color: var(--home-text-white);
+  color: #edebd7;
 }
 
 .feature-card__description {
-  color: var(--home-text-gray-light);
+  color: var(---home-text-muted-light);
+  line-height: 1.6;
+  font-size: 0.95rem;
 }
 
 .feature-card__description--dark {
-  color: var(--home-text-light);
+  color: #dcd5d4;
 }
 
-/* Pricing Section */
+/* ========================================
+              PRICING SECTION
+   ======================================== */
+
 .home__pricing {
   padding: 5rem 0;
+  background-color: var(--home-pricing-bg-light);
 }
 
 .home__pricing-container {
@@ -334,158 +408,197 @@
 }
 
 .home__pricing-title {
-  font-size: 1.875rem;
-  font-weight: bold;
+  font-size: 2rem;
+  font-weight: 800;
   text-align: center;
   margin-bottom: 3rem;
-  color: var(--home-text-dark);
+  color: var(--home-text-primary-light);
+}
+
+@media (min-width: 768px) {
+  .home__pricing-title {
+    font-size: 2.5rem;
+  }
 }
 
 .home__pricing-title--dark {
-  color: var(--home-text-white);
+  color: #edebd7;
 }
 
 .home__pricing-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
+  max-width: 60rem;
+  margin: 0 auto;
 }
 
 @media (min-width: 768px) {
   .home__pricing-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
   }
 }
+
 
 /* Pricing Card */
 .pricing-card {
   background-color: var(--home-bg-white);
-  border-radius: 0.5rem;
-  box-shadow: var(--home-shadow-md);
-  padding: 2rem;
-  transition: transform 0.2s;
+  border-radius: 1.25rem;
+  box-shadow: var(--home-shadow-lg);
+  padding: 2.5rem;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
 }
 
 .pricing-card:hover {
-  transform: scale(1.05);
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
 }
 
 .pricing-card--dark {
-  background-color: var(--home-bg-dark);
+  background-color: #6e675f;
 }
 
 .pricing-card--featured {
-  background: var(--home-bg-featured);
-  color: var(--home-text-white);
+  background: #60a5fa;
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 20px 25px -5px rgba(96, 165, 250, 0.3);
 }
 
 .pricing-card__plan {
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1.75rem;
+  font-weight: 800;
   margin-bottom: 1rem;
-  color: var(--home-text-dark);
+  color: var(--home-text-primary-light);
 }
 
 .pricing-card__plan--dark {
-  color: var(--home-text-white);
+  color: #edebd7;
 }
 
 .pricing-card__plan--featured {
-  color: var(--home-text-white);
+  color: white;
 }
 
 .pricing-card__price {
-  font-size: 2.25rem;
-  font-weight: bold;
+  font-size: 3rem;
+  font-weight: 900;
   margin-bottom: 0.5rem;
-  color: var(--home-primary);
+  color: #64748b;
 }
 
 .pricing-card__price--dark {
-  color: var(--home-primary-light);
+  color: #edebd7;
 }
 
 .pricing-card__price--featured {
-  color: var(--home-text-white);
+  color: white;
 }
 
 .pricing-card__period {
-  color: var(--home-text-gray-light);
-  margin-bottom: 1.5rem;
+  color: var(--home-text-muted-light);
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
 }
 
 .pricing-card__period--dark {
-  color: var(--home-text-light);
+  color: #dcd5d4;
 }
 
 .pricing-card__period--featured {
-  color: rgba(237, 235, 215, 0.8);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .pricing-card__features {
   list-style: none;
   padding: 0;
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 2rem 0;
 }
 
 .pricing-card__feature {
-  padding: 0.5rem 0;
-  color: var(--home-text-gray-medium);
+  padding: 0.75rem 0;
+  color: var(--home-text-secondary-light);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  font-size: 0.95rem;
 }
 
 .pricing-card__feature--dark {
-  color: var(--home-text-light);
+  color: #dcd5d4;
 }
 
 .pricing-card__feature--featured {
-  color: rgba(237, 235, 215, 0.9);
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .pricing-card__feature::before {
   content: "✓";
-  color: var(--home-success);
+  color: white;
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: #10b981;
+  border-radius: 50%;
+  font-size: 0.875rem;
+  flex-shrink: 0;
 }
 
 .pricing-card__feature--featured::before {
-  color: var(--home-text-white);
+  background-color: rgba(255, 255, 255, 0.3);
+  color: white;
 }
 
 .pricing-card__button {
   width: 100%;
-  padding: 0.75rem;
-  border-radius: 0.5rem;
-  font-weight: bold;
-  transition: all 0.2s;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
   border: none;
   cursor: pointer;
+  font-size: 1rem;
 }
 
 .pricing-card__button--free {
-  background-color: var(--home-primary);
-  color: var(--home-text-white);
+  background-color: #64748b;
+  color: white;
 }
 
 .pricing-card__button--free:hover {
-  background-color: var(--home-primary-hover);
+  background-color: #475569;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.4);
 }
 
 .pricing-card__button--premium {
-  background-color: var(--home-bg-white);
-  color: var(--home-primary);
+  background-color: white;
+  color: #3b82f6;
+  font-weight: 800;
 }
 
 .pricing-card__button--premium:hover {
-  background-color: var(--home-bg-light);
+  background-color: #f1f5f9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.5);
 }
 
-/* CTA Section */
+
+/* ========================================
+                CTA SECTION
+   ======================================== */
 .home__cta {
-  background: var(--home-bg-cta);
-  padding: 4rem 0;
+  background: #8b5cf6;
+  padding: 5rem 0;
+  position: relative;
+  overflow: hidden;
 }
 
 .home__cta-container {
@@ -493,44 +606,58 @@
   margin: 0 auto;
   text-align: center;
   padding: 0 1rem;
+  position: relative;
+  z-index: 1;
 }
 
 .home__cta-title {
-  font-size: 1.875rem;
-  font-weight: bold;
-  color: var(--home-text-white);
+  font-size: 2rem;
+  font-weight: 800;
+  color: white;
   margin-bottom: 1.5rem;
 }
 
+@media (min-width: 768px) {
+  .home__cta-title {
+    font-size: 2.5rem;
+  }
+}
+
 .home__cta-description {
-  color: var(--home-text-cta);
-  margin-bottom: 2rem;
+  color: rgba(255, 255, 255, 0.95);
+  margin-bottom: 2.5rem;
   font-size: 1.125rem;
+  line-height: 1.7;
 }
 
 .home__cta-button {
-  background-color: var(--home-bg-white);
-  color: var(--home-primary-hover);
-  padding: 0.75rem 2rem;
-  border-radius: 0.5rem;
-  font-weight: bold;
+  background-color: #84C59C;
+  color: white;
+  padding: 1rem 2.5rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
   font-size: 1.125rem;
-  transition: all 0.2s;
-  transform: scale(1);
+  transition: all 0.3s ease;
   border: none;
   cursor: pointer;
+  box-shadow: 0 4px 14px 0 rgba(132, 197, 156, 0.3);
 }
 
 .home__cta-button:hover {
-  background-color: var(--home-bg-light);
-  transform: scale(1.05);
+  background-color: #6fb589;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(132, 197, 156, 0.4);
 }
 
-/* Footer */
+
+/* ========================================
+                    FOOTER
+   ======================================== */
+
 .home__footer {
-  background-color: var(--home-bg-footer);
-  color: var(--home-text-light);
-  padding: 2rem 0;
+  background-color: #334155;
+  color: #94a3b8;
+  padding: 2.5rem 0;
 }
 
 .home__footer-container {
@@ -539,4 +666,3 @@
   padding: 0 1rem;
   text-align: center;
 }
-
