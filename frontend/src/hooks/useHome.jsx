@@ -11,48 +11,30 @@ export const useHome = () => {
     navigate('/register');
   };
 
-  const features = [
-    {
-      icon: 'FiMic',
-      title: 'Voice Interviews',
-      description: 'Practice with real-time voice interaction and get transcribed feedback'
-    },
-    {
-      icon: 'FiBarChart2',
-      title: 'Analytics & Tracking',
-      description: 'Monitor your progress with detailed statistics and performance trends'
-    },
-    {
-      icon: 'FiLock',
-      title: 'Secure & Private',
-      description: 'Your data is encrypted and secure with industry-standard security'
-    }
-  ];
-
   const freePlan = {
-    plan: 'Free',
+    plan: t('home.freePlan'),
     price: '$0',
     features: [
-      'Unlimited voice interviews',
-      'AI-generated questions',
-      '7 days free trial',
-      'Basic feedback'
+      t('home.freeFeature1'),
+      t('home.freeFeature2'),
+      t('home.freeFeature3')
     ],
-    cta: 'Start Free',
+    cta: t('home.getStarted'),
     featured: false
   };
 
   const premiumPlan = {
-    plan: 'Premium',
+    plan: t('home.premiumPlan'),
     price: '$9.99',
-    period: 'per month',
+    period: t('home.perMonth'),
     features: [
-      'Everything in Free',
-      'Download reports',
-      'Advanced analytics',
-      'Priority support'
+      t('home.premiumFeature1'),
+      t('home.premiumFeature2'),
+      t('home.premiumFeature3'),
+      t('home.premiumFeature4'),
+      t('home.premiumFeature5')
     ],
-    cta: 'Upgrade Now',
+    cta: t('home.upgradeToPremium'),
     featured: true
   };
 
@@ -60,9 +42,7 @@ export const useHome = () => {
     t,
     isAuthenticated,
     navigateToRegister,
-    features,
     freePlan,
     premiumPlan
   };
 };
-
