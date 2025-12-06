@@ -69,7 +69,7 @@
 
 .settings {
   min-height: 100vh;
-  background-color: var(--home-bg-light);
+  background-color: #FFFFFF;
   padding: 2rem;
 }
 
@@ -94,18 +94,14 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: var(--home-secondary);
-  color: var(--home-text-white);
+  background-color: #EDF1F6;
+  color: #000000;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   font-weight: 600;
   transition: all 0.2s;
-  border: none;
+  border: 2px solid #000000;
   cursor: pointer;
-}
-
-.settings__back-button:hover {
-  background-color: var(--home-bg-dark-alt);
 }
 
 .settings__title {
@@ -120,7 +116,7 @@
 
 /* Subscription Section */
 .settings__subscription {
-  background-color: var(--home-bg-white);
+  background-color: #E2E8F0;
   border-radius: 0.5rem;
   box-shadow: var(--home-shadow-md);
   padding: 1.5rem;
@@ -312,7 +308,7 @@
 
 /* Form Card */
 .settings__form-card {
-  background-color: var(--bg-card-light);
+  background-color: #E2E8F0;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
   padding: var(--spacing-lg);
@@ -350,7 +346,7 @@
   border-radius: var(--radius-md);
   padding: var(--spacing-sm) 0.75rem;
   outline: none;
-  background-color: var(--bg-card-light);
+  background-color: #EDF1F6;
   color: var(--text-dark);
   transition: border-color 0.2s;
 }
@@ -370,7 +366,7 @@
   border-radius: var(--radius-md);
   padding: var(--spacing-sm) 0.75rem;
   outline: none;
-  background-color: var(--bg-card-light);
+  background-color: #EDF1F6;
   color: var(--text-dark);
   cursor: pointer;
   transition: border-color 0.2s;
@@ -412,7 +408,7 @@
 
 /* Language Settings */
 .settings__language-section {
-  background-color: var(--bg-card-light);
+  background-color: #E2E8F0;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
   padding: var(--spacing-lg);
@@ -460,7 +456,7 @@
 
 /* Full Width Section */
 .settings__full-section {
-  background-color: var(--bg-card-light);
+  background-color: #E2E8F0;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
   padding: var(--spacing-lg);
