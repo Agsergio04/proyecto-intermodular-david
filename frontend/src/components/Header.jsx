@@ -109,7 +109,7 @@ const Header = () => {
               </button>
               <button
                 onClick={() => navigateTo('/register')}
-                className="header__register-button"
+                className={`header__register-button ${isDark ? 'header__register-button--dark' : ''}`}
               >
                 {t('common.register')}
               </button>
@@ -190,7 +190,7 @@ const Header = () => {
               </button>
               <button
                 onClick={() => navigateTo('/register')}
-                className="header__register-button"
+                className={`header__register-button ${isDark ? 'header__register-button--dark' : ''}`}
               >
                 {t('common.register')}
               </button>
@@ -203,4 +203,3 @@ const Header = () => {
 };
 
 export default Header;
-
