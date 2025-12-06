@@ -74,7 +74,7 @@
 }
 
 .register--dark {
-  background: linear-gradient(135deg, var(--bg-dark) 0%, var(--black-olive) 100%);
+  background: #172133;
 }
 
 .register__container {
@@ -87,7 +87,7 @@
 }
 
 .register__container--dark {
-  background-color: var(--bg-card-dark);
+  background-color: #1C2739;
 }
 
 .register__title {
@@ -136,7 +136,7 @@
 
 .register__input-wrapper--dark {
   border-color: var(--border-dark);
-  background-color: var(--bg-input-dark);
+  background-color: #2F4467;
 }
 
 .register__icon {
@@ -169,7 +169,7 @@
 
 .register__select--dark {
   border-color: var(--border-dark);
-  background-color: var(--bg-input-dark);
+  background-color: #2F4467;
   color: var(--text-light);
 }
 

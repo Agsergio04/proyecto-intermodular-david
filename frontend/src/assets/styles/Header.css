@@ -206,8 +206,8 @@
   padding: 0.5rem 1.5rem;
   border-radius: var(--radius-md);
   border: none;
-  background-color: var(--color-primary-light);
-  color: var(--text-light);
+  background-color: #E3B23C;
+  color: #000000;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
