@@ -72,7 +72,7 @@
 }
 
 .login--dark {
-  background: var(--login-bg-gradient-dark);
+  background: #172133;
 }
 
 .login__container {
@@ -85,7 +85,7 @@
 }
 
 .login__container--dark {
-  background-color: var(--login-bg-container-dark);
+  background-color: #2F4467;
 }
 
 .login__title {
