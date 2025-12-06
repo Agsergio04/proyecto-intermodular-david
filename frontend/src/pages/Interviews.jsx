@@ -70,7 +70,7 @@ const Interviews = () => {
           <div className="interviews__actions">
             <button
               onClick={() => navigate('/dashboard')}
-              className="interviews__button interviews__button--dashboard"
+              className={`interviews__button interviews__button--dashboard ${isDark ? 'interviews__button--dashboard--dark' : ''}`}
             >
               ← {t('dashboard.title')}
             </button>

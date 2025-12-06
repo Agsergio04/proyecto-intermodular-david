@@ -55,12 +55,6 @@ const Dashboard = () => {
               >
                 <FiPlus /> {t('interview.newInterview')}
               </button>
-              <button
-                  onClick={navigateToInterviews}
-                  className="dashboard__button dashboard__button--interviews"
-              >
-                <FiAward /> {t('interview.myInterviews')}
-              </button>
             </div>
           </div>
 
