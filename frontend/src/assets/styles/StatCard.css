@@ -88,23 +88,30 @@
 
 /* Modo Oscuro - Gris y amarillo */
 .stat-card--gray.stat-card--dark-mode {
-  background: linear-gradient(135deg, var(--dim-gray), var(--color-secondary-hover));
+  background: #384E6B;
 }
 
 .stat-card--yellow.stat-card--dark-mode {
-  background: linear-gradient(135deg, var(--xanthous), #d4a02e);
+  background: #BE8F0E;
 }
 
 .stat-card--purple.stat-card--dark-mode {
-  background: linear-gradient(135deg, var(--dim-gray), var(--color-secondary-hover));
+  background: #73439D;
 }
 
 .stat-card--orange.stat-card--dark-mode {
-  background: linear-gradient(135deg, var(--xanthous), #d4a02e);
+  background: #C14B0B;
 }
 
 /* Contenido de la card */
 .stat-card__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.stat-card__content--dark {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -117,12 +124,25 @@
   margin-bottom: 0.5rem;
 }
 
+.stat-card__title--dark {
+  color: #FFFFFF;
+}
+
 .stat-card__value {
   font-size: 2rem;
   font-weight: bold;
 }
 
+.stat-card__value--dark {
+  color: #FFFFFF;
+}
+
 .stat-card__icon {
   font-size: 2rem;
   opacity: 0.8;
+  color: #000000;
+}
+
+.stat-card__icon--dark {
+  color: #FFFFFF;
 }
