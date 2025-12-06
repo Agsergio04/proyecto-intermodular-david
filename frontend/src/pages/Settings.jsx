@@ -291,7 +291,7 @@ const Settings = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="settings__submit-button"
+                className={`settings__submit-button ${isDark ? 'settings__submit-button--dark' : ''}`}
               >
                 {loading ? (
                   <>
@@ -353,7 +353,7 @@ const Settings = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="settings__submit-button"
+                className={`settings__submit-button ${isDark ? 'settings__submit-button--dark' : ''}`}
               >
                 {loading ? (
                   <>

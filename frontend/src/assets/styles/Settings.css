@@ -74,7 +74,7 @@
 }
 
 .settings--dark {
-  background-color: var(--home-bg-dark);
+  background-color: #172133;
 }
 
 .settings__container {
@@ -111,7 +111,7 @@
 }
 
 .settings__title--dark {
-  color: var(--home-text-white);
+  color: #FFFFFF;
 }
 
 /* Subscription Section */
@@ -124,7 +124,7 @@
 }
 
 .settings__subscription--dark {
-  background-color: var(--home-bg-dark);
+  background-color: #2F4467;
 }
 
 .settings__section-title {
@@ -135,7 +135,7 @@
 }
 
 .settings__section-title--dark {
-  color: var(--home-text-white);
+  color: #FFFFFF;
 }
 
 .settings__subscription-status {
@@ -164,7 +164,7 @@
 }
 
 .settings__subscription-label--dark {
-  color: var(--text-muted-dark);
+  color: #FFFFFF;
 }
 
 .settings__manage-button {
@@ -207,7 +207,7 @@
 
 .plan-card--dark {
   border-color: var(--border-dark);
-  background-color: var(--bg-card-dark);
+  background-color: #1C2739;
 }
 
 .plan-card--active {
@@ -216,7 +216,7 @@
 }
 
 .plan-card--active--dark {
-  background-color: var(--bg-input-dark);
+  background-color: #1C2739;
 }
 
 .plan-card__header {
@@ -315,7 +315,7 @@
 }
 
 .settings__form-card--dark {
-  background-color: var(--bg-card-dark);
+  background-color: #2F4467;
 }
 
 .settings__form {
@@ -338,7 +338,7 @@
 }
 
 .settings__label--dark {
-  color: var(--text-muted-dark);
+  color: #FFFFFF;
 }
 
 .settings__input {
@@ -357,7 +357,7 @@
 
 .settings__input--dark {
   border-color: var(--border-dark);
-  background-color: var(--bg-input-dark);
+  background-color: #1C2739;
   color: var(--text-light);
 }
 
@@ -378,13 +378,13 @@
 
 .settings__select--dark {
   border-color: var(--border-dark);
-  background-color: var(--bg-input-dark);
+  background-color: #1C2739;
   color: var(--text-light);
 }
 
 .settings__submit-button {
-  background-color: var(--home-primary);
-  color: var(--home-text-white);
+  background-color: #3B82F6;
+  color: #FFFFFF;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   font-weight: 600;
@@ -398,7 +398,16 @@
 }
 
 .settings__submit-button:hover:not(:disabled) {
-  background-color: var(--home-primary-hover);
+  background-color: #2563EB;
+}
+
+.settings__submit-button--dark {
+  background-color: #E3B23C;
+  color: #000000;
+}
+
+.settings__submit-button--dark:hover:not(:disabled) {
+  background-color: #D4A02E;
 }
 
 .settings__submit-button:disabled {
@@ -415,7 +424,7 @@
 }
 
 .settings__language-section--dark {
-  background-color: var(--bg-card-dark);
+  background-color: #2F4467;
 }
 
 .settings__language-buttons {
@@ -464,7 +473,7 @@
 }
 
 .settings__full-section--dark {
-  background-color: var(--bg-card-dark);
+  background-color: #2F4467;
 }
 
 @media (min-width: 768px) {
