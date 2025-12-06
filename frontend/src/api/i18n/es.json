@@ -171,7 +171,10 @@
     "subscription": "Suscripción",
     "manageSubscription": "Gestionar suscripción",
     "upgradeToPremium": "Upgradear a premium",
-    "currentPlan": "Plan actual"
+    "currentPlan": "Plan actual",
+    "dangerZone": "Zona de peligro",
+    "dangerZoneWarning": "Esta acción no se puede deshacer. Se eliminarán todos los datos.",
+    "deleteAccount": "Eliminar cuenta"
   },
   "errors": {
     "networkError": "Error de red. Intenta de nuevo.",

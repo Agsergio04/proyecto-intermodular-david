@@ -171,7 +171,10 @@
     "subscription": "Subscription",
     "manageSubscription": "Manage Subscription",
     "upgradeToPremium": "Upgrade to Premium",
-    "currentPlan": "Current Plan"
+    "currentPlan": "Current Plan",
+    "dangerZone": "Danger Zone",
+    "dangerZoneWarning": "This action cannot be undone. All data will be deleted.",
+    "deleteAccount": "Delete Account"
   },
   "errors": {
     "networkError": "Network error. Please try again.",

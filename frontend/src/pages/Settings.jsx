@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguageStore, useThemeStore } from '../store';
 import { toast } from 'react-toastify';
 import { authService } from '../api';
-import { FiArrowLeft, FiCheckCircle } from 'react-icons/fi';
+import { FiArrowLeft, FiCheckCircle, FiAlertTriangle } from 'react-icons/fi';
 import '../assets/styles/Settings.css';
 
 // Planes de suscripción
@@ -173,6 +173,13 @@ const Settings = () => {
     toast.info('Redirigir a gestión de pago / upgrade');
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    toast.success(t('common.logoutSuccess'));
+    navigate('/login');
+  };
+
   return (
     <div className={`settings ${isDark ? 'settings--dark' : ''}`}>
       <div className="settings__container">
@@ -280,8 +287,6 @@ const Settings = () => {
                   className={`settings__input ${isDark ? 'settings__input--dark' : ''}`}
                   required
                 />
-                  className={`settings__input ${isDark ? 'settings__input--dark' : ''}`}
-                />
               </div>
               <button
                 type="submit"
@@ -299,6 +304,7 @@ const Settings = () => {
               </button>
             </form>
           </div>
+
           {/* Contraseña */}
           <div className={`settings__form-card ${isDark ? 'settings__form-card--dark' : ''}`}>
             <h2 className={`settings__section-title ${isDark ? 'settings__section-title--dark' : ''}`}>
@@ -394,20 +400,22 @@ const Settings = () => {
           </p>
         </div>
 
-        {/* Cerrar Sesión */}
-        <div className={`settings__full-section ${isDark ? 'settings__full-section--dark' : ''}`}>
+        {/* Zona de Peligro - Cerrar Sesión */}
+        <div className={`settings__danger-zone ${isDark ? 'settings__danger-zone--dark' : ''}`}>
+          <div className="settings__danger-header">
+            <FiAlertTriangle className="settings__danger-icon" />
+            <h3 className="settings__danger-title">
+              {t('settings.dangerZone')}
+            </h3>
+          </div>
+          <p className="settings__danger-description">
+            {t('settings.dangerZoneWarning')}
+          </p>
           <button
-            onClick={() => {
-              localStorage.removeItem('token');
-              localStorage.removeItem('user');
-              toast.success(t('common.logoutSuccess'));
-              navigate('/login');
-            }}
-            className="settings__submit-button"
-            style={{ backgroundColor: 'var(--color-danger)', width: '100%' }}
+            onClick={handleLogout}
+            className="settings__danger-button"
           >
-            <FiArrowLeft className="rotate-180" />
-            {t('common.logout')}
+            {t('settings.deleteAccount')}
           </button>
         </div>
       </div>

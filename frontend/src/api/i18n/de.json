@@ -171,7 +171,10 @@
     "subscription": "Abonnement",
     "manageSubscription": "Abonnement verwalten",
     "upgradeToPremium": "Auf Premium Upgraden",
-    "currentPlan": "Aktueller Plan"
+    "currentPlan": "Aktueller Plan",
+    "dangerZone": "Gefahrenzone",
+    "dangerZoneWarning": "Diese Aktion kann nicht rückgängig gemacht werden. Alle Daten werden gelöscht.",
+    "deleteAccount": "Konto löschen"
   },
   "errors": {
     "networkError": "Netzwerkfehler. Bitte versuchen Sie es erneut.",
