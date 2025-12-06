@@ -51,10 +51,10 @@
                PALETA MODO OSCURO 
      ======================================== */
 
-  --black-olive: #423e37;
-  --xanthous: #e3b23c;
-  --eggshell: #edebd7;
-  --dim-gray: #6e675f;
+  --home-bg-dark-main: #172133;
+  --home-bg-dark-features: #1C2739;
+  --home-bg-dark-card: #2F4467;
+  --home-text-dark-white: #FFFFFF;
 }
 
 .home {
@@ -64,8 +64,8 @@
 }
 
 .home--dark {
-  background: linear-gradient(to bottom right, #423e37, #6e675f);
-  color: #edebd7;
+  background: var(--home-bg-dark-main);
+  color: var(--home-text-dark-white);
 }
 
 
@@ -111,7 +111,7 @@
 }
 
 .home__hero-title--dark {
-  color: #edebd7;
+  color: var(--home-text-dark-white);
 }
 
 .home__hero-description {
@@ -131,7 +131,7 @@
 }
 
 .home__hero-description--dark {
-  color: #dcd5d4;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .home__hero-button {
@@ -169,7 +169,7 @@
 }
 
 .home__features--dark {
-  background-color: #6e675f;
+  background-color: var(--home-bg-dark-features);
 }
 
 .home__features-container {
@@ -207,7 +207,7 @@
 }
 
 .home__features-title--dark {
-  color: #edebd7;
+  color: var(--home-text-dark-white);
 }
 
 .home__features-grid {
@@ -241,7 +241,7 @@
 }
 
 .feature-card--dark {
-  background-color: #E2E8F0;
+  background-color: #2F4467;
   border-color: transparent;
 }
 
@@ -262,7 +262,7 @@
   font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 0.75rem;
-  color: var(--home-text-primary-light);
+  color: #1E293B;
 }
 
 @media (min-width: 768px) {
@@ -272,17 +272,17 @@
 }
 
 .feature-card__title--dark {
-  color: #1E293B;
+  color: #FFFFFF;
 }
 
 .feature-card__description {
-  color: var(--home-text-muted-light);
+  color: #475569;
   line-height: 1.6;
   font-size: 0.95rem;
 }
 
 .feature-card__description--dark {
-  color: #475569;
+  color: #FFFFFF;
 }
 
 /* ========================================
@@ -291,6 +291,10 @@
 .home__pricing {
   padding: 5rem 0;
   background-color: var(--home-pricing-bg-light);
+}
+
+.home__pricing--dark {
+  background-color: var(--home-bg-dark-main);
 }
 
 .home__pricing-container {
@@ -328,7 +332,7 @@
 }
 
 .home__pricing-title--dark {
-  color: #edebd7;
+  color: var(--home-text-dark-white);
 }
 
 .home__pricing-grid {
@@ -382,7 +386,7 @@
 }
 
 .pricing-card__plan--dark {
-  color: #FFFFFF;
+  color: var(--home-text-dark-white);
 }
 
 .pricing-card__plan--featured {
@@ -397,7 +401,7 @@
 }
 
 .pricing-card__price--dark {
-  color: #FFFFFF;
+  color: var(--home-text-dark-white);
 }
 
 .pricing-card__price--featured {
@@ -411,7 +415,7 @@
 }
 
 .pricing-card__period--dark {
-  color: #dcd5d4;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .pricing-card__period--featured {
@@ -434,7 +438,7 @@
 }
 
 .pricing-card__feature--dark {
-  color: #FFFFFF;
+  color: var(--home-text-dark-white);
 }
 
 .pricing-card__feature--featured {
@@ -475,10 +479,12 @@
 .pricing-card__button--free {
   background-color: #FFFFFF;
   color: #3B82F6;
+  font-weight: 800;
 }
 
 .pricing-card__button--free:hover {
   background-color: #475569;
+  color: #FFFFFF;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(100, 116, 139, 0.4);
 }
@@ -490,9 +496,10 @@
 }
 
 .pricing-card__button--premium:hover {
-  background-color: #f1f5f9;
+  background-color: #475569;
+  color: #FFFFFF;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.4);
 }
 
 /* ========================================
@@ -503,6 +510,10 @@
   padding: 5rem 0;
   position: relative;
   overflow: hidden;
+}
+
+.home__cta--dark {
+  background: #8b5cf6;
 }
 
 .home__cta-container {
@@ -527,11 +538,19 @@
   }
 }
 
+.home__cta-title--dark {
+  color: var(--home-text-dark-white);
+}
+
 .home__cta-description {
   color: #1E293B;
   margin-bottom: 2.5rem;
   font-size: 1.125rem;
   line-height: 1.7;
+}
+
+.home__cta-description--dark {
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .home__cta-button {
@@ -561,6 +580,11 @@
   background-color: #FFFFFF;
   color: #1E293B;
   padding: 2.5rem 0;
+}
+
+.home__footer--dark {
+  background-color: #2F4467;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .home__footer-container {
