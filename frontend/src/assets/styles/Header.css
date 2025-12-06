@@ -206,26 +206,26 @@
   padding: 0.5rem 1.5rem;
   border-radius: var(--radius-md);
   border: none;
-  background-color: #E3B23C;
-  color: #000000;
+  background-color: #3B82F6;
+  color: #FFFFFF;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .header__register-button--dark {
-  background-color: var(--color-primary-dark);
-  color: var(--text-dark);
+  background-color: #E3B23C;
+  color: #000000;
 }
 
 .header__register-button:hover {
-  background-color: var(--color-primary-light-hover);
+  background-color: #2563EB;
   transform: translateY(-2px);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .header__register-button--dark:hover {
-  background-color: var(--color-primary-dark-hover);
+  background-color: #D4A02E;
   transform: translateY(-2px);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
 }
@@ -390,4 +390,3 @@
   background-color: var(--color-primary-dark-hover);
   transform: translateY(-1px);
 }
-
