@@ -207,7 +207,9 @@ const Dashboard = () => {
 
                       {manualFormData.questions.length > 0 && (
                           <div className="dashboard__questions-list">
-                            {manualFormData.questions.map((q, index) => (
+                            {manualFormData.questions.map((q, index) => {
+                              console.log(`📋 Pregunta ${index + 1}:`, q);
+                              return (
                                 <div key={index} className={`dashboard__question-item ${isDark ? 'dashboard__question-item--dark' : ''}`}>
                                   <div className="dashboard__question-header">
                                     <span className="dashboard__question-number">{index + 1}</span>
@@ -220,9 +222,10 @@ const Dashboard = () => {
                                       <FiTrash2 />
                                     </button>
                                   </div>
-                                  <p className="dashboard__question-text">{q.question}</p>
+                                  <p className="dashboard__question-text">{q.questionText || 'Sin texto'}</p>
                                 </div>
-                            ))}
+                              );
+                            })}
                           </div>
                       )}
                     </div>

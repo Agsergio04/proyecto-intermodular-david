@@ -25,13 +25,13 @@ const responseSchema = new mongoose.Schema({
   },
   score: {
     type: Number,
-    default: 0,
+    default: null,
     min: 0,
     max: 100
   },
   feedback: {
     type: String,
-    default: ''
+    default: null
   },
   confidence: {
     type: Number,

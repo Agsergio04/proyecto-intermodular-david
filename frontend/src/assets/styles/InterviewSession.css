@@ -188,6 +188,11 @@
   background-color: var(--color-danger);
 }
 
+.interview-session__score-badge--pending {
+  background-color: #94a3b8;
+  color: white;
+}
+
 .interview-session__result-text {
   color: var(--text-dark);
   line-height: 1.6;
@@ -218,6 +223,36 @@
 .interview-session__feedback strong {
   color: var(--xanthous);
   margin-right: 0.5rem;
+}
+
+.interview-session__analysis {
+  margin-top: 0.75rem;
+  padding: 0.875rem;
+  border-radius: var(--radius-md);
+  background-color: rgba(52, 152, 219, 0.1);
+  border-left: 4px solid #3498db;
+  font-size: 0.875rem;
+  color: var(--text-dark);
+}
+
+.interview-session__analysis--dark {
+  background-color: rgba(52, 152, 219, 0.2);
+  color: var(--text-light);
+}
+
+.interview-session__analysis strong {
+  color: #3498db;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.interview-session__analysis ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.interview-session__analysis li {
+  margin-bottom: 0.25rem;
 }
 
 /* Header Section */

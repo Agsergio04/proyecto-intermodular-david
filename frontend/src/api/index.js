@@ -25,7 +25,8 @@ export const responseService = {
   submitResponse: (data) => api.post('/responses', data),
   getResponses: (interviewId) => api.get(`/responses/interview/${interviewId}`),
   getResponse: (id) => api.get(`/responses/${id}`),
-  updateResponse: (id, data) => api.put(`/responses/${id}`, data)
+  updateResponse: (id, data) => api.put(`/responses/${id}`, data),
+  generateInterviewFeedback: (interviewId) => api.post(`/responses/interview/${interviewId}/generate-feedback`)
 };
 
 export const statsService = {

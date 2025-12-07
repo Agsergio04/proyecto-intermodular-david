@@ -218,12 +218,20 @@ export const useDashboard = () => {
             return;
         }
 
-        setManualFormData(prev => ({
-            ...prev,
-            questions: [...prev.questions, {
-                questionText: newQuestion.questionText
-            }]
-        }));
+        const questionToAdd = {
+            questionText: newQuestion.questionText
+        };
+        
+        console.log('➕ Añadiendo pregunta:', questionToAdd);
+
+        setManualFormData(prev => {
+            const updated = {
+                ...prev,
+                questions: [...prev.questions, questionToAdd]
+            };
+            console.log('📝 Estado actualizado:', updated.questions);
+            return updated;
+        });
 
         setNewQuestion({
             questionText: ''
