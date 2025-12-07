@@ -4,10 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b2e8140-e031-48cb-87be-40599ae013ae" name="Changes" comment="subida del render">
-      <change afterPath="$PROJECT_DIR$/DEPLOY_RENDER.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Taskfile.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/.env" beforeDir="false" />
+    <list default="true" id="1b2e8140-e031-48cb-87be-40599ae013ae" name="Changes" comment="editado del render sin plan">
+      <change afterPath="$PROJECT_DIR$/FRONTEND_ERRORS_ANALYSIS.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FRONTEND_FIXES_SUMMARY.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/hooks/useDashboard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/hooks/useDashboard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/InterviewSession.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/InterviewSession.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/render.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/render.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,8 +77,8 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\sergi\Desktop\Trabajo\fp\Segundo\Proyecto Intermodular\proyecto-intermodular-david\.github\render" />
       <recent name="C:\Users\sergi\Desktop\Trabajo\fp\Segundo\Proyecto Intermodular\proyecto-intermodular-david" />
+      <recent name="C:\Users\sergi\Desktop\Trabajo\fp\Segundo\Proyecto Intermodular\proyecto-intermodular-david\.github\render" />
       <recent name="C:\Users\sergi\Desktop\Trabajo\fp\Segundo\Proyecto Intermodular\proyecto-intermodular-david\backend" />
       <recent name="C:\Users\sergi\Desktop\Trabajo\fp\Segundo\Proyecto Intermodular\proyecto-intermodular-david\frontend" />
       <recent name="C:\Users\sergi\Desktop\Trabajo\fp\Segundo\Proyecto Intermodular\Proyecto_Intermodular_David\worker" />
@@ -187,7 +192,7 @@
       <workItem from="1764832346699" duration="27000" />
       <workItem from="1764832384138" duration="49000" />
       <workItem from="1764864678540" duration="74000" />
-      <workItem from="1764864762438" duration="9350000" />
+      <workItem from="1764864762438" duration="17865000" />
     </task>
     <task id="LOCAL-00001" summary="Reorganizacion y gestion de la dockerizacion del proyecto">
       <option name="closed" value="true" />
@@ -245,7 +250,47 @@
       <option name="project" value="LOCAL" />
       <updated>1764921006755</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="subida del render">
+      <option name="closed" value="true" />
+      <created>1764921185355</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1764921185355</updated>
+    </task>
+    <task id="LOCAL-00009" summary="movida del render al main">
+      <option name="closed" value="true" />
+      <created>1764921509989</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1764921509989</updated>
+    </task>
+    <task id="LOCAL-00010" summary="editado del render a estatico">
+      <option name="closed" value="true" />
+      <created>1764921580343</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1764921580343</updated>
+    </task>
+    <task id="LOCAL-00011" summary="editado del render sin plan">
+      <option name="closed" value="true" />
+      <created>1764921606912</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1764921606912</updated>
+    </task>
+    <task id="LOCAL-00012" summary="editado del render sin plan">
+      <option name="closed" value="true" />
+      <created>1764921691440</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1764921691441</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -258,7 +303,10 @@
     <MESSAGE value="Comprobante de la creacion de las preguntas y refactorizacion de los componentes docker-entrypoints.sh" />
     <MESSAGE value="Paso del promp al backend" />
     <MESSAGE value="subida del render" />
-    <option name="LAST_COMMIT_MESSAGE" value="subida del render" />
+    <MESSAGE value="movida del render al main" />
+    <MESSAGE value="editado del render a estatico" />
+    <MESSAGE value="editado del render sin plan" />
+    <option name="LAST_COMMIT_MESSAGE" value="editado del render sin plan" />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>

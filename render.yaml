@@ -1,33 +1,41 @@
+# render.yaml - Configuración de despliegue en Render
 # Documentación: https://render.com/docs/blueprint-spec
 
 services:
-  # Backend - Node.js API
+  # ============================================
+  # BACKEND - Node.js API
+  # ============================================
   - type: web
     name: ai-interview-backend
     runtime: node
     region: frankfurt
+    plan: free
     rootDir: backend
     buildCommand: npm install
     startCommand: node server.js
     healthCheckPath: /api/health
     envVars:
+      # Variables de entorno para producción
       - key: NODE_ENV
         value: production
       - key: MONGODB_URI
-        sync: false
+        sync: false # Configurar manualmente en Render Dashboard
       - key: JWT_SECRET
-        generateValue: true
+        generateValue: true # Render genera automáticamente
       - key: FRONTEND_URL
-        sync: false
+        value: https://ai-interview-frontend.onrender.com
       - key: GEMINI_API_KEY
-        sync: false
+        sync: false # Configurar manualmente
       - key: OPENAI_API_KEY
-        sync: false
+        sync: false # Configurar manualmente (opcional)
 
-  # Frontend - React App (Static Site)
+  # ============================================
+  # FRONTEND - React Static Site
+  # ============================================
   - type: web
     name: ai-interview-frontend
     runtime: static
+    plan: free
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: build
@@ -36,9 +44,15 @@ services:
         name: Cache-Control
         value: no-cache
     routes:
+      # SPA routing - todas las rutas van a index.html
       - type: rewrite
         source: /*
         destination: /index.html
     envVars:
+      # La URL del backend se configura aquí para el build
       - key: REACT_APP_API_URL
-        sync: false
+        value: https://ai-interview-backend-lxv2.onrender.com/api
+      - key: REACT_APP_GEMINI_API_KEY
+        sync: false # Configurar manualmente si es necesario
+      - key: REACT_APP_PAYPAL_CLIENT_ID
+        sync: false # Configurar manualmente si es necesario

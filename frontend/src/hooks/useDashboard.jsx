@@ -51,7 +51,7 @@ export const useDashboard = () => {
             const trendsResponse = await statsService.getPerformanceTrends();
             setTrends(trendsResponse.data.trends);
 
-            const user = JSON.parse(localStorage.getItem('user'));
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
             setIsPremium(user?.subscriptionStatus === 'premium');
         } catch (error) {
             console.error('Error fetching stats:', error);
@@ -135,11 +135,11 @@ export const useDashboard = () => {
                 }
             } else {
                 questions = [
-                    { question: "Pregunta 1", difficulty: formData.difficulty },
-                    { question: "Pregunta 2", difficulty: formData.difficulty },
-                    { question: "Pregunta 3", difficulty: formData.difficulty },
-                    { question: "Pregunta 4", difficulty: formData.difficulty },
-                    { question: "Pregunta 5", difficulty: formData.difficulty }
+                    { questionText: "Pregunta 1", difficulty: formData.difficulty },
+                    { questionText: "Pregunta 2", difficulty: formData.difficulty },
+                    { questionText: "Pregunta 3", difficulty: formData.difficulty },
+                    { questionText: "Pregunta 4", difficulty: formData.difficulty },
+                    { questionText: "Pregunta 5", difficulty: formData.difficulty }
                 ];
             }
 
@@ -212,7 +212,7 @@ export const useDashboard = () => {
         setManualFormData(prev => ({
             ...prev,
             questions: [...prev.questions, {
-                question: newQuestion.questionText
+                questionText: newQuestion.questionText
             }]
         }));
 

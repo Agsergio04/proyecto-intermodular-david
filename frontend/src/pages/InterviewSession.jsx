@@ -194,6 +194,14 @@ const InterviewSession = () => {
       toast.warning('Introduce una respuesta antes de continuar');
       return;
     }
+
+    // Validar que la pregunta existe y tiene ID
+    if (!question?._id) {
+      toast.error('Error: No se encontró el ID de la pregunta');
+      console.error('Question object:', question);
+      return;
+    }
+
     try {
       setSubmitting(true);
       const questionId = question._id;

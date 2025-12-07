@@ -1,7 +1,12 @@
 import axios from 'axios';
 
-// Asegurar que siempre haya una URL válida
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
+// Asegurar que siempre haya una URL válida con /api al final
+let API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
+// Asegurar que la URL termine en /api
+if (API_URL && !API_URL.endsWith('/api')) {
+  API_URL = API_URL.replace(/\/$/, '') + '/api';
+}
 
 console.log('🔧 API Configuration:', {
   REACT_APP_API_URL: process.env.REACT_APP_API_URL,
@@ -12,7 +17,8 @@ const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  timeout: 30000 // 30 segundos timeout
 });
 
 // Add token to requests
