@@ -1,9 +1,11 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { FiMoon, FiSun, FiMenu, FiX, FiUser, FiClock } from 'react-icons/fi';
 import { useHeader } from '../hooks/useHeader';
 import '../assets/styles/Header.css';
 
 const Header = () => {
+  const location = useLocation();
   const {
     isAuthenticated,
     isDark,
@@ -15,6 +17,9 @@ const Header = () => {
     toggleMobileMenu,
     navigateTo
   } = useHeader();
+
+  // Detectar si estamos en la página de entrevista activa
+  const isInInterviewSession = location.pathname.startsWith('/interview/');
 
   return (
     <header className={`header ${isDark ? 'header--dark' : ''}`}>
@@ -33,22 +38,25 @@ const Header = () => {
           {isAuthenticated ? (
             // Authenticated User Menu
             <>
-              <div className="header__nav-buttons">
-                <button
-                  onClick={() => navigateTo('/interviews')}
-                  className={`header__nav-button ${isDark ? 'header__nav-button--dark' : ''}`}
-                >
-                  <FiClock />
-                  {t('interview.myInterviews')}
-                </button>
-                <button
-                  onClick={() => navigateTo('/settings')}
-                  className={`header__nav-button ${isDark ? 'header__nav-button--dark' : ''}`}
-                >
-                  <FiUser />
-                  {t('settings.profile')}
-                </button>
-              </div>
+              {/* Ocultar botones de navegación durante entrevista */}
+              {!isInInterviewSession && (
+                <div className="header__nav-buttons">
+                  <button
+                    onClick={() => navigateTo('/interviews')}
+                    className={`header__nav-button ${isDark ? 'header__nav-button--dark' : ''}`}
+                  >
+                    <FiClock />
+                    {t('interview.myInterviews')}
+                  </button>
+                  <button
+                    onClick={() => navigateTo('/settings')}
+                    className={`header__nav-button ${isDark ? 'header__nav-button--dark' : ''}`}
+                  >
+                    <FiUser />
+                    {t('settings.profile')}
+                  </button>
+                </div>
+              )}
 
               {/* Language Selector */}
               <select
@@ -131,20 +139,25 @@ const Header = () => {
         <div className={`header__mobile-menu ${isDark ? 'header__mobile-menu--dark' : ''}`}>
           {isAuthenticated ? (
             <>
-              <button
-                onClick={() => navigateTo('/interviews')}
-                className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
-              >
-                <FiClock />
-                {t('interview.myInterviews')}
-              </button>
-              <button
-                onClick={() => navigateTo('/settings')}
-                className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
-              >
-                <FiUser />
-                {t('settings.profile')}
-              </button>
+              {/* Ocultar botones de navegación en móvil durante entrevista */}
+              {!isInInterviewSession && (
+                <>
+                  <button
+                    onClick={() => navigateTo('/interviews')}
+                    className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
+                  >
+                    <FiClock />
+                    {t('interview.myInterviews')}
+                  </button>
+                  <button
+                    onClick={() => navigateTo('/settings')}
+                    className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
+                  >
+                    <FiUser />
+                    {t('settings.profile')}
+                  </button>
+                </>
+              )}
               <select
                 value={language}
                 onChange={(e) => handleLanguageChange(e.target.value)}

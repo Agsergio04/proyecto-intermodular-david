@@ -136,24 +136,10 @@ const InterviewSession = () => {
         console.log('📊 First question responses:', interviewData.questions[0].responses);
         interviewData.questions.forEach((q, idx) => {
           console.log(`📊 Question ${idx + 1} has ${q?.responses?.length || 0} responses`);
-          if (q?.responses?.length > 0) {
-            q.responses.forEach((r, rIdx) => {
-              console.log(`  📝 Response ${rIdx + 1}:`, {
-                id: r._id,
-                text: r.responseText?.substring(0, 50),
-                score: r.score,
-                feedback: r.feedback ? `${r.feedback.substring(0, 50)}...` : null,
-                hasAnalysis: !!r.analysis
-              });
-            });
-          }
         });
       }
       
       setInterview(interviewData);
-      
-      console.log('📊 Interview totalScore:', interviewData.totalScore);
-      console.log('📊 Interview status:', interviewData.status);
 
       if (interviewData.status === 'in_progress') {
         const map = {};
@@ -208,14 +194,6 @@ const InterviewSession = () => {
       toast.warning('Introduce una respuesta antes de continuar');
       return;
     }
-
-    // Validar que la pregunta existe y tiene ID
-    if (!question?._id) {
-      toast.error('Error: No se encontró el ID de la pregunta');
-      console.error('Question object:', question);
-      return;
-    }
-
     try {
       setSubmitting(true);
       const questionId = question._id;
@@ -232,20 +210,6 @@ const InterviewSession = () => {
         delete newResponses[currentQuestion];
         return newResponses;
       });
-      
-      // ✅ Avanzar automáticamente a la siguiente pregunta
-      if (currentQuestion < questions.length - 1) {
-        setCurrentQuestion(prev => prev + 1);
-        // Resetear estados de voz si estaban activos
-        if (isListening && recognitionRef.current) {
-          recognitionRef.current.stop();
-        }
-        setIsConfirming(false);
-        setUserAnswer('');
-        userAnswerRef.current = '';
-        setElapsedTime(0);
-        setVoiceStatus('');
-      }
     } catch (error) {
       toast.error(error.response?.data?.message || 'Error al guardar respuesta');
     } finally {
@@ -254,48 +218,11 @@ const InterviewSession = () => {
   };
 
   const handleCompleteInterview = async () => {
-    // ✅ Validar que todas las preguntas tengan respuesta guardada
-    const allQuestionsAnswered = questions.every((q) => {
-      const qResponses = q?.responses || [];
-      return qResponses.length > 0 && qResponses[qResponses.length - 1]?.responseText?.trim().length > 0;
-    });
-
-    if (!allQuestionsAnswered) {
-      toast.error('Debes responder todas las preguntas antes de completar la entrevista');
-      // Encontrar la primera pregunta sin responder y navegar a ella
-      const firstUnanswered = questions.findIndex((q) => {
-        const qResponses = q?.responses || [];
-        return !(qResponses.length > 0 && qResponses[qResponses.length - 1]?.responseText?.trim().length > 0);
-      });
-      if (firstUnanswered !== -1) {
-        setCurrentQuestion(firstUnanswered);
-        toast.info(`Pregunta ${firstUnanswered + 1} sin responder`);
-      }
-      return;
-    }
-
     try {
       setSubmitting(true);
-      
-      // 1️⃣ Completar la entrevista primero
       await interviewService.updateInterviewStatus(interviewId, { status: 'completed' });
       toast.success('¡Entrevista completada!');
-      
-      // 2️⃣ Generar feedback automáticamente
-      toast.info('Generando feedback...');
-      console.log('🤖 Generando feedback al completar entrevista...');
-      
-      try {
-        await responseService.generateInterviewFeedback(interviewId);
-        console.log('✅ Feedback generado exitosamente');
-        toast.success('¡Feedback generado!');
-      } catch (feedbackError) {
-        console.error('Error generando feedback:', feedbackError);
-        toast.warning('Entrevista completada, pero hubo un error al generar el feedback');
-      }
-      
-      // 3️⃣ Navegar a la lista de entrevistas
-      setTimeout(() => navigate('/interviews'), 1500);
+      setTimeout(() => navigate('/interviews'), 1200);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Error al completar la entrevista');
     } finally {
@@ -367,11 +294,6 @@ const InterviewSession = () => {
             </div>
             <p className={`interview-session__subtitle ${isDark ? 'interview-session__subtitle--dark' : ''}`}>
               Resultados de la entrevista - {questions.length} preguntas
-              {interview?.totalScore !== null && interview?.totalScore !== undefined && (
-                <span style={{ marginLeft: '1rem', fontWeight: 'bold', color: 'var(--xanthous)' }}>
-                  | Promedio: {interview.totalScore}/100
-                </span>
-              )}
             </p>
           </div>
 
@@ -402,37 +324,16 @@ const InterviewSession = () => {
                         <div key={respIdx} className={`interview-session__result-answer ${isDark ? 'interview-session__result-answer--dark' : ''}`}>
                           <div className="interview-session__result-answer-header">
                             <span className="interview-session__response-badge">Respuesta {respIdx + 1}</span>
-                            {resp?.score !== null && resp?.score !== undefined && (
+                            {resp?.score !== undefined && (
                               <span className={`interview-session__score-badge ${resp.score >= 70 ? 'interview-session__score-badge--good' : resp.score >= 50 ? 'interview-session__score-badge--medium' : 'interview-session__score-badge--low'}`}>
                                 {resp.score}/100
                               </span>
                             )}
-                            {(resp?.score === null || resp?.score === undefined) && (
-                              <span className="interview-session__score-badge interview-session__score-badge--pending">
-                                Sin evaluar
-                              </span>
-                            )}
                           </div>
                           <p className="interview-session__result-text">{resp?.responseText || <span className="interview-session__no-response">{t('interview.noResponse')}</span>}</p>
-                          {resp?.feedback && resp?.feedback !== null && resp?.feedback !== '' && (
+                          {resp?.feedback && (
                             <div className={`interview-session__feedback ${isDark ? 'interview-session__feedback--dark' : ''}`}>
                               <strong>Feedback:</strong> {resp.feedback}
-                            </div>
-                          )}
-                          {resp?.analysis?.strengths && resp?.analysis?.strengths?.length > 0 && (
-                            <div className={`interview-session__analysis ${isDark ? 'interview-session__analysis--dark' : ''}`}>
-                              <strong>Fortalezas:</strong>
-                              <ul>
-                                {resp.analysis.strengths.map((s, i) => <li key={i}>{s}</li>)}
-                              </ul>
-                            </div>
-                          )}
-                          {resp?.analysis?.areasForImprovement && resp?.analysis?.areasForImprovement?.length > 0 && (
-                            <div className={`interview-session__analysis ${isDark ? 'interview-session__analysis--dark' : ''}`}>
-                              <strong>Áreas de mejora:</strong>
-                              <ul>
-                                {resp.analysis.areasForImprovement.map((a, i) => <li key={i}>{a}</li>)}
-                              </ul>
                             </div>
                           )}
                         </div>
@@ -504,20 +405,31 @@ const InterviewSession = () => {
                 )}
 
                 {/* Área de entrada con reconocimiento de voz o textarea */}
+                {/* Área de entrada con reconocimiento de voz o textarea */}
                 {isConfirming ? (
                   <div className={`interview-session__confirming-box ${isDark ? 'interview-session__confirming-box--dark' : ''}`}>
                     <p className="interview-session__confirming-title">{t('interview.pendingConfirmation')}</p>
                     <p className="interview-session__confirming-text">{userAnswer}</p>
                   </div>
                 ) : (
-                  <textarea
-                    value={localResponse || userAnswer}
-                    onChange={handleResponseChange}
-                    disabled={isListening || submitting}
-                    className={`interview-session__textarea ${isDark ? 'interview-session__textarea--dark' : ''}`}
-                    rows="6"
-                    placeholder={t('interview.unansweredQuestion')}
-                  />
+                  <div className="interview-session__textarea-wrapper">
+                    <textarea
+                      value={localResponse || userAnswer}
+                      onChange={handleResponseChange}
+                      disabled={isListening || submitting}
+                      className={`interview-session__textarea ${isDark ? 'interview-session__textarea--dark' : ''}`}
+                      rows="6"
+                      placeholder={t('interview.unansweredQuestion')}
+                    />
+                    <button
+                      onClick={handleListenToggle}
+                      disabled={submitting}
+                      className={`interview-session__mic-button-inside ${isListening ? 'interview-session__mic-button-inside--listening' : ''}`}
+                      title={isListening ? t('interview.stop') : t('interview.record')}
+                    >
+                      <MicrophoneIcon />
+                    </button>
+                  </div>
                 )}
 
                 {/* Estado del reconocimiento de voz */}
@@ -553,30 +465,16 @@ const InterviewSession = () => {
                       </button>
                     </>
                   ) : (
-                    <>
-                      <button
-                        onClick={handleListenToggle}
-                        disabled={submitting}
-                        className={`interview-session__button interview-session__button--mic ${isListening ? 'interview-session__button--mic--listening' : ''}`}
-                      >
-                        <MicrophoneIcon />
-                        {isListening ? t('interview.stop') : t('interview.record')}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleSaveResponse}
-                        disabled={submitting || localResponse.trim().length === 0}
-                        className="interview-session__button interview-session__button--save"
-                      >
-                        {t('interview.saveResponse')}
-                      </button>
-                    </>
+                    <button
+                      type="button"
+                      onClick={handleSaveResponse}
+                      disabled={submitting || localResponse.trim().length === 0}
+                      className="interview-session__button interview-session__button--save"
+                    >
+                      {t('interview.saveResponse')}
+                    </button>
                   )}
                 </div>
-
-                <p className={`interview-session__hint ${isDark ? 'interview-session__hint--dark' : ''}`}>
-                  {!isConfirming && (isListening ? t('interview.clickMicToStop') : t('interview.clickMicToRecord'))}
-                </p>
               </div>
             ) : null}
           </div>
@@ -598,9 +496,12 @@ const InterviewSession = () => {
                 {t('interview.nextQuestion')} <FiArrowRight />
               </button>
             )}
-            <div className="interview-session__nav-spacer"></div>
-            {currentQuestion === questions.length - 1 && isInProgress ? (
-              allAnswered ? (
+          </div>
+
+          {/* Botón de completar entrevista - Separado y centrado */}
+          {currentQuestion === questions.length - 1 && isInProgress && (
+            <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center' }}>
+              {allAnswered ? (
                 <button
                   onClick={handleCompleteInterview}
                   disabled={submitting}
@@ -611,21 +512,15 @@ const InterviewSession = () => {
               ) : (
                 <button
                   disabled
-                  className="interview-session__complete-button interview-session__complete-button--disabled"
+                  className="interview-session__complete-button"
+                  style={{ opacity: 0.5, cursor: 'not-allowed' }}
                   title="Debes responder todas las preguntas antes de completar"
                 >
                   <FiX /> Completa todas las preguntas
                 </button>
-              )
-            ) : (
-              <button
-                onClick={() => navigate('/interviews')}
-                className="interview-session__exit-button"
-              >
-                <FiX /> {t('interview.exit')}
-              </button>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
