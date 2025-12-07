@@ -218,6 +218,20 @@ const InterviewSession = () => {
         delete newResponses[currentQuestion];
         return newResponses;
       });
+      
+      // ✅ Avanzar automáticamente a la siguiente pregunta
+      if (currentQuestion < questions.length - 1) {
+        setCurrentQuestion(prev => prev + 1);
+        // Resetear estados de voz si estaban activos
+        if (isListening && recognitionRef.current) {
+          recognitionRef.current.stop();
+        }
+        setIsConfirming(false);
+        setUserAnswer('');
+        userAnswerRef.current = '';
+        setElapsedTime(0);
+        setVoiceStatus('');
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || 'Error al guardar respuesta');
     } finally {
