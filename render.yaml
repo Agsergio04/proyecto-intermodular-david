@@ -1,10 +1,7 @@
-# render.yaml - Configuración de despliegue en Render
-# Documentación: https://render.com/docs/blueprint-spec
-
+# render.yaml - Configuracion de despliegue en Render
+# Documentacion: https://render.com/docs/blueprint-spec
 services:
-  # ============================================
   # BACKEND - Node.js API
-  # ============================================
   - type: web
     name: ai-interview-backend
     runtime: node
@@ -15,23 +12,19 @@ services:
     startCommand: node server.js
     healthCheckPath: /api/health
     envVars:
-      # Variables de entorno para producción
       - key: NODE_ENV
         value: production
       - key: MONGODB_URI
-        sync: false # Configurar manualmente en Render Dashboard
+        sync: false
       - key: JWT_SECRET
-        generateValue: true # Render genera automáticamente
+        generateValue: true
       - key: FRONTEND_URL
         value: https://ai-interview-frontend.onrender.com
       - key: GEMINI_API_KEY
-        sync: false # Configurar manualmente
+        sync: false
       - key: OPENAI_API_KEY
-        sync: false # Configurar manualmente (opcional)
-
-  # ============================================
+        sync: false
   # FRONTEND - React Static Site
-  # ============================================
   - type: web
     name: ai-interview-frontend
     runtime: static
@@ -44,15 +37,13 @@ services:
         name: Cache-Control
         value: no-cache
     routes:
-      # SPA routing - todas las rutas van a index.html
       - type: rewrite
         source: /*
         destination: /index.html
     envVars:
-      # La URL del backend se configura aquí para el build
       - key: REACT_APP_API_URL
         value: https://ai-interview-backend-lxv2.onrender.com/api
       - key: REACT_APP_GEMINI_API_KEY
-        sync: false # Configurar manualmente si es necesario
+        sync: false
       - key: REACT_APP_PAYPAL_CLIENT_ID
-        sync: false # Configurar manualmente si es necesario
+        sync: false
