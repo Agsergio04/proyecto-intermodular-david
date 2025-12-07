@@ -28,176 +28,20 @@ exports.submitResponse = async (req, res) => {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
-    // Create response
+    // Create response (sin generar feedback automáticamente)
     const response = new Response({
       questionId,
       interviewId,
       responseText,
       responseAudio,
-      duration: duration || 0
+      duration: duration || 0,
+      score: null, // Se generará bajo demanda
+      feedback: null,
+      analysis: null
     });
 
-    // Generate AI feedback and scoring with Gemini
-    if (responseText && genAI) {
-      try {
-        console.log('🤖 Iniciando evaluación con IA...');
-        console.log('📝 Pregunta:', question.questionText.substring(0, 100));
-        console.log('💬 Respuesta:', responseText.substring(0, 100));
-        
-        // Obtener el contexto del repositorio si existe
-        const repoContext = interview.repoContext;
-        let contextInfo = '';
+    console.log('💾 Guardando respuesta sin evaluar (se evaluará cuando se solicite el feedback)');
 
-        if (repoContext && repoContext.readmeContent) {
-          contextInfo = `
-CONTEXTO DEL REPOSITORIO (${repoContext.owner}/${repoContext.repo}):
-${repoContext.readmeContent.slice(0, 3000)}
-
-Este contexto debe ser usado para evaluar si la respuesta del candidato demuestra comprensión real del proyecto, sus tecnologías y funcionalidades específicas.
-`;
-          console.log('📚 Usando contexto del repositorio:', repoContext.owner, '/', repoContext.repo);
-        } else {
-          console.log('⚠️  Sin contexto del repositorio');
-        }
-
-        const languageMap = {
-          'en': 'English',
-          'es': 'Español',
-          'fr': 'Français',
-          'de': 'Deutsch'
-        };
-
-        const evaluationLanguage = languageMap[interview.language] || 'English';
-
-        const prompt = `Eres un entrevistador técnico amable y comprensivo evaluando a un candidato para un puesto de desarrollador. Tu enfoque es FORMATIVO y ALENTADOR, valorando el esfuerzo y el conocimiento demostrado.
-
-${contextInfo}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PREGUNTA TÉCNICA:
-"${question.questionText}"
-
-RESPUESTA DEL CANDIDATO:
-"${responseText}"
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-FILOSOFÍA DE EVALUACIÓN:
-Eres COMPRENSIVO y GENEROSO. Valoras el esfuerzo, la iniciativa y cualquier conocimiento demostrado. Los errores menores NO deben penalizar severamente. Enfócate en lo POSITIVO que el candidato muestra.
-
-CRITERIOS DE EVALUACIÓN (con enfoque positivo):
-
-1. **CONOCIMIENTO DEL PROYECTO** (25 puntos):
-   ${repoContext ? `
-   - Si menciona CUALQUIER aspecto relacionado con ${repoContext.owner}/${repoContext.repo}, otorga puntos generosamente
-   - Valora positivamente incluso referencias generales al tipo de tecnología
-   - No penalices si la conexión con el proyecto es parcial
-   ` : '- Valora cualquier conocimiento técnico relevante'}
-
-2. **COMPRENSIÓN TÉCNICA** (25 puntos):
-   - ¿Demuestra entendimiento básico del concepto? → Da puntos
-   - ¿Intenta explicar aunque sea de forma simple? → Da puntos
-   - ¿Menciona términos técnicos relevantes? → Da puntos
-   - Errores menores NO deben restar mucho
-
-3. **ESFUERZO Y CLARIDAD** (25 puntos):
-   - ¿Se nota que pensó la respuesta? → Da puntos
-   - ¿Intenta estructurar su explicación? → Da puntos
-   - ¿Proporciona algún ejemplo aunque sea básico? → Da puntos
-
-4. **ACTITUD Y APLICABILIDAD** (25 puntos):
-   - ¿La respuesta es sincera y muestra interés? → Da puntos
-   - ¿Intenta aplicar conocimiento práctico? → Da puntos
-   - Valora el intento aunque no sea perfecto
-
-ESCALA DE PUNTUACIÓN (GENEROSA):
-- **85-100**: Excelente. Respuesta bien pensada que demuestra conocimiento y esfuerzo. Puede tener pequeños errores pero el concepto general es sólido.
-- **70-84**: Muy buena. Respuesta correcta con entendimiento claro del tema. Algunos detalles podrían mejorarse pero está bien.
-- **55-69**: Buena. Respuesta válida que muestra comprensión básica. Aunque simple, demuestra que entiende el concepto.
-- **40-54**: Aceptable. Respuesta incompleta pero muestra algo de conocimiento. Hay esfuerzo visible.
-- **25-39**: Necesita mejorar. Respuesta muy básica o con varios errores, pero hay algún intento de responder.
-- **0-24**: Insuficiente. Respuesta muy alejada del tema o sin contenido relevante.
-
-REGLAS IMPORTANTES:
-- SÉ GENEROSO con la puntuación - errores menores no deben bajar mucho la nota
-- Si el candidato demuestra CUALQUIER conocimiento relevante, la nota debe ser al menos 55-60
-- Una respuesta con esfuerzo visible debe estar en 65-75 mínimo
-- Solo da notas bajas (<50) si realmente no hay contenido relevante
-- El feedback debe ser ALENTADOR y CONSTRUCTIVO
-- EXPLICA CLARAMENTE por qué diste esa puntuación específica
-- Menciona primero lo bueno, luego sugerencias de mejora
-
-FORMATO DE SALIDA: JSON con:
-- score (número 0-100): Puntuación GENEROSA basada en lo positivo de la respuesta
-- strengths (array de 2-4 strings): Fortalezas específicas - SÉ GENEROSO, encuentra lo bueno
-- improvements (array de 2-3 strings): Sugerencias constructivas y amables para mejorar
-- keywords (array de strings): Conceptos técnicos mencionados (da crédito por intentarlo)
-- feedback (string): Retroalimentación DETALLADA (200-300 palabras) en ${evaluationLanguage} que:
-  * Empiece destacando lo positivo
-  * EXPLIQUE CLARAMENTE por qué obtuviste esta puntuación (ej: "Te he dado 75 puntos porque...")
-  * Detalle los criterios evaluados y cómo los cumplió
-  * Termine con sugerencias constructivas para mejorar`;
-
-        console.log('🤖 Llamando a Gemini API...');
-
-        const result = await genAI.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: prompt,
-            config: {
-                responseMimeType: 'application/json',
-                responseSchema: {
-                    type: 'OBJECT',
-                    properties: {
-                        score: { type: 'NUMBER' },
-                        strengths: {
-                            type: 'ARRAY',
-                            items: { type: 'STRING' }
-                        },
-                        improvements: {
-                            type: 'ARRAY',
-                            items: { type: 'STRING' }
-                        },
-                        keywords: {
-                            type: 'ARRAY',
-                            items: { type: 'STRING' }
-                        },
-                        feedback: { type: 'STRING' }
-                    },
-                    required: ['score', 'strengths', 'improvements', 'keywords', 'feedback']
-                }
-            }
-        });
-
-        console.log('📥 Respuesta recibida de Gemini');
-        const analysis = JSON.parse(result.text.trim());
-
-        console.log('✅ Evaluación completada. Score:', analysis.score);
-        console.log('💪 Fortalezas:', analysis.strengths?.length || 0);
-        console.log('📈 Mejoras:', analysis.improvements?.length || 0);
-
-        response.score = Math.min(100, Math.max(0, analysis.score || 0));
-        response.feedback = analysis.feedback || '';
-        response.analysis = {
-          strengths: analysis.strengths || [],
-          areasForImprovement: analysis.improvements || [],
-          keywords: analysis.keywords || []
-        };
-      } catch (error) {
-        console.error('❌ Error en evaluación con IA:', error.message);
-        console.error('📋 Detalles del error:', error);
-        response.score = 50;
-        response.feedback = 'No se pudo generar feedback en este momento. Puntuación asignada por defecto.';
-      }
-    } else {
-      if (!responseText) {
-        console.log('⚠️  Sin texto de respuesta, asignando score por defecto');
-      }
-      if (!genAI) {
-        console.log('⚠️  Gemini AI no disponible, asignando score por defecto');
-      }
-      response.score = 50;
-    }
-
-    response.confidence = response.score;
     await response.save();
 
     // Update question with response
@@ -207,10 +51,13 @@ FORMATO DE SALIDA: JSON con:
     console.log(`✅ Response added to question. Question now has ${question.responses.length} responses`);
     console.log(`📝 Response IDs:`, question.responses);
 
-    // Update interview statistics
+    // Update interview statistics (sin incluir score hasta que se genere feedback)
     const allResponses = await Response.find({ interviewId });
     const answeredQuestions = allResponses.filter(r => r.responseText || r.responseAudio).length;
-    const totalScore = allResponses.reduce((sum, r) => sum + r.score, 0) / allResponses.length || 0;
+    const responsesWithScore = allResponses.filter(r => r.score !== null && r.score !== undefined);
+    const totalScore = responsesWithScore.length > 0 
+      ? responsesWithScore.reduce((sum, r) => sum + r.score, 0) / responsesWithScore.length 
+      : null;
     const averageTime = allResponses.reduce((sum, r) => sum + r.duration, 0) / allResponses.length || 0;
 
     interview.statistics = {
@@ -218,10 +65,10 @@ FORMATO DE SALIDA: JSON con:
       answeredQuestions,
       skippedQuestions: interview.questions.length - answeredQuestions,
       averageResponseTime: Math.round(averageTime),
-      confidence: Math.round(totalScore)
+      confidence: totalScore !== null ? Math.round(totalScore) : null
     };
 
-    interview.totalScore = Math.round(totalScore);
+    interview.totalScore = totalScore !== null ? Math.round(totalScore) : null;
     interview.updatedAt = Date.now();
     await interview.save();
 
@@ -229,10 +76,11 @@ FORMATO DE SALIDA: JSON con:
       message: 'Response submitted successfully',
       response: {
         id: response._id,
-        score: response.score,
-        feedback: response.feedback,
-        analysis: response.analysis,
-        confidence: response.confidence
+        questionId: response.questionId,
+        interviewId: response.interviewId,
+        responseText: response.responseText,
+        duration: response.duration
+        // score, feedback y analysis se generarán bajo demanda
       }
     });
   } catch (error) {
@@ -319,5 +167,232 @@ exports.updateResponse = async (req, res) => {
   } catch (error) {
     console.error('Update response error:', error);
     res.status(500).json({ message: 'Error updating response', error: error.message });
+  }
+};
+
+// Generate feedback for all responses in an interview
+exports.generateInterviewFeedback = async (req, res) => {
+  try {
+    const { interviewId } = req.params;
+
+    console.log(`🎯 Generando feedback para entrevista ${interviewId}`);
+
+    const interview = await Interview.findById(interviewId).populate('questions');
+    if (!interview) {
+      return res.status(404).json({ message: 'Interview not found' });
+    }
+
+    if (interview.userId.toString() !== req.userId) {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    if (!genAI || !process.env.GEMINI_API_KEY) {
+      return res.status(503).json({
+        message: 'AI service not available. GEMINI_API_KEY not configured.'
+      });
+    }
+
+    // Obtener todas las respuestas de la entrevista
+    const responses = await Response.find({ interviewId });
+    console.log(`📝 Encontradas ${responses.length} respuestas`);
+
+    if (responses.length === 0) {
+      return res.status(400).json({ message: 'No responses found for this interview' });
+    }
+
+    const repoContext = interview.repoContext;
+    const languageMap = {
+      'en': 'English',
+      'es': 'Español',
+      'fr': 'Français',
+      'de': 'Deutsch'
+    };
+    const evaluationLanguage = languageMap[interview.language] || 'English';
+
+    let evaluatedCount = 0;
+    let errorCount = 0;
+    const evaluatedResponses = [];
+
+    // Generar feedback para cada respuesta que tenga texto y no tenga feedback previo
+    for (const response of responses) {
+      if (!response.responseText || (response.feedback && response.score !== null)) {
+        console.log(`⏭️  Saltando respuesta ${response._id} (sin texto o ya evaluada)`);
+        continue;
+      }
+
+      const question = await Question.findById(response.questionId);
+      if (!question) {
+        console.log(`⚠️  Pregunta no encontrada para respuesta ${response._id}`);
+        continue;
+      }
+
+      try {
+        console.log(`🤖 Evaluando respuesta ${evaluatedCount + 1}...`);
+
+        let contextInfo = '';
+        if (repoContext && repoContext.readmeContent) {
+          contextInfo = `
+CONTEXTO DEL REPOSITORIO (${repoContext.owner}/${repoContext.repo}):
+${repoContext.readmeContent.slice(0, 3000)}
+
+Este contexto debe ser usado para evaluar si la respuesta del candidato demuestra comprensión real del proyecto, sus tecnologías y funcionalidades específicas.
+`;
+        }
+
+        const prompt = `Eres un entrevistador técnico amable y comprensivo evaluando a un candidato para un puesto de desarrollador. Tu enfoque es FORMATIVO y ALENTADOR, valorando el esfuerzo y el conocimiento demostrado.
+
+${contextInfo}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PREGUNTA TÉCNICA:
+"${question.questionText}"
+
+RESPUESTA DEL CANDIDATO:
+"${response.responseText}"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+FILOSOFÍA DE EVALUACIÓN:
+Eres COMPRENSIVO y GENEROSO. Valoras el esfuerzo, la iniciativa y cualquier conocimiento demostrado. Los errores menores NO deben penalizar severamente. Enfócate en lo POSITIVO que el candidato muestra.
+
+CRITERIOS DE EVALUACIÓN (con enfoque positivo):
+
+1. **CONOCIMIENTO DEL PROYECTO** (25 puntos):
+   ${repoContext ? `
+   - Si menciona CUALQUIER aspecto relacionado con ${repoContext.owner}/${repoContext.repo}, otorga puntos generosamente
+   - Valora positivamente incluso referencias generales al tipo de tecnología
+   - No penalices si la conexión con el proyecto es parcial
+   ` : '- Valora cualquier conocimiento técnico relevante'}
+
+2. **COMPRENSIÓN TÉCNICA** (25 puntos):
+   - ¿Demuestra entendimiento básico del concepto? → Da puntos
+   - ¿Intenta explicar aunque sea de forma simple? → Da puntos
+   - ¿Menciona términos técnicos relevantes? → Da puntos
+   - Errores menores NO deben restar mucho
+
+3. **ESFUERZO Y CLARIDAD** (25 puntos):
+   - ¿Se nota que pensó la respuesta? → Da puntos
+   - ¿Intenta estructurar su explicación? → Da puntos
+   - ¿Proporciona algún ejemplo aunque sea básico? → Da puntos
+
+4. **ACTITUD Y APLICABILIDAD** (25 puntos):
+   - ¿La respuesta es sincera y muestra interés? → Da puntos
+   - ¿Intenta aplicar conocimiento práctico? → Da puntos
+   - Valora el intento aunque no sea perfecto
+
+ESCALA DE PUNTUACIÓN (GENEROSA):
+- **85-100**: Excelente. Respuesta bien pensada que demuestra conocimiento y esfuerzo. Puede tener pequeños errores pero el concepto general es sólido.
+- **70-84**: Muy buena. Respuesta correcta con entendimiento claro del tema. Algunos detalles podrían mejorarse pero está bien.
+- **55-69**: Buena. Respuesta válida que muestra comprensión básica. Aunque simple, demuestra que entiende el concepto.
+- **40-54**: Aceptable. Respuesta incompleta pero muestra algo de conocimiento. Hay esfuerzo visible.
+- **25-39**: Necesita mejorar. Respuesta muy básica o con varios errores, pero hay algún intento de responder.
+- **0-24**: Insuficiente. Respuesta muy alejada del tema o sin contenido relevante.
+
+REGLAS IMPORTANTES:
+- SÉ GENEROSO con la puntuación - errores menores no deben bajar mucho la nota
+- Si el candidato demuestra CUALQUIER conocimiento relevante, la nota debe ser al menos 55-60
+- Una respuesta con esfuerzo visible debe estar en 65-75 mínimo
+- Solo da notas bajas (<50) si realmente no hay contenido relevante
+- El feedback debe ser ALENTADOR y CONSTRUCTIVO
+- EXPLICA CLARAMENTE por qué diste esa puntuación específica
+- Menciona primero lo bueno, luego sugerencias de mejora
+
+FORMATO DE SALIDA: JSON con:
+- score (número 0-100): Puntuación GENEROSA basada en lo positivo de la respuesta
+- strengths (array de 2-4 strings): Fortalezas específicas - SÉ GENEROSO, encuentra lo bueno
+- improvements (array de 2-3 strings): Sugerencias constructivas y amables para mejorar
+- keywords (array de strings): Conceptos técnicos mencionados (da crédito por intentarlo)
+- feedback (string): Retroalimentación DETALLADA (200-300 palabras) en ${evaluationLanguage} que:
+  * Empiece destacando lo positivo
+  * EXPLIQUE CLARAMENTE por qué obtuviste esta puntuación (ej: "Te he dado 75 puntos porque...")
+  * Detalle los criterios evaluados y cómo los cumplió
+  * Termine con sugerencias constructivas para mejorar`;
+
+        const { GoogleGenAI } = require("@google/genai");
+        const genAIInstance = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
+        const result = await genAIInstance.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents: prompt,
+          config: {
+            responseMimeType: 'application/json',
+            responseSchema: {
+              type: 'OBJECT',
+              properties: {
+                score: { type: 'NUMBER' },
+                strengths: {
+                  type: 'ARRAY',
+                  items: { type: 'STRING' }
+                },
+                improvements: {
+                  type: 'ARRAY',
+                  items: { type: 'STRING' }
+                },
+                keywords: {
+                  type: 'ARRAY',
+                  items: { type: 'STRING' }
+                },
+                feedback: { type: 'STRING' }
+              },
+              required: ['score', 'strengths', 'improvements', 'keywords', 'feedback']
+            }
+          }
+        });
+
+        const analysis = JSON.parse(result.text.trim());
+
+        response.score = Math.min(100, Math.max(0, analysis.score || 0));
+        response.feedback = analysis.feedback || '';
+        response.analysis = {
+          strengths: analysis.strengths || [],
+          areasForImprovement: analysis.improvements || [],
+          keywords: analysis.keywords || []
+        };
+        response.confidence = response.score;
+
+        await response.save();
+        evaluatedCount++;
+        evaluatedResponses.push({
+          responseId: response._id,
+          questionId: question._id,
+          score: response.score
+        });
+
+        console.log(`✅ Respuesta ${evaluatedCount} evaluada. Score: ${response.score}`);
+
+      } catch (error) {
+        console.error(`❌ Error evaluando respuesta ${response._id}:`, error.message);
+        errorCount++;
+      }
+    }
+
+    // Actualizar estadísticas de la entrevista
+    const allResponses = await Response.find({ interviewId });
+    const responsesWithScore = allResponses.filter(r => r.score !== null && r.score !== undefined);
+    const totalScore = responsesWithScore.length > 0 
+      ? responsesWithScore.reduce((sum, r) => sum + r.score, 0) / responsesWithScore.length 
+      : null;
+
+    interview.statistics.confidence = totalScore !== null ? Math.round(totalScore) : null;
+    interview.totalScore = totalScore !== null ? Math.round(totalScore) : null;
+    interview.updatedAt = Date.now();
+    await interview.save();
+
+    console.log(`🎉 Feedback generado para ${evaluatedCount} respuestas. Errores: ${errorCount}`);
+
+    res.status(200).json({
+      message: 'Interview feedback generated successfully',
+      evaluatedCount,
+      errorCount,
+      totalResponses: responses.length,
+      averageScore: totalScore,
+      evaluatedResponses
+    });
+
+  } catch (error) {
+    console.error('Generate interview feedback error:', error);
+    res.status(500).json({ 
+      message: 'Error generating interview feedback', 
+      error: error.message 
+    });
   }
 };
