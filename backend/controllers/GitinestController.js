@@ -20,7 +20,7 @@ let genAI = null;
 try {
     if (API_KEY && API_KEY.trim() !== '') {
         genAI = new GoogleGenAI({ apiKey: API_KEY });
-        console.log('✅ GoogleGenAI initialized successfully');
+        console.log('✅ GoogleGenAI (new SDK) initialized successfully');
     }
 } catch (err) {
     console.error('❌ Error initializing GoogleGenAI:', err.message);
@@ -118,6 +118,7 @@ async function generateTextAndQuestions(repoUrl, questionCount = 5, difficulty =
         // ✅ Fetch README or repo info
         let baseText = '';
         let repoInfo = null;
+        let isGeneric = false;
 
         const readme = await fetchReadme(parsed.owner, parsed.repo);
 
@@ -137,7 +138,12 @@ Homepage: ${repoInfo.homepage || 'None'}
 This is a ${repoInfo.language} project${repoInfo.topics.length > 0 ? ` focused on ${repoInfo.topics.join(', ')}` : ''}.`;
                 console.log(`📚 Using GitHub API info, length: ${baseText.length} chars`);
             } else {
-                throw new Error(`Could not fetch information for repository ${parsed.owner}/${parsed.repo}. The repository may be private or does not exist.`);
+                // ✅ NUEVO: Si no se puede acceder al repositorio, usar información genérica
+                console.log(`⚠️ Repository ${parsed.owner}/${parsed.repo} is private or inaccessible. Generating generic questions.`);
+                isGeneric = true;
+                baseText = `Repository: ${parsed.repo}
+Owner: ${parsed.owner}
+This is a software development project. Since the repository is private or inaccessible, we'll generate general technical interview questions suitable for software development roles.`;
             }
         }
 
@@ -163,7 +169,17 @@ This is a ${repoInfo.language} project${repoInfo.topics.length > 0 ? ` focused o
                 : 'mid-level (medium)';
 
         // ✅ Build prompt
-        const prompt = `You are a senior technical interviewer with extensive experience. You have reviewed a GitHub repository and need to ask intelligent, technical questions that make sense.
+        const prompt = isGeneric
+            ? `You are a senior technical interviewer. Generate ${questionCount} general technical interview questions in ${languageText} for a ${difficultyText} software developer position.
+
+REQUIREMENTS:
+- Cover different areas: algorithms, data structures, system design, best practices, testing, version control, databases
+- Questions should be practical and realistic
+- Difficulty level: ${difficultyText}
+- Language: ${languageText}
+
+OUTPUT FORMAT: JSON with array of objects {question: string, difficulty: string}`
+            : `You are a senior technical interviewer with extensive experience. You have reviewed a GitHub repository and need to ask intelligent, technical questions that make sense.
 
 REPOSITORY ANALYZED: ${parsed.owner}/${parsed.repo}
 
@@ -195,11 +211,11 @@ OUTPUT FORMAT: JSON with array of objects {question: string, difficulty: string}
 
         console.log('📤 Calling Gemini API using gemini-2.5-flash...');
 
-        // ✅ Call Gemini API with CORRECT MODEL
+        // ✅ Call Gemini API usando el nuevo SDK @google/genai
         let result;
         try {
             result = await genAI.models.generateContent({
-                model: 'gemini-2.5-flash',  // ✅ CAMBIO: Usar modelo actual
+                model: 'gemini-2.5-flash',
                 contents: prompt,
                 config: {
                     responseMimeType: 'application/json',
@@ -224,7 +240,6 @@ OUTPUT FORMAT: JSON with array of objects {question: string, difficulty: string}
             });
         } catch (geminiError) {
             console.error('❌ Gemini API call failed:', geminiError.message);
-            console.error('❌ Error status:', geminiError.status);
             throw new Error(`Gemini API error: ${geminiError.message}`);
         }
 
@@ -236,10 +251,21 @@ OUTPUT FORMAT: JSON with array of objects {question: string, difficulty: string}
         // ✅ Parse JSON
         const jsonText = result.text.trim();
         console.log('📥 Gemini response received, parsing...');
+        console.log('📄 Raw JSON response:', jsonText.substring(0, 500));
 
         let parsedResult;
         try {
-            parsedResult = JSON.parse(jsonText);
+            const rawParsed = JSON.parse(jsonText);
+            
+            // ✅ ADAPTACIÓN: Si Gemini devuelve un array directamente, envolverlo en un objeto
+            if (Array.isArray(rawParsed)) {
+                console.log('⚠️ Gemini returned array instead of object, wrapping...');
+                parsedResult = { questions: rawParsed };
+            } else {
+                parsedResult = rawParsed;
+            }
+            
+            console.log('✅ Parsed result with', parsedResult.questions?.length || 0, 'questions');
         } catch (parseErr) {
             console.error('❌ JSON parse error. Raw response (first 300 chars):', jsonText.substring(0, 300));
             throw new Error(`Failed to parse Gemini response as JSON: ${parseErr.message}`);

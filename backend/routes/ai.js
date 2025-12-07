@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middleware/auth');
-const { GoogleGenAI, Modality } = require("@google/genai");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const API_KEY = process.env.GEMINI_API_KEY;
 let ai = null;
 
 if (API_KEY) {
-    ai = new GoogleGenAI({ apiKey: API_KEY });
+    ai = new GoogleGenerativeAI(API_KEY);
 } else {
     console.warn("⚠️  GEMINI_API_KEY not set. AI features will be disabled.");
 }

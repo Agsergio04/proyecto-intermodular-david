@@ -2,9 +2,9 @@ const Interview = require('../models/Interview');
 const Question = require('../models/Question');
 const Response = require('../models/Response');
 const User = require('../models/User');
-const { GoogleGenAI } = require("@google/genai");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 if (!process.env.GEMINI_API_KEY) {
   console.warn("⚠️ GEMINI_API_KEY not set. AI features will be disabled.");

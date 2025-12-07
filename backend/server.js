@@ -3,7 +3,22 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-require('dotenv').config();
+const path = require('path');
+const fs = require('fs');
+
+// Cargar variables de entorno: .env.local tiene prioridad sobre .env
+const envLocalPath = path.resolve(__dirname, '.env.local');
+const envPath = path.resolve(__dirname, '.env');
+
+if (fs.existsSync(envLocalPath)) {
+  console.log('✅ Loading .env.local');
+  require('dotenv').config({ path: envLocalPath });
+} else if (fs.existsSync(envPath)) {
+  console.log('✅ Loading .env');
+  require('dotenv').config({ path: envPath });
+} else {
+  console.log('⚠️  No .env file found, using environment variables');
+}
 
 // Import routes
 const authRoutes = require('./routes/auth');

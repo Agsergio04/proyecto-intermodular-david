@@ -129,7 +129,16 @@ export const useDashboard = () => {
                     toast.success(`${questions.length} preguntas generadas!`);
                 } catch (genError) {
                     console.error('❌ Error generando preguntas:', genError);
-                    toast.error('Error generando preguntas: ' + genError.message);
+                    console.error('❌ Error response:', genError.response?.data);
+                    console.error('❌ Error status:', genError.response?.status);
+                    console.error('❌ Error message:', genError.message);
+
+                    const errorMsg = genError.response?.data?.error
+                        || genError.response?.data?.message
+                        || genError.message
+                        || 'Error desconocido al generar preguntas';
+
+                    toast.error(`Error generando preguntas: ${errorMsg}`);
                     setFormLoading(false);
                     return;
                 }
