@@ -2,13 +2,13 @@
 
 .interview-session {
   min-height: 100vh;
-  background-color: var(--bg-light);
+  background-color: #EDF1F6;
   padding: 2rem;
   box-sizing: border-box;
 }
 
 .interview-session--dark {
-  background-color: var(--bg-dark);
+  background-color: #172133;
 }
 
 .interview-session__container {
@@ -81,7 +81,7 @@
 }
 
 .interview-session__result-card--dark {
-  background-color: var(--bg-card-dark);
+  background-color: #2F4467;
   border-color: var(--border-dark);
 }
 
@@ -149,7 +149,7 @@
 }
 
 .interview-session__result-answer--dark {
-  background-color: var(--bg-input-dark);
+  background-color: #1C2739;
   border-color: var(--border-dark);
 }
 
@@ -290,14 +290,14 @@
 /* Progress Bar */
 .interview-session__progress-track {
   width: 100%;
-  background-color: var(--border-light);
+  background-color: #B8B8B8;
   border-radius: 9999px;
   height: 0.5rem;
   overflow: hidden;
 }
 
 .interview-session__progress-track--dark {
-  background-color: var(--border-dark);
+  background-color: #2F4467;
 }
 
 .interview-session__progress-bar {
@@ -321,7 +321,7 @@
 }
 
 .interview-session__card--dark {
-  background-color: var(--bg-card-dark);
+  background-color: #2F4467;
 }
 
 .interview-session__question-header {
@@ -566,8 +566,8 @@
 }
 
 .interview-session__textarea--dark {
-  border-color: var(--border-dark);
-  background-color: var(--bg-input-dark);
+  border-color: #9CA3AF;
+  background-color: #1C2739;
   color: var(--text-light);
 }
 
