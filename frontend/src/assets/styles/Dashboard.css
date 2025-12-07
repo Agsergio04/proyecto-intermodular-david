@@ -107,6 +107,7 @@
 .dashboard__button {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--radius-md);
