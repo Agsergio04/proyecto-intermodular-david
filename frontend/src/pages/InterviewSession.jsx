@@ -210,6 +210,11 @@ const InterviewSession = () => {
         delete newResponses[currentQuestion];
         return newResponses;
       });
+      
+      // ✅ NUEVO: Avanzar automáticamente a la siguiente pregunta
+      if (currentQuestion < questions.length - 1) {
+        setCurrentQuestion(currentQuestion + 1);
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || 'Error al guardar respuesta');
     } finally {
@@ -218,11 +223,36 @@ const InterviewSession = () => {
   };
 
   const handleCompleteInterview = async () => {
+    // ✅ Verificar si hay preguntas sin responder
+    const firstUnansweredIndex = questions.findIndex((q, idx) => {
+      const qResponses = q?.responses || [];
+      const lastSaved = qResponses.length > 0 ? qResponses[qResponses.length - 1]?.responseText : null;
+      const temp = responses[idx];
+      return !(temp && temp.trim().length > 0) && !(lastSaved && lastSaved.trim().length > 0);
+    });
+
+    // Si hay preguntas sin responder, navegar a la primera
+    if (firstUnansweredIndex !== -1) {
+      toast.warning(`Tienes preguntas sin responder. Ir a pregunta ${firstUnansweredIndex + 1}`);
+      setCurrentQuestion(firstUnansweredIndex);
+      return;
+    }
+
+    // Si todas están respondidas, generar feedback y completar
     try {
       setSubmitting(true);
+      toast.info('Generando puntuaciones y feedback...');
+      
+      // ✅ Generar feedback antes de completar
+      await responseService.generateInterviewFeedback(interviewId);
+      
+      // Actualizar estado a completado
       await interviewService.updateInterviewStatus(interviewId, { status: 'completed' });
-      toast.success('¡Entrevista completada!');
-      setTimeout(() => navigate('/interviews'), 1200);
+      
+      toast.success('¡Entrevista completada! Puedes ver tus resultados en el listado de entrevistas.');
+      
+      // Redirigir al listado de entrevistas
+      setTimeout(() => navigate('/interviews'), 1500);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Error al completar la entrevista');
     } finally {
@@ -498,27 +528,30 @@ const InterviewSession = () => {
             )}
           </div>
 
-          {/* Botón de completar entrevista - Separado y centrado */}
+          {/* Botón de completar entrevista - Solo en la última pregunta */}
           {currentQuestion === questions.length - 1 && isInProgress && (
             <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center' }}>
-              {allAnswered ? (
-                <button
-                  onClick={handleCompleteInterview}
-                  disabled={submitting}
-                  className="interview-session__complete-button"
-                >
-                  <FiCheck /> {t('interview.completeInterview')}
-                </button>
-              ) : (
-                <button
-                  disabled
-                  className="interview-session__complete-button"
-                  style={{ opacity: 0.5, cursor: 'not-allowed' }}
-                  title="Debes responder todas las preguntas antes de completar"
-                >
-                  <FiX /> Completa todas las preguntas
-                </button>
-              )}
+              <button
+                onClick={handleCompleteInterview}
+                disabled={submitting}
+                className="interview-session__complete-button"
+                title={allAnswered ? 'Completar y enviar entrevista' : 'Haz clic para ir a las preguntas sin responder'}
+              >
+                {allAnswered ? (
+                  <>
+                    <FiCheck /> {t('interview.completeInterview')}
+                  </>
+                ) : (
+                  <>
+                    <FiX /> Faltan preguntas por responder ({questions.filter((q, idx) => {
+                      const qResponses = q?.responses || [];
+                      const lastSaved = qResponses.length > 0 ? qResponses[qResponses.length - 1]?.responseText : null;
+                      const temp = responses[idx];
+                      return (temp && temp.trim().length > 0) || (lastSaved && lastSaved.trim().length > 0);
+                    }).length}/{questions.length})
+                  </>
+                )}
+              </button>
             </div>
           )}
         </div>
