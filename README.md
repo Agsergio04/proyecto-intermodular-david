@@ -10,5 +10,6 @@ Si deseas meterte en el despliegue web del proyecto se hace por medio del siguie
 ### Capturas de pantalla 
 
 ### Instrucciones de Instalacion 
+
 ### Equipo
 
