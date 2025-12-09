@@ -21,7 +21,7 @@ jobs:
         uses: BaileyJM02/markdown-to-pdf@v1.2.0
         with:
           input_dir: ./
-          output_dir: docs/Github Action/generada
+          output_dir: docs/generated-docs
           build_pdf: true
           build_html: true
 
@@ -29,13 +29,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: docs-generated
-          path: docs/Github Action/generada/
+          path: docs/generated-docs/
           retention-days: 30
 
       - name: Commit and push documentation
         run: |
           git config --local user.email "bot@github.com"
           git config --local user.name "GitHub Bot"
-          git add "docs/Github Action/generada/"
+          git add "docs/generated-docs/"
           git diff --staged --quiet || git commit -m "docs: Actualizar documentación generada [skip ci]"
           git push
