@@ -17,25 +17,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build Markdown files to HTML/PDF in Github Action folder
-        uses: BaileyJM02/markdown-to-pdf@v1.2.0
-        with:
-          input_dir: ./
-          output_dir: docs/generated-docs
-          build_pdf: true
-          build_html: true
+      - name: Install pandoc
+        run: sudo apt-get update && sudo apt-get install -y pandoc
 
-      - name: Upload docs artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: docs-generated
-          path: docs/generated-docs/
-          retention-days: 30
+      - name: Convert Markdown files to PDF
+        run: |
+          mkdir -p docs/generated-docs
+          pandoc README.md -o docs/generated-docs/README.pdf
+          pandoc DEPLOY_RENDER.md -o docs/generated-docs/DEPLOY_RENDER.pdf
+          pandoc ENV_LOCAL_CONFIGURATION.md -o docs/generated-docs/ENV_LOCAL_CONFIGURATION.pdf
+          pandoc GUIA_LOCALHOST.md -o docs/generated-docs/GUIA_LOCALHOST.pdf
+          pandoc Guia_de_preparacion_de_docker.md -o docs/generated-docs/Guia_de_preparacion_de_docker.pdf
 
-      - name: Commit and push documentation
+      - name: Commit and push
         run: |
           git config --local user.email "bot@github.com"
           git config --local user.name "GitHub Bot"
-          git add "docs/generated-docs/"
-          git diff --staged --quiet || git commit -m "docs: Actualizar documentación generada [skip ci]"
-          git push
+          git add docs/generated-docs/
+          git commit -m "docs: Actualizar documentación 
+          git push origin main
