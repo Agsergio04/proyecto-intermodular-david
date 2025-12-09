@@ -8,6 +8,7 @@ Este es un proyecto el cual tiene como objetivo la realizacion de una entrevista
 Si deseas meterte en el despliegue web del proyecto se hace por medio del siguiente [enlace](ai-interview-frontend-q9db.onrender.com).   
 
 ### Capturas de pantalla 
+
 ### Instrucciones de Instalacion 
 ### Equipo
 
