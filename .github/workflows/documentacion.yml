@@ -18,7 +18,7 @@ jobs:
         uses: BaileyJM02/markdown-to-pdf@v1.2.0
         with:
           input_dir: ./
-          output_dir: docs/Github%Actions/generated
+          output_dir: docs-generated
           build_pdf: true
           build_html: true
         continue-on-error: true
@@ -27,7 +27,7 @@ jobs:
         run: |
           git config --local user.email "bot@github.com"
           git config --local user.name "GitHub Bot"
-          git add docs/Github%Actions/generated
+          git add docs-generated/
           git diff --staged --quiet || git commit -m "docs: Actualizar documentación [skip ci]"
           git push || true
         continue-on-error: true
