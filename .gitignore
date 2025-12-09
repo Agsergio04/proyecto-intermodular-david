@@ -26,3 +26,8 @@ Thumbs.db
 dist/
 build/
 
+# Documentation exports (generados por GitHub Actions)
+docs-export/
+code-docs/
+public-docs/
+

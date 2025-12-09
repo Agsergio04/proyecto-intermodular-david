@@ -1,0 +1,183 @@
+name: Build Docs (PDF & HTML + Code Docs)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - 'backend/**'
+      - 'frontend/src/**'
+      - '.github/workflows/docs-build.yml'
+      - '*.md'
+  workflow_dispatch:
+
+jobs:
+  # 1) Convertir documentación Markdown a PDF/HTML
+  build-markdown-docs:
+    runs-on: ubuntu-latest
+    name: Build Markdown Documentation
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Documentos raíz del proyecto
+      - name: Build root markdown files
+        uses: BaileyJM02/markdown-to-pdf@v1.2.0
+        with:
+          input_dir: ./
+          output_dir: docs-export/root
+          build_pdf: true
+          build_html: true
+        continue-on-error: true
+
+      # Documentos en docs/
+      - name: Build docs folder
+        uses: BaileyJM02/markdown-to-pdf@v1.2.0
+        with:
+          input_dir: docs
+          output_dir: docs-export/docs
+          build_pdf: true
+          build_html: true
+        continue-on-error: true
+
+      - name: Upload markdown docs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: markdown-docs
+          path: docs-export/
+          retention-days: 30
+
+  #  Generar documentación de código Backend (JSDoc)
+  build-backend-docs:
+    runs-on: ubuntu-latest
+    name: Build Backend Code Documentation
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Install JSDoc globally
+        run: npm install -g jsdoc
+
+      - name: Generate backend documentation
+        working-directory: backend
+        run: |
+          jsdoc -c jsdoc.json || jsdoc . -r -d ../code-docs/backend \
+            controllers/ \
+            models/ \
+            routes/ \
+            middleware/ \
+            server.js \
+            --readme README.md
+        continue-on-error: true
+
+      - name: Upload backend docs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-code-docs
+          path: code-docs/backend/
+          retention-days: 30
+
+  #Generar documentación de código Frontend (JSDoc/TypeDoc)
+  
+  build-frontend-docs:
+    runs-on: ubuntu-latest
+    name: Build Frontend Code Documentation
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Install documentation tools
+        run: npm install -g jsdoc jsdoc-to-markdown
+
+      - name: Generate frontend documentation
+        working-directory: frontend
+        run: |
+          jsdoc -c jsdoc.json || jsdoc src/ -r -d ../code-docs/frontend \
+            --readme README.md
+        continue-on-error: true
+
+      - name: Upload frontend docs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-code-docs
+          path: code-docs/frontend/
+          retention-days: 30
+
+
+  # Combinar todos los artefactos y publicar
+  publish-docs:
+    runs-on: ubuntu-latest
+    name: Publish All Documentation
+    needs: [build-markdown-docs, build-backend-docs, build-frontend-docs]
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          fetch-depth: 0
+        continue-on-error: true
+
+      - name: Create docs directories if not exist
+        run: |
+          mkdir -p public-docs/markdown/root
+          mkdir -p public-docs/markdown/docs
+          mkdir -p public-docs/code/backend
+          mkdir -p public-docs/code/frontend
+
+      - name: Download and merge markdown docs
+        uses: actions/download-artifact@v4
+        with:
+          name: markdown-docs
+          path: public-docs/markdown
+        continue-on-error: true
+
+      - name: Download and merge backend docs
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-code-docs
+          path: public-docs/code/backend
+        continue-on-error: true
+
+      - name: Download and merge frontend docs
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-code-docs
+          path: public-docs/code/frontend
+        continue-on-error: true
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public-docs
+          publish_branch: gh-pages
+          keep_files: true
+          force_orphan: false

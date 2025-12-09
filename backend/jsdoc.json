@@ -1,0 +1,34 @@
+{
+  "source": {
+    "include": [
+      "controllers",
+      "models",
+      "routes",
+      "middleware",
+      "server.js"
+    ],
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(node_modules/|docs|test)"
+  },
+  "opts": {
+    "destination": "../code-docs/backend",
+    "recurse": true,
+    "readme": "README.md",
+    "template": "default",
+    "encoding": "utf8"
+  },
+  "plugins": [
+    "plugins/markdown"
+  ],
+  "templates": {
+    "cleverLinks": true,
+    "monospaceLinks": false,
+    "default": {
+      "outputSourceFiles": true
+    }
+  },
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc", "closure"]
+  }
+}
