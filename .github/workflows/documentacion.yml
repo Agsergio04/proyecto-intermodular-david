@@ -12,25 +12,23 @@ permissions:
 jobs:
   build-docs:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Install pandoc
-        run: sudo apt-get update && sudo apt-get install -y pandoc
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y pandoc texlive-latex-base texlive-latex-extra
 
-      - name: Convert Markdown files to PDF
+      - name: Generate PDFs
         run: |
           mkdir -p docs/GitHub-Action
-          pandoc README.md -o docs/GitHub-Action/README.pdf
-          pandoc DEPLOY_RENDER.md -o docs/GitHub-Action/DEPLOY_RENDER.pdf
-          pandoc ENV_LOCAL_CONFIGURATION.md -o docs/GitHub-Action/ENV_LOCAL_CONFIGURATION.pdf
-          pandoc GUIA_LOCALHOST.md -o docs/GitHub-Action/GUIA_LOCALHOST.pdf
-          pandoc Guia_de_preparacion_de_docker.md -o docs/GitHub-Action/Guia_de_preparacion_de_docker.pdf
+          pandoc README.md -o docs/GitHub-Action/README.pdf --pdf-engine=pdflatex
+          pandoc DEPLOY_RENDER.md -o docs/GitHub-Action/DEPLOY_RENDER.pdf --pdf-engine=pdflatex
+          pandoc ENV_LOCAL_CONFIGURATION.md -o docs/GitHub-Action/ENV_LOCAL_CONFIGURATION.pdf --pdf-engine=pdflatex
+          pandoc GUIA_LOCALHOST.md -o docs/GitHub-Action/GUIA_LOCALHOST.pdf --pdf-engine=pdflatex
+          pandoc Guia_de_preparacion_de_docker.md -o docs/GitHub-Action/Guia_de_preparacion_de_docker.pdf --pdf-engine=pdflatex
 
-      - name: Commit and push
+      - name: Push changes
         run: |
           git add docs/GitHub-Action/
-          git commit -m "docs: Actualizar documentación [skip ci]" || echo "Sin cambios"
-          git push || echo "Sin cambios para hacer push"
+          git commit -m "docs: Actualizar documentación 
+          git push
