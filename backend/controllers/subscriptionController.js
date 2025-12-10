@@ -16,7 +16,7 @@ const axios = require('axios');
  * Endpoint base de la API de PayPal según el modo configurado.
  * Usa el entorno sandbox por defecto y el entorno live en producción.
  * @type {string}
- */s
+ */
 const PAYPAL_API = process.env.PAYPAL_MODE === 'live' 
   ? 'https://api.paypal.com' 
   : 'https://api.sandbox.paypal.com';
