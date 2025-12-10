@@ -65,7 +65,7 @@ Acción: para cada recurso gráfico utilizado en el frontend se debe:
 | Servicio / API     | Uso                            | Términos / Límite / Licencia | URL |
 |--------------------|--------------------------------|-------------------------------|-----|
 | MongoDB Atlas      | Base de datos (hosting)        | Plan gratuito con límites; revisar SLA y condiciones | https://www.mongodb.com/atlas |
-| Vercel / Render / Railway | Hosting frontend/backend | Planes freemium; revisar condiciones de uso | (según servicio usado) |
+| Vercel / Render / Railway | Hosting frontend/backend | Planes freemium; revisar condiciones de uso | https://ai-interview-frontend-q9db.onrender.com // https://ai-interview-backend-lxv2.onrender.com |
 | GitHub Actions     | CI/CD                          | Uso sujeto a condiciones GitHub | https://github.com/features/actions |
 | SendGrid / Mailgun | Emails transaccionales         | Plan gratuito con límites; revisar TOS | https://sendgrid.com/ |
 | Google Analytics (si) | Analítica web               | Política de privacidad y anonimización de IP requerida | https://analytics.google.com/ |
