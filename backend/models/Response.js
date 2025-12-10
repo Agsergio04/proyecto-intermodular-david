@@ -1,5 +1,27 @@
+/**
+ * @fileoverview Mongoose schema for Response model. User answers to questions
+ * with AI scoring, feedback, and analysis.
+ * 
+ * @module models/Response
+ */
 const mongoose = require('mongoose');
-
+/**
+ * Schema for Response documents
+ * @typedef {Object} ResponseSchema
+ * @property {mongoose.Types.ObjectId} questionId - Related Question reference [required]
+ * @property {mongoose.Types.ObjectId} interviewId - Owning Interview reference [required]
+ * @property {string} [responseText=''] - User text response
+ * @property {string} [responseAudio=null] - Audio recording URL
+ * @property {number} [duration=0] - Response duration in seconds
+ * @property {number} [score=null] - AI-generated score (0-100)
+ * @property {string} [feedback=null] - AI feedback text
+ * @property {number} [confidence=0] - AI confidence score (0-100)
+ * @property {Object} analysis - Detailed analysis results
+ * @property {string[]} analysis.strengths - Identified strengths
+ * @property {string[]} analysis.areasForImprovement - Improvement areas
+ * @property {string[]} analysis.keywords - Extracted keywords
+ * @property {Date} [createdAt] - Creation timestamp
+ */
 const responseSchema = new mongoose.Schema({
   questionId: {
     type: mongoose.Schema.Types.ObjectId,

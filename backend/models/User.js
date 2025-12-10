@@ -1,6 +1,29 @@
+/**
+ * @fileoverview Mongoose schema for User model with authentication, subscription
+ * management, and interview history. Includes password hashing middleware.
+ * 
+ * @module models/User
+ */
+
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+/**
+ * Schema for User documents
+ * @typedef {Object} UserSchema
+ * @property {string} email - Unique user email with validation [required]
+ * @property {string} password - Hashed password (not selected by default) [required]
+ * @property {string} firstName - User's first name [required]
+ * @property {string} lastName - User's last name [required]
+ * @property {('en'|'es'|'fr'|'de'|'pt'|'it'|'ja'|'zh')} [language='en'] - Preferred language
+ * @property {mongoose.Types.ObjectId} [subscription=null] - Subscription reference
+ * @property {('free'|'premium'|'expired')} [subscriptionStatus='free'] - Current status
+ * @property {Date} [freeTrialEndDate] - Free trial expiration (defaults to 7 days)
+ * @property {mongoose.Types.ObjectId[]} interviews - Array of Interview references
+ * @property {string} [profileImage=null] - Profile image URL
+ * @property {Date} [createdAt] - Creation timestamp
+ * @property {Date} [updatedAt] - Last update timestamp
+ */
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -60,7 +83,13 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-// Hash password before saving
+/**
+ * Preguardado que la contraseña no esté ya hasheada
+ * @function
+ * @memberof userSchema
+ * @param {function} next - Mongoose middleware next callback
+ * @returns {Promise<void>}
+ */
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) {
     return next();
@@ -75,12 +104,25 @@ userSchema.pre('save', async function(next) {
   }
 });
 
-// Method to compare passwords
+/**
+ * Comparar la contraseña ingresada con la contraseña hasheada
+ * @function matchPassword
+ * @memberof userSchema
+ * @instance
+ * @param {string} enteredPassword - Password to validate
+ * @returns {Promise<boolean>} True if passwords match
+ */
 userSchema.methods.matchPassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// Method to check if subscription is active
+/**
+ * Comprobar si la suscripción del usuario está activa
+ * @function isSubscriptionActive
+ * @memberof userSchema
+ * @instance
+ * @returns {boolean} True if subscription or trial is active
+ */
 userSchema.methods.isSubscriptionActive = function() {
   if (this.subscriptionStatus === 'premium' && this.subscription) {
     return true;

@@ -1,7 +1,39 @@
+/**
+ * Controlador de estadísticas de entrevistas.
+ *
+ * Proporciona endpoints para obtener estadísticas globales del usuario,
+ * estadísticas detalladas de una entrevista concreta y la evolución
+ * del rendimiento a lo largo del tiempo.
+ *
+ * @module controllers/statsController
+ */
+
 const Interview = require('../models/Interview');
 const Response = require('../models/Response');
 
-// ✅ Get user statistics - CORREGIDO
+/**
+ * Obtiene estadísticas globales del usuario autenticado sobre sus entrevistas.
+ *
+ * Calcula:
+ * - totalInterviews: número total de entrevistas.
+ * - completedInterviews: número de entrevistas completadas.
+ * - averageScore: media de totalScore de las entrevistas completadas.
+ * - totalDuration: suma de las duraciones de todas las entrevistas.
+ * - interviewsByMonth: número de entrevistas por mes (clave: "MMM YYYY").
+ * - interviewsByProfession: número de entrevistas por repositorio asociado.
+ *
+ * Requiere:
+ * - req.userId establecido por el middleware de autenticación.
+ *
+ * Respuesta:
+ * - 200: { stats: { totalInterviews, completedInterviews, averageScore, totalDuration, interviewsByMonth, interviewsByProfession } }
+ * - 500: Error al obtener las estadísticas.
+ *
+ * @async
+ * @param {import('express').Request} req - Petición HTTP.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {Promise<void>}
+ */
 exports.getUserStats = async (req, res) => {
   try {
     const interviews = await Interview.find({ userId: req.userId });
@@ -42,7 +74,37 @@ exports.getUserStats = async (req, res) => {
   }
 };
 
-// ✅ Get interview statistics - CORREGIDO
+/**
+ * Obtiene estadísticas detalladas de una entrevista concreta.
+ *
+ * Incluye:
+ * - title: título de la entrevista.
+ * - repoUrl: URL del repositorio asociado.
+ * - totalScore: puntuación global de la entrevista.
+ * - statistics: objeto de estadísticas almacenadas en la entrevista.
+ * - scoresByDifficulty: media de puntuaciones agrupadas por dificultad.
+ * - questionStats: detalle por pregunta (texto, dificultad, respuestas con score/feedback/duration).
+ * - duration: duración total de la entrevista.
+ * - createdAt: fecha de creación.
+ * - completedAt: fecha de finalización.
+ *
+ * Params:
+ * - interviewId {string} ID de la entrevista.
+ *
+ * Requiere:
+ * - req.userId coincidiendo con interview.userId.
+ *
+ * Respuesta:
+ * - 200: { stats: { ... } }
+ * - 403: Usuario no autorizado.
+ * - 404: Entrevista no encontrada.
+ * - 500: Error al obtener las estadísticas de la entrevista.
+ *
+ * @async
+ * @param {import('express').Request} req - Petición HTTP.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {Promise<void>}
+ */
 exports.getInterviewStats = async (req, res) => {
   try {
     const { interviewId } = req.params;  // ✅ CORRECCIÓN: Destructuring correcto
@@ -109,7 +171,27 @@ exports.getInterviewStats = async (req, res) => {
   }
 };
 
-// ✅ Get performance trends
+/**
+ * Obtiene las tendencias de rendimiento del usuario en sus entrevistas completadas.
+ *
+ * Devuelve una lista ordenada cronológicamente con:
+ * - date: fecha de creación de la entrevista.
+ * - score: totalScore de la entrevista.
+ * - repoUrl: URL del repositorio asociado.
+ * - duration: duración de la entrevista.
+ *
+ * Requiere:
+ * - req.userId establecido por el middleware de autenticación.
+ *
+ * Respuesta:
+ * - 200: Array<{ date: Date, score: number, repoUrl: string, duration: number }>
+ * - 500: Error al obtener las tendencias.
+ *
+ * @async
+ * @param {import('express').Request} req - Petición HTTP.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {Promise<void>}
+ */
 exports.getPerformanceTrends = async (req, res) => {
   try {
     const interviews = await Interview.find({ userId: req.userId, status: 'completed' })

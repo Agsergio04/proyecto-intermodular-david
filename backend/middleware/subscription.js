@@ -1,5 +1,22 @@
+/**
+ * @fileoverview Express middleware for checking user subscription status. Validates free trial
+ * and premium subscriptions, updating expired trials and setting request flags for route protection.
+ * 
+ * @module middleware/subscription
+ */
 const User = require('../models/User');
-
+/**
+ * Middleware to verify and set subscription status on request object
+ * @function checkSubscription
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ * @param {import('express').NextFunction} next - Express next middleware callback
+ * @returns {Promise<void|Response>} Continues middleware chain or sends error response
+ * @throws {Error} Database or validation errors
+ * 
+ * @example
+ * app.get('/premium-route', checkSubscription, premiumHandler);
+ */
 const checkSubscription = async (req, res, next) => {
   try {
     const user = await User.findById(req.userId).populate('subscription');

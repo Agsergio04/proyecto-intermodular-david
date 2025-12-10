@@ -1,13 +1,37 @@
+/**
+ * Controlador de suscripciones y pagos.
+ *
+ * Gestiona la integración con PayPal para crear y ejecutar pagos,
+ * así como la creación, consulta, cancelación y validación del estado
+ * de la suscripción de un usuario.
+ *
+ * @module controllers/subscriptionController
+ */
+
 const Subscription = require('../models/Subscription');
 const User = require('../models/User');
 const axios = require('axios');
 
-// PayPal API endpoints
+/**
+ * Endpoint base de la API de PayPal según el modo configurado.
+ * Usa el entorno sandbox por defecto y el entorno live en producción.
+ * @type {string}
+ */s
 const PAYPAL_API = process.env.PAYPAL_MODE === 'live' 
   ? 'https://api.paypal.com' 
   : 'https://api.sandbox.paypal.com';
 
-// Get PayPal access token
+/**
+ * Obtiene un access token de PayPal usando OAuth2 client_credentials.
+ *
+ * Requiere:
+ * - PAYPAL_CLIENT_ID en process.env.
+ * - PAYPAL_SECRET en process.env.
+ *
+ * @async
+ * @returns {Promise<string>} Access token de PayPal.
+ * @throws {Error} Si no se puede obtener el token de PayPal.
+ */
 const getPayPalAccessToken = async () => {
   try {
     const auth = Buffer.from(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_SECRET}`).toString('base64');
@@ -26,7 +50,25 @@ const getPayPalAccessToken = async () => {
   }
 };
 
-// Create payment
+/**
+ * Crea un pago de PayPal para una suscripción premium.
+ *
+ * Body:
+ * - plan {string} Debe ser 'premium'.
+ *
+ * Requiere:
+ * - PAYPAL_CLIENT_ID, PAYPAL_SECRET y FRONTEND_URL configurados.
+ *
+ * Respuesta:
+ * - 200: { approvalUrl, paymentId } URL de aprobación de PayPal y ID del pago.
+ * - 400: Plan no válido.
+ * - 500: Error al crear el pago.
+ *
+ * @async
+ * @param {import('express').Request} req - Petición HTTP.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {Promise<void>}
+ */
 exports.createPayment = async (req, res) => {
   try {
     const { plan } = req.body;
@@ -98,7 +140,29 @@ exports.createPayment = async (req, res) => {
   }
 };
 
-// Execute payment
+/**
+ * Ejecuta un pago de PayPal previamente aprobado por el usuario
+ * y crea/actualiza la suscripción premium del usuario.
+ *
+ * Body:
+ * - paymentId {string} ID del pago devuelto por PayPal.
+ * - payerId {string} ID del pagador (PayerID) devuelto por PayPal.
+ *
+ * Efectos:
+ * - Crea o actualiza el documento Subscription del usuario.
+ * - Establece plan='premium', status='active', fechas de inicio/fin y renovación.
+ * - Guarda precio, moneda y features disponibles.
+ * - Actualiza el usuario con subscription y subscriptionStatus='premium'.
+ *
+ * Respuesta:
+ * - 200: { message, subscription, transactionId }
+ * - 500: Error al ejecutar el pago o actualizar la suscripción.
+ *
+ * @async
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @returns {Promise<void>}
+ */
 exports.executePayment = async (req, res) => {
   try {
     const { paymentId, payerId } = req.body;
@@ -160,7 +224,29 @@ exports.executePayment = async (req, res) => {
   }
 };
 
-// Get subscription
+/**
+ * Obtiene la suscripción actual del usuario.
+ *
+ * Si el usuario no tiene suscripción en BD, se devuelve un objeto
+ * virtual de plan 'free' con las características correspondientes
+ * y la fecha de fin de prueba gratuita (freeTrialEndDate).
+ *
+ * Requiere:
+ * - req.userId establecido por autenticación.
+ *
+ * Respuesta:
+ * - 200: { subscription }
+ *   donde subscription incluye al menos:
+ *   - plan {'free'|'premium'}
+ *   - status {string}
+ *   - features {Object} mapa de flags de funcionalidad.
+ * - 500: Error al consultar la suscripción.
+ *
+ * @async
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @returns {Promise<void>}
+ */
 exports.getSubscription = async (req, res) => {
   try {
     let subscription = await Subscription.findOne({ userId: req.userId });
@@ -188,7 +274,26 @@ exports.getSubscription = async (req, res) => {
   }
 };
 
-// Cancel subscription
+/**
+ * Cancela la suscripción premium del usuario.
+ *
+ * Efectos:
+ * - Actualiza Subscription: status='cancelled', endDate=Date.now().
+ * - Actualiza User: subscriptionStatus='free', subscription=null.
+ *
+ * Requiere:
+ * - req.userId establecido.
+ *
+ * Respuesta:
+ * - 200: { message }
+ * - 404: Suscripción no encontrada.
+ * - 500: Error al cancelar la suscripción.
+ *
+ * @async
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @returns {Promise<void>}
+ */
 exports.cancelSubscription = async (req, res) => {
   try {
     const subscription = await Subscription.findOne({ userId: req.userId });
@@ -212,8 +317,32 @@ exports.cancelSubscription = async (req, res) => {
     res.status(500).json({ message: 'Error cancelling subscription', error: error.message });
   }
 };
-
-// Check premium access
+/**
+ * Comprueba si el usuario tiene acceso premium y qué features están activas.
+ *
+ * Requiere:
+ * - req.userId establecido.
+ *
+ * Respuesta:
+ * - 200: {
+ *     isPremium: boolean,
+ *     subscriptionStatus: string,
+ *     features: {
+ *       downloadReports?: boolean,
+ *       viewStatistics?: boolean,
+ *       customInterviews?: boolean,
+ *       voiceInterview?: boolean,
+ *       aiGeneratedQuestions?: boolean
+ *     }
+ *   }
+ * - 404: Usuario no encontrado.
+ * - 500: Error al comprobar el estado premium.
+ *
+ * @async
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @returns {Promise<void>}
+ */
 exports.checkPremiumAccess = async (req, res) => {
   try {
     const user = await User.findById(req.userId).populate('subscription');

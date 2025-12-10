@@ -1,7 +1,17 @@
+/**
+ * Controlador de respuestas de entrevista.
+ *
+ * Gestiona el envío, consulta, actualización y evaluación automática
+ * de respuestas asociadas a preguntas e entrevistas, incluyendo
+ * la generación de feedback mediante IA (Gemini).
+ *
+ * @module controllers/responseController
+ */
 const Response = require('../models/Response');
 const Question = require('../models/Question');
 const Interview = require('../models/Interview');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
@@ -9,7 +19,31 @@ if (!process.env.GEMINI_API_KEY) {
     console.warn("⚠️  GEMINI_API_KEY not set. AI features will be disabled.");
 }
 
-// Submit response to a question
+/**
+ * Envía una respuesta para una pregunta concreta de una entrevista.
+ *
+ * Body:
+ * - questionId {string} ID de la pregunta respondida.
+ * - interviewId {string} ID de la entrevista.
+ * - responseText {string} Texto de la respuesta (opcional si se usa audio).
+ * - responseAudio {string} Referencia/URL al audio de la respuesta (opcional).
+ * - duration {number} Duración de la respuesta en segundos (opcional).
+ *
+ * Requiere:
+ * - req.userId coincidiendo con interview.userId.
+ *
+ * Respuesta:
+ * - 201: { message, response: { id, questionId, interviewId, responseText, duration } }
+ * - 403: Usuario no autorizado.
+ * - 404: Pregunta o entrevista no encontrada.
+ * - 500: Error al guardar la respuesta.
+ *
+ * @async
+ * @param {import('express').Request} req - Petición HTTP.
+ * @param {import('express').Response} res - Respuesta HTTP.
+ * @returns {Promise<void>}
+ */
+
 exports.submitResponse = async (req, res) => {
   try {
     const { questionId, interviewId, responseText, responseAudio, duration } = req.body;
@@ -89,7 +123,26 @@ exports.submitResponse = async (req, res) => {
   }
 };
 
-// Get responses for an interview
+/**
+ * Obtiene todas las respuestas de una entrevista.
+ *
+ * Params:
+ * - interviewId {string} ID de la entrevista.
+ *
+ * Requiere:
+ * - req.userId coincidiendo con interview.userId.
+ *
+ * Respuesta:
+ * - 200: { count, responses } (con questionId poblado).
+ * - 403: Usuario no autorizado.
+ * - 404: Entrevista no encontrada.
+ * - 500: Error al obtener respuestas.
+ *
+ * @async
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @returns {Promise<void>}
+ */
 exports.getResponses = async (req, res) => {
   try {
     const { interviewId } = req.params;
@@ -115,7 +168,26 @@ exports.getResponses = async (req, res) => {
   }
 };
 
-// Get specific response
+/**
+ * Obtiene una respuesta concreta por su ID.
+ *
+ * Params:
+ * - responseId {string} ID de la respuesta.
+ *
+ * Requiere:
+ * - req.userId coincidiendo con interview.userId.
+ *
+ * Respuesta:
+ * - 200: { response } (con questionId e interviewId poblados).
+ * - 403: Usuario no autorizado.
+ * - 404: Respuesta no encontrada.
+ * - 500: Error al obtener la respuesta.
+ *
+ * @async
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @returns {Promise<void>}
+ */
 exports.getResponse = async (req, res) => {
   try {
     const { responseId } = req.params;
@@ -139,7 +211,31 @@ exports.getResponse = async (req, res) => {
   }
 };
 
-// Update response
+/**
+ * Actualiza una respuesta existente.
+ *
+ * Params:
+ * - responseId {string} ID de la respuesta.
+ *
+ * Body:
+ * - responseText {string} Nuevo texto de la respuesta (opcional).
+ * - responseAudio {string} Nuevo audio de la respuesta (opcional).
+ * - duration {number} Nueva duración (opcional).
+ *
+ * Requiere:
+ * - req.userId coincidiendo con interview.userId.
+ *
+ * Respuesta:
+ * - 200: { message, response }
+ * - 403: Usuario no autorizado.
+ * - 404: Respuesta no encontrada.
+ * - 500: Error al actualizar la respuesta.
+ *
+ * @async
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @returns {Promise<void>}
+ */
 exports.updateResponse = async (req, res) => {
   try {
     const { responseId } = req.params;
@@ -170,7 +266,35 @@ exports.updateResponse = async (req, res) => {
   }
 };
 
-// Generate feedback for all responses in an interview
+/**
+ * Genera feedback y puntuación con IA para todas las respuestas
+ * de una entrevista, actualizando estadísticas de la entrevista.
+ *
+ * Params:
+ * - interviewId {string} ID de la entrevista.
+ *
+ * Requiere:
+ * - req.userId coincidiendo con interview.userId.
+ * - GEMINI_API_KEY configurado.
+ *
+ * Efectos:
+ * - Evalúa solo respuestas con texto y sin feedback previo.
+ * - Actualiza score, feedback, analysis y confidence de cada respuesta.
+ * - Actualiza interview.statistics.confidence y interview.totalScore.
+ *
+ * Respuesta:
+ * - 200: { message, evaluatedCount, errorCount, totalResponses, averageScore, evaluatedResponses }
+ * - 400: No hay respuestas para evaluar.
+ * - 403: Usuario no autorizado.
+ * - 404: Entrevista no encontrada.
+ * - 503: Servicio de IA no disponible.
+ * - 500: Error al generar feedback.
+ *
+ * @async
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @returns {Promise<void>}
+ */
 exports.generateInterviewFeedback = async (req, res) => {
   try {
     const { interviewId } = req.params;

@@ -1,5 +1,33 @@
-const mongoose = require('mongoose');
+/**
+ * @fileoverview Mongoose schema for Subscription model. Manages user billing,
+ * PayPal integration, and feature access control.
+ * 
+ * @module models/Subscription
+ */
 
+const mongoose = require('mongoose');
+/**
+ * Schema for Subscription documents
+ * @typedef {Object} SubscriptionSchema
+ * @property {mongoose.Types.ObjectId} userId - Owning User reference [required, unique]
+ * @property {('free'|'premium')} [plan='free'] - Subscription plan
+ * @property {('active'|'inactive'|'cancelled'|'expired')} [status='active'] - Status
+ * @property {string} [paypalSubscriptionId=null] - PayPal subscription ID
+ * @property {string} [paypalTransactionId=null] - PayPal transaction ID
+ * @property {Date} startDate - Start timestamp
+ * @property {Date} [endDate=null] - End timestamp
+ * @property {Date} [renewalDate=null] - Next renewal
+ * @property {number} [price=0] - Subscription price
+ * @property {string} [currency='USD'] - Currency code
+ * @property {Object} features - Feature flags
+ * @property {boolean} [features.downloadReports=false] - Report download access
+ * @property {boolean} [features.viewStatistics=false] - Stats viewing access
+ * @property {boolean} [features.customInterviews=true] - Custom interview access
+ * @property {boolean} [features.voiceInterview=true] - Voice interview access
+ * @property {boolean} [features.aiGeneratedQuestions=true] - AI question generation
+ * @property {Date} [createdAt] - Creation timestamp
+ * @property {Date} [updatedAt] - Last update timestamp
+ */
 const subscriptionSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,

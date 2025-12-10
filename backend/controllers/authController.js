@@ -1,8 +1,21 @@
+/**
+ * @fileoverview Authentication controller handling user registration, login, profile management,
+ * and JWT token generation with subscription integration.
+ * 
+ * @module controllers/authController
+ */
+
 const User = require('../models/User');
 const Subscription = require('../models/Subscription');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
-
+/**
+ * Generates JWT token for user authentication
+ * @function generateToken
+ * @param {string} userId - User MongoDB ObjectId
+ * @returns {string} Signed JWT token valid for 7 days
+ * @private
+ */
 const generateToken = (userId) => {
   return jwt.sign(
       { userId },
@@ -10,7 +23,14 @@ const generateToken = (userId) => {
       { expiresIn: '7d' }
   );
 };
-
+/**
+ * Register new user with free subscription
+ * POST /api/auth/register
+ * @function register
+ * @param {import('express').Request} req - Express request with validated body
+ * @param {import('express').Response} res - Express response
+ * @returns {201} User data and token or 400/500 error
+ */
 exports.register = async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -76,7 +96,14 @@ exports.register = async (req, res) => {
     res.status(500).json({ message: 'Registration failed', error: error.message });
   }
 };
-
+/**
+ * Login user with subscription status check
+ * POST /api/auth/login
+ * @function login
+ * @param {import('express').Request} req - Express request with email/password
+ * @param {import('express').Response} res - Express response
+ * @returns {200} User data and token or 401/500 error
+ */
 exports.login = async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -125,6 +152,14 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: 'Login failed', error: error.message });
   }
 };
+/**
+ * Get authenticated user profile
+ * GET /api/auth/me
+ * @function getMe
+ * @param {import('express').Request} req - Request with req.userId from auth middleware
+ * @param {import('express').Response} res - Express response
+ * @returns {200} User profile with subscription or 404/500 error
+ */
 
 exports.getMe = async (req, res) => {
   try {
@@ -159,7 +194,14 @@ exports.getMe = async (req, res) => {
     res.status(500).json({ message: 'Error fetching user', error: error.message });
   }
 };
-
+/**
+ * Update user profile information
+ * PUT /api/auth/profile
+ * @function updateProfile
+ * @param {import('express').Request} req - Request with profile updates
+ * @param {import('express').Response} res - Express response
+ * @returns {200} Updated profile or 404/500 error
+ */
 exports.updateProfile = async (req, res) => {
   try {
     const { firstName, lastName, language, profileImage } = req.body;
@@ -193,7 +235,14 @@ exports.updateProfile = async (req, res) => {
     res.status(500).json({ message: 'Error updating profile', error: error.message });
   }
 };
-
+/**
+ * Change user password
+ * PUT /api/auth/password
+ * @function changePassword
+ * @param {import('express').Request} req - Request with current/new password
+ * @param {import('express').Response} res - Express response
+ * @returns {200} Success message or 401/404/500 error
+ */
 exports.changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
