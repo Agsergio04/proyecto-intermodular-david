@@ -22,7 +22,7 @@ jobs:
         run: |
           mkdir -p docs/GitHub-Action
           pandoc README.md -o docs/GitHub-Action/README.pdf --pdf-engine=pdflatex
-          pandoc DEPLOY_RENDER.md -o docs/GitHub-Action/DEPLOY_RENDER.pdf --pdf-engine=pdflatex
+          pandoc RENDER.md -o docs/GitHub-Action/DEPLOY_RENDER.pdf --pdf-engine=pdflatex
           pandoc ENV_LOCAL_CONFIGURATION.md -o docs/GitHub-Action/ENV_LOCAL_CONFIGURATION.pdf --pdf-engine=pdflatex
           pandoc GUIA_LOCALHOST.md -o docs/GitHub-Action/GUIA_LOCALHOST.pdf --pdf-engine=pdflatex
           pandoc RENDER.md -o docs/GitHub-Action/RENDER.pdf --pdf-engine=pdflatex
