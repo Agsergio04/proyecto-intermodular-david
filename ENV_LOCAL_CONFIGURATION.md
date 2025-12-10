@@ -1,10 +1,10 @@
 # Configuración de Variables de Entorno Locales
 
-## 📋 Descripción
+##  Descripción
 
 Este documento explica cómo configurar las variables de entorno para ejecutar el proyecto localmente en tu máquina.
 
-## 🔧 Backend - Variables de Entorno
+##  Backend - Variables de Entorno
 
 ### Archivo: `backend/.env.local`
 
@@ -48,7 +48,7 @@ cp backend/.env.example backend/.env.local
    - `GEMINI_API_KEY`: Obtén tu clave desde [Google Cloud Console](https://console.cloud.google.com)
    - `PAYPAL_CLIENT_ID` y `PAYPAL_CLIENT_SECRET`: Obtén del [PayPal Developer](https://developer.paypal.com)
 
-## 🎨 Frontend - Variables de Entorno
+##  Frontend - Variables de Entorno
 
 ### Archivo: `frontend/.env.local`
 
@@ -78,7 +78,7 @@ cp frontend/.env.example frontend/.env.local
    - `REACT_APP_GEMINI_API_KEY`: La misma que en el backend
    - `REACT_APP_PAYPAL_CLIENT_ID`: Cliente ID de PayPal sandbox
 
-## 🐳 Docker Local
+##  Docker Local
 
 Si prefieres usar Docker para ejecutar MongoDB localmente:
 
@@ -86,7 +86,7 @@ Si prefieres usar Docker para ejecutar MongoDB localmente:
 docker run -d -p 27017:27017 --name mongodb mongo:latest
 ```
 
-## ✅ Verificación
+##  Verificación
 
 Para verificar que todo está configurado correctamente:
 
@@ -97,7 +97,7 @@ npm install
 npm start
 ```
 
-Deberías ver: `✅ Servidor ejecutándose en http://localhost:5000`
+Deberías ver: ` Servidor ejecutándose en http://localhost:5000`
 
 ### Frontend
 ```bash
@@ -108,7 +108,7 @@ npm start
 
 Se abrirá automáticamente `http://localhost:3000`
 
-## 🔑 Obtener las Claves API
+##  Obtener las Claves API
 
 ### Google Gemini API
 1. Ve a [Google Cloud Console](https://console.cloud.google.com)
@@ -122,7 +122,7 @@ Se abrirá automáticamente `http://localhost:3000`
 3. Ve a "Apps & Credentials"
 4. Copia los credenciales de Sandbox
 
-## 📝 Notas Importantes
+##  Notas Importantes
 
 - **NUNCA** subas archivos `.env.local` al repositorio
 - Las claves en desarrollo pueden ser simples, pero en producción deben ser muy seguras

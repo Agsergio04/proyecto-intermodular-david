@@ -1,16 +1,16 @@
 # Despliegue en Render
 
-## 🚀 Guía Completa de Despliegue en Render
+##  Guía Completa de Despliegue en Render
 
 Render es una plataforma modern para hospedar aplicaciones web. Esta guía te ayudará a desplegar el proyecto completo en Render.
 
-## 📋 Requisitos
+##  Requisitos
 
 - Cuenta en [Render](https://render.com) (gratis)
 - Repositorio GitHub conectado a Render
 - Variables de entorno configuradas
 
-## 🏗️ Arquitectura de Despliegue
+##  Arquitectura de Despliegue
 
 ```
 ┌─────────────────────────────────────────┐
@@ -24,7 +24,7 @@ Render es una plataforma modern para hospedar aplicaciones web. Esta guía te ay
    MongoDB Atlas (Base de datos en la nube)
 ```
 
-## 1️⃣ Preparar el Backend
+## 1️ Preparar el Backend
 
 ### 1.1 Conectar MongoDB Atlas
 
@@ -65,7 +65,7 @@ PAYPAL_MODE=live
 FRONTEND_URL=https://tu-frontend-url.onrender.com
 ```
 
-## 2️⃣ Preparar el Frontend
+## 2️ Preparar el Frontend
 
 ### 2.1 Crear Servicio Web para Frontend en Render
 
@@ -92,7 +92,7 @@ REACT_APP_PAYPAL_CLIENT_ID=tu-paypal-client-id-produccion
 REACT_APP_DEFAULT_LANGUAGE=es
 ```
 
-## 3️⃣ Configurar el Dockerfile (Opcional pero Recomendado)
+## 3️ Configurar el Dockerfile (Opcional pero Recomendado)
 
 Si quieres un despliegue más controlado, usa Docker:
 
@@ -124,7 +124,7 @@ EXPOSE 3000
 CMD ["serve", "-s", "build", "-l", "3000"]
 ```
 
-## 4️⃣ GitHub Actions - Deploy Automático
+## 4️ GitHub Actions - Deploy Automático
 
 Crea un workflow para desplegar automáticamente con cada push a `main`:
 
@@ -150,14 +150,14 @@ jobs:
           curl https://api.render.com/deploy/srv-${{ secrets.RENDER_FRONTEND_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
 ```
 
-## 5️⃣ URLs Finales
+## 5️ URLs Finales
 
 Después del despliegue, tendrás URLs como:
 
 - **Backend**: `https://ai-interview-backend-xxx.onrender.com`
 - **Frontend**: `https://ai-interview-frontend-xxx.onrender.com`
 
-## 📊 Monitoreo
+##  Monitoreo
 
 ### En Render Dashboard:
 
@@ -165,7 +165,7 @@ Después del despliegue, tendrás URLs como:
 2. **Metrics**: Monitorea CPU, memoria y requests
 3. **Health Checks**: Verifica que los servicios estén activos
 
-## ⚠️ Problemas Comunes
+##  Problemas Comunes
 
 ### "Build failed"
 ```
@@ -189,7 +189,7 @@ Después del despliegue, tendrás URLs como:
 → Verifica que el backend esté corriendo
 ```
 
-## 🔄 Actualizaciones
+##  Actualizaciones
 
 Cada vez que hagas `git push` a `main`:
 
@@ -198,13 +198,13 @@ Cada vez que hagas `git push` a `main`:
 3. Render redeploy el servicio
 4. Verifica en Render Dashboard que todo esté corriendo
 
-## 💰 Costos
+##  Costos
 
 - **Backend**: $0.10/hora si está activo (capa gratuita: durmiente después de 15 min inactivo)
 - **Frontend**: $0.10/hora si está activo (capa gratuita: durmiente después de 15 min inactivo)
 - **MongoDB Atlas**: Gratuito hasta 5GB
 
-## 🎯 Próximos Pasos
+##  Próximos Pasos
 
 1. Verifica que ambos servicios estén en "Running"
 2. Abre la URL del frontend en el navegador

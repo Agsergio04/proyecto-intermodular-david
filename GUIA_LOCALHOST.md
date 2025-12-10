@@ -1,16 +1,16 @@
 # Guía de Despliegue en Localhost
 
-## 🏠 Ejecución Local Completa
+##  Ejecución Local Completa
 
 Esta guía te ayudará a ejecutar el proyecto completo (backend + frontend) en tu máquina local.
 
-## 📋 Requisitos Previos
+##  Requisitos Previos
 
 - **Node.js**: v18 o superior ([Descargar](https://nodejs.org))
 - **MongoDB**: Instalado localmente o en Docker
 - **Git**: Para clonar el repositorio
 
-## 🚀 Pasos de Instalación
+##  Pasos de Instalación
 
 ### 1. Clonar el Repositorio
 
@@ -74,7 +74,7 @@ cd backend
 npm start
 ```
 
-Espera el mensaje: `✅ Servidor ejecutándose en http://localhost:5000`
+Espera el mensaje: ` Servidor ejecutándose en http://localhost:5000`
 
 #### Terminal 2 - Frontend
 ```bash
@@ -84,7 +84,7 @@ npm start
 
 Se abrirá automáticamente: `http://localhost:3000`
 
-## 🧪 Testing de Features
+##  Testing de Features
 
 ### Generar Preguntas con IA
 1. Inicia sesión o regístrate
@@ -103,7 +103,7 @@ Se abrirá automáticamente: `http://localhost:3000`
 2. Haz clic en "Mejorar a Premium"
 3. Completa el pago de prueba con PayPal (Sandbox)
 
-## 🔍 Troubleshooting
+##  Troubleshooting
 
 ### "Port 5000 already in use"
 ```bash
@@ -133,7 +133,7 @@ npm install
 2. Verifica que la clave esté correctamente configurada
 3. Reinicia el servidor
 
-## 📊 Estructura de Directorios Locales
+##  Estructura de Directorios Locales
 
 ```
 proyecto-intermodular-david/
@@ -152,7 +152,7 @@ proyecto-intermodular-david/
 └── README.md
 ```
 
-## 🛠️ Comandos Útiles
+##  Comandos Útiles
 
 ### Backend
 ```bash
@@ -168,14 +168,14 @@ npm run build      # Crea build de producción
 npm test           # Ejecuta tests
 ```
 
-## 📝 Notas Importantes
+##  Notas Importantes
 
 - Los archivos `.env.local` NO se suben al repositorio
 - Para desarrollo, las claves pueden ser simples
 - En producción, usa valores seguros y secretos
 - MongoDB por defecto está en `mongodb://localhost:27017`
 
-## 🚪 Puertos Utilizados
+##  Puertos Utilizados
 
 | Servicio | Puerto | URL |
 |----------|--------|-----|

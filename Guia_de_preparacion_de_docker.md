@@ -1,6 +1,6 @@
-# 🐳 Guía de Preparación de Docker para Principiantes
+#  Guía de Preparación de Docker para Principiantes
 
-## 📋 Tabla de Contenidos
+##  Tabla de Contenidos
 1. [Introducción](#introducción)
 2. [Requisitos Previos](#requisitos-previos)
 3. [Estructura del Proyecto](#estructura-del-proyecto)
@@ -12,7 +12,7 @@
 
 ---
 
-## 🎯 Introducción
+##  Introducción
 
 Esta guía te enseñará paso a paso cómo configurar las **variables de entorno** para que tu proyecto funcione correctamente con Docker. Las variables de entorno son como "configuraciones secretas" que tu aplicación necesita para funcionar (API keys, contraseñas, URLs, etc.).
 
@@ -24,16 +24,16 @@ Los archivos `.env.local` guardan información sensible (como contraseñas y API
 
 ---
 
-## 📦 Requisitos Previos
+##  Requisitos Previos
 
 ### 1. Instalar Docker Desktop
 
 **Windows / Mac:**
-- 🔗 Descarga: [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/)
+-  Descarga: [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/)
 - Instala Docker Desktop y asegúrate de que esté corriendo (verás el icono de Docker en tu barra de tareas)
 
 **Linux:**
-- 🔗 Guía: [https://docs.docker.com/engine/install/](https://docs.docker.com/engine/install/)
+-  Guía: [https://docs.docker.com/engine/install/](https://docs.docker.com/engine/install/)
 
 ### 2. Verificar Instalación
 
@@ -50,33 +50,33 @@ Docker version 24.0.0
 Docker Compose version v2.20.0
 ```
 
-✅ Si ves versiones, ¡estás listo!
-❌ Si no, reinicia Docker Desktop o tu computadora.
+ Si ves versiones, ¡estás listo!
+ Si no, reinicia Docker Desktop o tu computadora.
 
 ---
 
-## 📂 Estructura del Proyecto
+##  Estructura del Proyecto
 
 Tu proyecto tiene esta estructura:
 
 ```
 proyecto/
 ├── backend/
-│   ├── .env.local          ⬅️ Configuración del backend
-│   ├── .env.example        ⬅️ Plantilla de ejemplo
+│   ├── .env.local          ⬅ Configuración del backend
+│   ├── .env.example        ⬅ Plantilla de ejemplo
 │   ├── Dockerfile
 │   └── ... (código backend)
 ├── frontend/
-│   ├── .env.local          ⬅️ Configuración del frontend
-│   ├── .env.example        ⬅️ Plantilla de ejemplo
+│   ├── .env.local          ⬅ Configuración del frontend
+│   ├── .env.example        ⬅ Plantilla de ejemplo
 │   ├── Dockerfile
 │   └── ... (código frontend)
-└── docker-compose.yml      ⬅️ Orquestador de servicios
+└── docker-compose.yml      ⬅ Orquestador de servicios
 ```
 
 ---
 
-## 🔧 Configuración del Backend
+##  Configuración del Backend
 
 ### Paso 1: Crear el archivo `.env.local` en la carpeta `backend`
 
@@ -138,7 +138,7 @@ Este es un secreto para proteger las contraseñas de tus usuarios.
 **Cómo generar uno:**
 
 **Opción 1 - Online:**
-- 🔗 Ir a: [https://www.grc.com/passwords.htm](https://www.grc.com/passwords.htm)
+- Ir a: [https://www.grc.com/passwords.htm](https://www.grc.com/passwords.htm)
 - Copia cualquier cadena de caracteres larga
 - Pégala en `JWT_SECRET=`
 
@@ -156,14 +156,14 @@ openssl rand -base64 32
 JWT_SECRET=mi_secreto_super_seguro_generado_aleatoriamente_12345
 ```
 
-#### 🤖 GEMINI_API_KEY (OBLIGATORIO para IA)
+####  GEMINI_API_KEY (OBLIGATORIO para IA)
 
 Esta es la clave para usar la inteligencia artificial de Google Gemini (genera preguntas de entrevista, evalúa respuestas, etc.).
 
 **Cómo obtenerla (GRATIS):**
 
 1. **Ir a Google AI Studio:**
-   - 🔗 [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
+   -  [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
 
 2. **Iniciar sesión con tu cuenta de Google**
 
@@ -176,11 +176,11 @@ Esta es la clave para usar la inteligencia artificial de Google Gemini (genera p
    GEMINI_API_KEY=TU_API_KEY_AQUI_ejemplo_AIzaSy...
    ```
 
-**⚠️ IMPORTANTE:**
-- ✅ La API de Gemini tiene un **plan gratuito generoso**
-- ✅ No necesitas tarjeta de crédito para empezar
-- ⚠️ No compartas esta clave con nadie
-- ⚠️ No la subas a GitHub
+**IMPORTANTE:**
+-  La API de Gemini tiene un **plan gratuito generoso**
+-  No necesitas tarjeta de crédito para empezar
+-  No compartas esta clave con nadie
+-  No la subas a GitHub
 
 **Si no quieres usar IA ahora:**
 Deja la línea vacía:
@@ -189,19 +189,19 @@ GEMINI_API_KEY=
 ```
 El proyecto funcionará, pero sin las funciones de inteligencia artificial.
 
-#### 💳 PAYPAL_CLIENT_ID y PAYPAL_SECRET (OPCIONAL)
+####  PAYPAL_CLIENT_ID y PAYPAL_SECRET (OPCIONAL)
 
 Estos son para pagos con PayPal (suscripciones premium).
 
 **Cómo obtenerlos:**
 
 1. **Ir a PayPal Developer:**
-   - 🔗 [https://developer.paypal.com/](https://developer.paypal.com/)
+   -  [https://developer.paypal.com/](https://developer.paypal.com/)
 
 2. **Crear una cuenta de desarrollador (gratis)**
 
 3. **Ir a "Dashboard" → "Apps & Credentials"**
-   - 🔗 [https://developer.paypal.com/dashboard/applications/sandbox](https://developer.paypal.com/dashboard/applications/sandbox)
+   -  [https://developer.paypal.com/dashboard/applications/sandbox](https://developer.paypal.com/dashboard/applications/sandbox)
 
 4. **Crear una aplicación Sandbox:**
    - Haz clic en "Create App"
@@ -221,7 +221,7 @@ PAYPAL_CLIENT_ID=tu_paypal_client_id_aqui
 PAYPAL_SECRET=tu_paypal_secret_aqui
 ```
 
-#### ✅ Otras Variables (Ya Configuradas)
+####  Otras Variables (Ya Configuradas)
 
 Estas variables ya están correctas, **NO las cambies** a menos que sepas lo que haces:
 
@@ -234,7 +234,7 @@ Estas variables ya están correctas, **NO las cambies** a menos que sepas lo que
 
 ---
 
-## 🎨 Configuración del Frontend
+##  Configuración del Frontend
 
 ### Paso 1: Crear el archivo `.env.local` en la carpeta `frontend`
 
@@ -262,7 +262,7 @@ REACT_APP_PAYPAL_CLIENT_ID=tu_paypal_client_id_aqui
 
 ### Paso 3: Configurar las Variables
 
-#### 🌐 REACT_APP_API_URL (YA ESTÁ CORRECTA)
+####  REACT_APP_API_URL (YA ESTÁ CORRECTA)
 
 Esta es la URL donde el frontend se conecta al backend.
 
@@ -273,7 +273,7 @@ REACT_APP_API_URL=http://localhost:5001/api
 
 **Nota:** En React, todas las variables deben empezar con `REACT_APP_` para que funcionen.
 
-#### 🤖 REACT_APP_GEMINI_API_KEY (OPCIONAL)
+####  REACT_APP_GEMINI_API_KEY (OPCIONAL)
 
 Usa la **misma clave** que pusiste en el backend:
 
@@ -281,7 +281,7 @@ Usa la **misma clave** que pusiste en el backend:
 REACT_APP_GEMINI_API_KEY=TU_API_KEY_AQUI_ejemplo_AIzaSy...
 ```
 
-#### 💳 REACT_APP_PAYPAL_CLIENT_ID (OPCIONAL)
+####  REACT_APP_PAYPAL_CLIENT_ID (OPCIONAL)
 
 Usa el **mismo Client ID** que pusiste en el backend:
 
@@ -291,17 +291,17 @@ REACT_APP_PAYPAL_CLIENT_ID=AbCdEfGhIjKlMnOpQrStUvWxYz123456
 
 ---
 
-## 🔗 Cómo Obtener las API Keys
+##  Cómo Obtener las API Keys
 
-### 📝 Resumen Rápido
+###  Resumen Rápido
 
 | Servicio | ¿Es Gratis? | ¿Tarjeta de Crédito? | Enlace |
 |----------|-------------|---------------------|---------|
-| **Google Gemini** | ✅ Sí (generoso) | ❌ No | [aistudio.google.com](https://aistudio.google.com/app/apikey) |
-| **PayPal Sandbox** | ✅ Sí | ❌ No | [developer.paypal.com](https://developer.paypal.com/dashboard/applications/sandbox) |
-| **JWT Secret** | ✅ N/A | ❌ N/A | [grc.com/passwords](https://www.grc.com/passwords.htm) |
+| **Google Gemini** |  Sí (generoso) |  No | [aistudio.google.com](https://aistudio.google.com/app/apikey) |
+| **PayPal Sandbox** |  Sí |  No | [developer.paypal.com](https://developer.paypal.com/dashboard/applications/sandbox) |
+| **JWT Secret** |  N/A |  N/A | [grc.com/passwords](https://www.grc.com/passwords.htm) |
 
-### 🚀 Google Gemini (Para IA)
+###  Google Gemini (Para IA)
 
 **¿Para qué sirve?**
 - Generar preguntas de entrevista automáticamente
@@ -318,14 +318,14 @@ REACT_APP_PAYPAL_CLIENT_ID=AbCdEfGhIjKlMnOpQrStUvWxYz123456
 5. Pégala en ambos archivos `.env.local`
 
 **Plan Gratuito:**
-- ✅ 60 solicitudes por minuto
-- ✅ 1,500 solicitudes por día
-- ✅ Más que suficiente para desarrollo y pruebas
+-  60 solicitudes por minuto
+-  1,500 solicitudes por día
+-  Más que suficiente para desarrollo y pruebas
 
 **Documentación:**
-- 🔗 [https://ai.google.dev/gemini-api/docs](https://ai.google.dev/gemini-api/docs)
+-  [https://ai.google.dev/gemini-api/docs](https://ai.google.dev/gemini-api/docs)
 
-### 💳 PayPal Sandbox (Para Pagos)
+###  PayPal Sandbox (Para Pagos)
 
 **¿Para qué sirve?**
 - Probar pagos sin dinero real
@@ -346,11 +346,11 @@ REACT_APP_PAYPAL_CLIENT_ID=AbCdEfGhIjKlMnOpQrStUvWxYz123456
 PayPal te da automáticamente cuentas de prueba para simular compradores y vendedores.
 
 **Documentación:**
-- 🔗 [https://developer.paypal.com/docs/api/overview/](https://developer.paypal.com/docs/api/overview/)
+-  [https://developer.paypal.com/docs/api/overview/](https://developer.paypal.com/docs/api/overview/)
 
 ---
 
-## 🚀 Iniciar el Proyecto
+##  Iniciar el Proyecto
 
 Una vez configuradas las variables de entorno, sigue estos pasos:
 
@@ -422,7 +422,7 @@ Abre tu navegador y ve a:
 
 ---
 
-## 🔍 Verificar que las Variables se Cargaron
+##  Verificar que las Variables se Cargaron
 
 ### Verificar Backend
 
@@ -449,7 +449,7 @@ REACT_APP_GEMINI_API_KEY=TU_API_KEY_AQUI
 
 ---
 
-## 🛑 Detener el Proyecto
+##  Detener el Proyecto
 
 Cuando termines de trabajar:
 
@@ -463,13 +463,13 @@ Esto detiene y elimina los contenedores, pero **conserva tus datos** (usuarios, 
 ```bash
 docker-compose down -v
 ```
-⚠️ Cuidado: Esto borra la base de datos.
+ Cuidado: Esto borra la base de datos.
 
 ---
 
-## ❓ Solución de Problemas
+##  Solución de Problemas
 
-### 🔴 Problema: "docker: command not found"
+###  Problema: "docker: command not found"
 
 **Causa:** Docker no está instalado o no está en el PATH.
 
@@ -480,7 +480,7 @@ docker-compose down -v
 
 ---
 
-### 🔴 Problema: "Cannot connect to the Docker daemon"
+###  Problema: "Cannot connect to the Docker daemon"
 
 **Causa:** Docker Desktop no está corriendo.
 
@@ -491,7 +491,7 @@ docker-compose down -v
 
 ---
 
-### 🔴 Problema: "Port 5001 is already in use"
+###  Problema: "Port 5001 is already in use"
 
 **Causa:** Otro programa está usando el puerto 5001.
 
@@ -510,7 +510,7 @@ REACT_APP_API_URL=http://localhost:5002/api
 
 ---
 
-### 🔴 Problema: "GEMINI_API_KEY not set" en los logs
+###  Problema: "GEMINI_API_KEY not set" en los logs
 
 **Causa:** No configuraste la API key de Gemini.
 
@@ -527,7 +527,7 @@ REACT_APP_API_URL=http://localhost:5002/api
 
 ---
 
-### 🔴 Problema: El frontend no se conecta al backend
+###  Problema: El frontend no se conecta al backend
 
 **Causa:** La URL en `REACT_APP_API_URL` está mal.
 
@@ -541,7 +541,7 @@ Debe ser exactamente esa URL (con `/api` al final).
 
 ---
 
-### 🔴 Problema: "MongoServerError: connect ECONNREFUSED"
+###  Problema: "MongoServerError: connect ECONNREFUSED"
 
 **Causa:** MongoDB no está corriendo o no puede conectarse.
 
@@ -559,7 +559,7 @@ docker logs ai_interview_mongo
 
 ---
 
-### 🔴 Problema: Cambié el `.env.local` pero no se aplican los cambios
+###  Problema: Cambié el `.env.local` pero no se aplican los cambios
 
 **Causa:** Docker usa valores en caché.
 
@@ -574,7 +574,7 @@ docker-compose up -d --build
 
 ---
 
-## 📚 Comandos Útiles de Docker
+##  Comandos Útiles de Docker
 
 ### Gestión Básica
 
@@ -632,7 +632,7 @@ docker volume prune
 
 ---
 
-## 🎓 Próximos Pasos
+##  Próximos Pasos
 
 Una vez que tu proyecto esté corriendo:
 
@@ -656,7 +656,7 @@ Una vez que tu proyecto esté corriendo:
 
 ---
 
-## 📖 Recursos Adicionales
+##  Recursos Adicionales
 
 ### Documentación Oficial
 
@@ -675,7 +675,7 @@ Una vez que tu proyecto esté corriendo:
 
 ---
 
-## 🆘 ¿Necesitas Ayuda?
+##  ¿Necesitas Ayuda?
 
 Si tienes problemas:
 
@@ -699,7 +699,7 @@ Si tienes problemas:
 
 ---
 
-## ✅ Checklist de Configuración
+##  Checklist de Configuración
 
 Antes de iniciar el proyecto, verifica:
 
@@ -721,17 +721,17 @@ docker-compose up -d --build
 
 ---
 
-## 🎉 ¡Listo!
+##  ¡Listo!
 
 Ahora tienes tu proyecto de entrevistas con IA corriendo completamente en Docker. Las variables de entorno están configuradas de forma segura en archivos `.env.local` que NO se suben a GitHub.
 
 **Recuerda:**
-- ✅ Nunca subas archivos `.env.local` a GitHub
-- ✅ Nunca compartas tus API keys
-- ✅ Usa `.env.example` como plantilla para otros desarrolladores
-- ✅ Cambia `JWT_SECRET` en producción
+-  Nunca subas archivos `.env.local` a GitHub
+-  Nunca compartas tus API keys
+-  Usa `.env.example` como plantilla para otros desarrolladores
+-  Cambia `JWT_SECRET` en producción
 
-**¡Feliz desarrollo! 🚀**
+**¡Feliz desarrollo!**
 
 ---
 
