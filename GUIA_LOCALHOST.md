@@ -137,19 +137,19 @@ npm install
 
 ```
 proyecto-intermodular-david/
-├── backend/
-│   ├── .env.local          # ← Tu configuración local
-│   ├── server.js
-│   ├── controllers/
-│   ├── models/
-│   ├── routes/
-│   └── package.json
-├── frontend/
-│   ├── .env.local          # ← Tu configuración local
-│   ├── src/
-│   ├── public/
-│   └── package.json
-└── README.md
+|-- backend/
+│   |-- .env.local           Tu configuración local
+│   |-- server.js
+│   |-- controllers/
+│   |-- models/
+│   |-- routes/
+│   |-- package.json
+|-- frontend/
+│   |-- .env.local           Tu configuración local
+│   |-- src/
+│   |-- public/
+│   |-- package.json
+|-- README.md
 ```
 
 ##  Comandos Útiles

@@ -61,17 +61,17 @@ Tu proyecto tiene esta estructura:
 
 ```
 proyecto/
-├── backend/
-│   ├── .env.local          ⬅ Configuración del backend
-│   ├── .env.example        ⬅ Plantilla de ejemplo
-│   ├── Dockerfile
-│   └── ... (código backend)
-├── frontend/
-│   ├── .env.local          ⬅ Configuración del frontend
-│   ├── .env.example        ⬅ Plantilla de ejemplo
-│   ├── Dockerfile
-│   └── ... (código frontend)
-└── docker-compose.yml      ⬅ Orquestador de servicios
+|--- backend/
+│   |-- .env.local           Configuración del backend
+│   |-- .env.example         Plantilla de ejemplo
+│   |--Dockerfile
+│   |-- ... (código backend)
+|-- frontend/
+│   |-- .env.local           Configuración del frontend
+│   |-- .env.example         Plantilla de ejemplo
+│   |-- Dockerfile
+│   |-- ... (código frontend)
+|-- docker-compose.yml       Orquestador de servicios
 ```
 
 ---
@@ -379,11 +379,11 @@ docker-compose up -d --build
 
 **Salida esperada:**
 ```
-[+] Running 4/4
- ✔ Network ai_network          Created
- ✔ Container ai_interview_mongo     Started
- ✔ Container ai_interview_backend   Started
- ✔ Container ai_interview_frontend  Started
+[] Running 4/4
+  Network ai_network          Created
+  Container ai_interview_mongo     Started
+  Container ai_interview_backend   Started
+  Container ai_interview_frontend  Started
 ```
 
 ### 4. Verificar que Todo Esté Corriendo
