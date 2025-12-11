@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: api/i18n/config.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: api/i18n/config.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+/**
+ * @fileoverview Configuración principal de internacionalización (i18n) para la aplicación React.
+ * @description Inicializa i18next con soporte para múltiples idiomas (EN, ES, FR, DE) y
+ * integra el plugin react-i18next para uso en componentes React. Utiliza localStorage
+ * para persistir la preferencia de idioma del usuario.
+ * @author Agsergio04
+ * @version 1.0.0
+ */
+
+/**
+ * Importa la librería principal i18next para la gestión de traducciones.
+ * @external i18next
+ * @see {@link https://www.i18next.com/|i18next}
+ */
+import i18n from 'i18next';
+/**
+ * Importa el plugin initReactI18next que habilita el uso de hooks y Context de React
+ * con i18next.
+ * @external initReactI18next
+ * @see {@link https://react.i18next.com/|react-i18next}
+ */
+import { initReactI18next } from 'react-i18next';
+/**
+ * @typedef {Object} TranslationResources
+ * @property {Object} translation - Objeto que contiene todas las claves de traducción
+ * @property {string} translation.* - Valores traducidos para cada clave
+ */
+
+/**
+ * Importa los recursos de traducción para cada idioma soportado.
+ * Cada archivo JSON contiene las traducciones organizadas por namespaces o claves.
+ * @type {TranslationResources}
+ */
+import en from './en.json';
+import es from './es.json';
+import fr from './fr.json';
+import de from './de.json';
+/**
+ * Objeto que define todos los recursos de traducción disponibles en la aplicación.
+ * @type {Object}
+ * @property {Object} en - Recursos de traducción en inglés (idioma por defecto)
+ * @property {Object} es - Recursos de traducción en español
+ * @property {Object} fr - Recursos de traducción en francés  
+ * @property {Object} de - Recursos de traducción en alemán
+ */
+const resources = {
+  en: { translation: en },
+  es: { translation: es },
+  fr: { translation: fr },
+  de: { translation: de }
+};
+/**
+ * Inicializa la instancia global de i18next con la configuración específica de la aplicación.
+ * @description
+ * - Carga los recursos de traducción para 4 idiomas
+ * - Establece el idioma inicial desde localStorage o 'en' por defecto  
+ * - Configura 'en' como idioma de fallback
+ * - Desactiva el escape automático para React (manejado por React)
+ * @returns {Promise&lt;void>}
+ */
+i18n
+  .use(initReactI18next)
+  .init({
+    /**
+     * Recursos de traducción disponibles para todos los idiomas soportados.
+     * @type {Object}
+     */
+    resources,
+    /**
+     * Idioma inicial del usuario.
+     * @type {string}
+     * @default 'en'
+     * @description Lee la preferencia desde localStorage o usa 'en' como predeterminado.
+     */
+    lng: localStorage.getItem('language') || 'en',
+    /**
+     * Idioma de respaldo cuando la traducción no está disponible.
+     * @type {string}
+     * @default 'en'
+     */
+    fallbackLng: 'en',
+    /**
+     * Configuración de interpolación de variables en las traducciones.
+     * @type {Object}
+     */
+    interpolation: {
+       /**
+       * Desactiva el escape automático de valores interpolados.
+       * @type {boolean}
+       * @default false
+       * @description React ya maneja el escape de HTML, por lo que i18next no necesita hacerlo.
+       */
+      escapeValue: false
+    }
+  });
+/**
+ * Instancia exportada de i18next configurada y lista para usar en toda la aplicación.
+ * @type {import('i18next').i18n}
+ * @name default
+ * @description
+ * Úsala en tus componentes React con los hooks useTranslation(), withTranslation()
+ * o el HOC I18nextProvider.
+ * 
+ * Ejemplo de uso:
+ * ```
+ * import { useTranslation } from 'react-i18next';
+ * 
+ * function MyComponent() {
+ *   const { t } = useTranslation();
+ *   return &lt;p>{t('welcome.message')}&lt;/p>;
+ * }
+ * ```
+ */
+
+export default i18n;
+/**
+ * @namespace i18nConfig
+ * @description Espacio de nombres que documenta la configuración global de i18n
+ * @property {Array} supportedLngs - ['en', 'es', 'fr', 'de']
+ * @property {string} defaultLng - 'en'
+ * @property {string} fallbackLng - 'en'
+ * @property {boolean} reactIntegration - true (via initReactI18next)
+ */
+
+/**
+ * Funciones utilitarias recomendadas para usar con esta configuración:
+ * @function changeLanguage
+ * @param {string} lng - Código del idioma (ej: 'es', 'fr')
+ * @example i18n.changeLanguage('es');
+ * 
+ * @function getCurrentLanguage
+ * @returns {string} Código del idioma actual
+ * @example const currentLng = i18n.language;
+ */</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-App.html">App</a></li><li><a href="module-Header.html">Header</a></li><li><a href="module-Home.html">Home</a></li><li><a href="module-apiClient.html">apiClient</a></li><li><a href="module-components_Header.html">components/Header</a></li><li><a href="module-components_StatCard.html">components/StatCard</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pages_InterviewSession.html">pages/InterviewSession</a></li><li><a href="module-pages_Settings.html">pages/Settings</a></li><li><a href="module-services.html">services</a></li><li><a href="module-stores.html">stores</a></li><li><a href="module-useDashboard.html">useDashboard</a></li><li><a href="module-useHeader.html">useHeader</a></li><li><a href="module-useHome.html">useHome</a></li></ul><h3>Externals</h3><ul><li><a href="external-i18next.html">i18next</a></li><li><a href="external-initReactI18next.html">initReactI18next</a></li></ul><h3>Namespaces</h3><ul><li><a href="i18nConfig.html">i18nConfig</a></li><li><a href="module-services-aiService.html">aiService</a></li><li><a href="module-services-authService.html">authService</a></li><li><a href="module-services-interviewService.html">interviewService</a></li><li><a href="module-services-responseService.html">responseService</a></li><li><a href="module-services-statsService.html">statsService</a></li><li><a href="module-services-subscriptionService.html">subscriptionService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Interviews">Interviews</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Register">Register</a></li><li><a href="global.html#StatCard">StatCard</a></li><li><a href="global.html#Subscription">Subscription</a></li><li><a href="global.html#default">default</a></li><li><a href="global.html#fallbackLng">fallbackLng</a></li><li><a href="global.html#getCurrentLanguage">getCurrentLanguage</a></li><li><a href="global.html#interpolation">interpolation</a></li><li><a href="global.html#lng">lng</a></li><li><a href="global.html#resources">resources</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Dec 11 2025 22:20:26 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/Header.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/Header.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview Componente Header/Navbar de la aplicación.
+ * Proporciona navegación global, autenticación, preferencias de idioma y tema.
+ * Se adapta responsivamente a móvil y escritorio.
+ * 
+ * Características:
+ * - Menú de navegación condicional (autenticado vs no autenticado)
+ * - Selector de idioma (EN, ES, FR, DE)
+ * - Toggle de tema oscuro/claro
+ * - Menú móvil responsive con hamburguesa
+ * - Oculta navegación durante sesión de entrevista activa
+ * - Sincronización con hooks personalizados y Zustand store
+ * 
+ * @module components/Header
+ * @requires react
+ * @requires react-router-dom
+ * @requires react-icons/fi
+ * @requires ../hooks/useHeader
+ * @requires ../assets/styles/Header.css
+ */
+
+import React from 'react';
+import { useLocation } from 'react-router-dom';
+import { FiMoon, FiSun, FiMenu, FiX, FiUser, FiClock } from 'react-icons/fi';
+import { useHeader } from '../hooks/useHeader';
+import '../assets/styles/Header.css';
+
+/**
+ * Componente Header/Navbar principal de la aplicación.
+ * 
+ * Estructura:
+ * 1. **Sección Logo**: Logo clickeable que navega a home (/)
+ * 2. **Menú Desktop**: 
+ *    - Usuarios autenticados: Botones de entrevistas/settings, idioma, tema
+ *    - Usuarios sin autenticar: Idioma, tema, botones login/register
+ * 3. **Botón Mobile**: Hamburguesa que abre/cierra menú en móvil
+ * 4. **Menú Mobile**: Versión responsive del menú desktop
+ * 
+ * Comportamiento especial:
+ * - Durante sesión de entrevista (pathname=/interview/:id), oculta botones de navegación
+ * - Soporta 4 idiomas con selector dropdown
+ * - Toggle entre modo claro y oscuro persistido en localStorage
+ * - Responsive: Menú desktop en pantallas grandes, hamburguesa en móvil
+ * 
+ * Estados (desde useHeader hook):
+ * - isAuthenticated: Boolean de autenticación del usuario
+ * - isDark: Estado del tema (true=oscuro, false=claro)
+ * - language: Código de idioma actual ('en', 'es', 'fr', 'de')
+ * - mobileMenuOpen: Controla visibilidad del menú móvil
+ * 
+ * @component
+ * @returns {React.ReactElement} Header con navegación global y opciones de usuario
+ * 
+ * @example
+ * // Uso en App.js o layout principal
+ * &lt;Header />
+ */
+const Header = () => {
+  /**
+   * Obtiene la ruta actual para detectar si estamos en sesión de entrevista.
+   * @type {Object} location - Objeto de react-router con pathname, search, etc
+   */
+  const location = useLocation();
+  
+  /**
+   * Valores y funciones extraídas del hook personalizado useHeader.
+   * Este hook gestiona el estado global de autenticación, tema, idioma y navegación.
+   * 
+   * @type {Object}
+   * @property {boolean} isAuthenticated - Usuario autenticado o no
+   * @property {boolean} isDark - Tema oscuro activo
+   * @property {string} language - Idioma actual ('en'|'es'|'fr'|'de')
+   * @property {boolean} mobileMenuOpen - Menú móvil visible
+   * @property {Function} t - Función de traducción (i18n)
+   * @property {Function} handleLanguageChange - Cambia idioma global
+   * @property {Function} handleThemeToggle - Cambia tema dark/light
+   * @property {Function} toggleMobileMenu - Abre/cierra menú móvil
+   * @property {Function} navigateTo - Navega a ruta y cierra menú móvil
+   */
+  const {
+    isAuthenticated,
+    isDark,
+    language,
+    mobileMenuOpen,
+    t,
+    handleLanguageChange,
+    handleThemeToggle,
+    toggleMobileMenu,
+    navigateTo
+  } = useHeader();
+
+  /**
+   * Detecta si el usuario está en una sesión de entrevista activa.
+   * Se usa para ocultar botones de navegación y dejar foco total en la entrevista.
+   * 
+   * @type {boolean}
+   * @example
+   * // true si pathname = '/interview/123abc'
+   * // false si pathname = '/interviews' o '/dashboard'
+   */
+  const isInInterviewSession = location.pathname.startsWith('/interview/');
+
+  return (
+    &lt;header className={`header ${isDark ? 'header--dark' : ''}`}>
+      &lt;div className="header__container">
+        &lt;div
+          onClick={() => navigateTo('/')}
+          className={`header__logo ${isDark ? 'header__logo--dark' : ''}`}
+        >
+          &lt;span className={`header__logo-text ${isDark ? 'header__logo-text--dark' : ''}`}>
+            {t('common.appName')}
+          &lt;/span>
+        &lt;/div>
+
+        {/* Desktop Menu */}
+        &lt;div className="header__menu">
+          {isAuthenticated ? (
+            /**
+             * Menú para usuarios autenticados.
+             * 
+             * Componentes:
+             * 1. Botones de navegación (Entrevistas/Settings): Se ocultan si isInInterviewSession=true
+             * 2. Selector de idioma con 4 opciones (EN/ES/FR/DE)
+             * 3. Toggle de tema (Sun icon para pasar a light, Moon para dark)
+             * 
+             * La ocultación de botones durante entrevista asegura que el usuario
+             * pueda concentrarse completamente sin distracciones de navegación.
+             */
+            &lt;>
+              {/* Ocultar botones de navegación durante entrevista */}
+              {!isInInterviewSession &amp;&amp; (
+                &lt;div className="header__nav-buttons">
+                  &lt;button
+                    onClick={() => navigateTo('/interviews')}
+                    className={`header__nav-button ${isDark ? 'header__nav-button--dark' : ''}`}
+                  >
+                    &lt;FiClock />
+                    {t('interview.myInterviews')}
+                  &lt;/button>
+                  &lt;button
+                    onClick={() => navigateTo('/settings')}
+                    className={`header__nav-button ${isDark ? 'header__nav-button--dark' : ''}`}
+                  >
+                    &lt;FiUser />
+                    {t('settings.profile')}
+                  &lt;/button>
+                &lt;/div>
+              )}
+
+              {/* Language Selector */}
+              &lt;select
+                value={language}
+                onChange={(e) => handleLanguageChange(e.target.value)}
+                className={`header__language-select ${isDark ? 'header__language-select--dark' : ''}`}
+              >
+                &lt;option value="en">EN&lt;/option>
+                &lt;option value="es">ES&lt;/option>
+                &lt;option value="fr">FR&lt;/option>
+                &lt;option value="de">DE&lt;/option>
+              &lt;/select>
+
+              {/* Theme Toggle */}
+              &lt;button
+                onClick={handleThemeToggle}
+                className={`header__theme-button ${isDark ? 'header__theme-button--dark' : ''}`}
+              >
+                {isDark ? (
+                  &lt;FiSun className="header__theme-icon header__theme-icon--sun" />
+                ) : (
+                  &lt;FiMoon className={`header__theme-icon header__theme-icon--moon ${isDark ? 'header__theme-icon--moon--dark' : ''}`} />
+                )}
+              &lt;/button>
+            &lt;/>
+          ) : (
+            /**
+             * Menú para usuarios sin autenticar.
+             * 
+             * Componentes:
+             * 1. Selector de idioma con 4 opciones
+             * 2. Toggle de tema (Sun/Moon)
+             * 3. Botón "Login": Navega a /login
+             * 4. Botón "Register": Navega a /register
+             * 
+             * No hay acceso a Entrevistas ni Settings sin autenticación.
+             */
+            &lt;div className="header__auth-buttons">
+              {/* Language Selector */}
+              &lt;select
+                value={language}
+                onChange={(e) => handleLanguageChange(e.target.value)}
+                className={`header__language-select ${isDark ? 'header__language-select--dark' : ''}`}
+              >
+                &lt;option value="en">EN&lt;/option>
+                &lt;option value="es">ES&lt;/option>
+                &lt;option value="fr">FR&lt;/option>
+                &lt;option value="de">DE&lt;/option>
+              &lt;/select>
+
+              {/* Theme Toggle */}
+              &lt;button
+                onClick={handleThemeToggle}
+                className={`header__theme-button ${isDark ? 'header__theme-button--dark' : ''}`}
+              >
+                {isDark ? (
+                  &lt;FiSun className="header__theme-icon header__theme-icon--sun" />
+                ) : (
+                  &lt;FiMoon className={`header__theme-icon header__theme-icon--moon ${isDark ? 'header__theme-icon--moon--dark' : ''}`} />
+                )}
+              &lt;/button>
+
+              &lt;button
+                onClick={() => navigateTo('/login')}
+                className={`header__login-button ${isDark ? 'header__login-button--dark' : ''}`}
+              >
+                {t('common.login')}
+              &lt;/button>
+              &lt;button
+                onClick={() => navigateTo('/register')}
+                className={`header__register-button ${isDark ? 'header__register-button--dark' : ''}`}
+              >
+                {t('common.register')}
+              &lt;/button>
+            &lt;/div>
+          )}
+        &lt;/div>
+
+        {/**
+         * Botón de hamburguesa para menú móvil.
+         * Visible solo en pantallas pequeñas (handled por CSS media queries).
+         * 
+         * Comportamiento:
+         * - Icono FiX (X) cuando menú está abierto
+         * - Icono FiMenu (hamburguesa) cuando menú está cerrado
+         * - onClick={toggleMobileMenu} abre/cierra el menú desplegable
+         */}
+        {/* Mobile Menu Button */}
+        &lt;button
+          onClick={toggleMobileMenu}
+          className={`header__mobile-button ${isDark ? 'header__mobile-button--dark' : ''}`}
+        >
+          {mobileMenuOpen ? &lt;FiX size={24} /> : &lt;FiMenu size={24} />}
+        &lt;/button>
+      &lt;/div>
+
+      {/**
+       * Menú responsive para dispositivos móviles.
+       * Visible solo cuando mobileMenuOpen=true y en pantallas pequeñas.
+       * 
+       * Estructura:
+       * 1. Para usuarios autenticados:
+       *    - Botones de navegación (Entrevistas/Settings) - ocultos en sesión de entrevista
+       *    - Selector de idioma con etiquetas largas (English, Español, etc)
+       *    - Toggle tema con texto (Light/Dark Mode)
+       * 
+       * 2. Para usuarios no autenticados:
+       *    - Selector de idioma
+       *    - Toggle tema con texto
+       *    - Botón Login
+       *    - Botón Register
+       * 
+       * Nota: Se cierra automáticamente al navegar (toggleMobileMenu en navigateTo)
+       */}
+      {/* Mobile Menu */}
+      {mobileMenuOpen &amp;&amp; (
+        &lt;div className={`header__mobile-menu ${isDark ? 'header__mobile-menu--dark' : ''}`}>
+          {isAuthenticated ? (
+            &lt;>
+              {/* Ocultar botones de navegación en móvil durante entrevista */}
+              {!isInInterviewSession &amp;&amp; (
+                &lt;>
+                  &lt;button
+                    onClick={() => navigateTo('/interviews')}
+                    className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
+                  >
+                    &lt;FiClock />
+                    {t('interview.myInterviews')}
+                  &lt;/button>
+                  &lt;button
+                    onClick={() => navigateTo('/settings')}
+                    className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
+                  >
+                    &lt;FiUser />
+                    {t('settings.profile')}
+                  &lt;/button>
+                &lt;/>
+              )}
+              &lt;select
+                value={language}
+                onChange={(e) => handleLanguageChange(e.target.value)}
+                className={`header__language-select ${isDark ? 'header__language-select--dark' : ''}`}
+              >
+                &lt;option value="en">English&lt;/option>
+                &lt;option value="es">Español&lt;/option>
+                &lt;option value="fr">Français&lt;/option>
+                &lt;option value="de">Deutsch&lt;/option>
+              &lt;/select>
+              &lt;button
+                onClick={handleThemeToggle}
+                className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
+              >
+                {isDark ? &lt;FiSun /> : &lt;FiMoon />}
+                {isDark ? 'Light Mode' : 'Dark Mode'}
+              &lt;/button>
+            &lt;/>
+          ) : (
+            &lt;>
+              &lt;select
+                value={language}
+                onChange={(e) => handleLanguageChange(e.target.value)}
+                className={`header__language-select ${isDark ? 'header__language-select--dark' : ''}`}
+              >
+                &lt;option value="en">English&lt;/option>
+                &lt;option value="es">Español&lt;/option>
+                &lt;option value="fr">Français&lt;/option>
+                &lt;option value="de">Deutsch&lt;/option>
+              &lt;/select>
+              &lt;button
+                onClick={handleThemeToggle}
+                className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
+              >
+                {isDark ? &lt;FiSun /> : &lt;FiMoon />}
+                {isDark ? 'Light Mode' : 'Dark Mode'}
+              &lt;/button>
+              &lt;button
+                onClick={() => navigateTo('/login')}
+                className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
+              >
+                {t('common.login')}
+              &lt;/button>
+              &lt;button
+                onClick={() => navigateTo('/register')}
+                className={`header__register-button ${isDark ? 'header__register-button--dark' : ''}`}
+              >
+                {t('common.register')}
+              &lt;/button>
+            &lt;/>
+          )}
+        &lt;/div>
+      )}
+    &lt;/header>
+  );
+};
+
+export default Header;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-App.html">App</a></li><li><a href="module-Header.html">Header</a></li><li><a href="module-Home.html">Home</a></li><li><a href="module-apiClient.html">apiClient</a></li><li><a href="module-components_Header.html">components/Header</a></li><li><a href="module-components_StatCard.html">components/StatCard</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pages_InterviewSession.html">pages/InterviewSession</a></li><li><a href="module-pages_Settings.html">pages/Settings</a></li><li><a href="module-services.html">services</a></li><li><a href="module-stores.html">stores</a></li><li><a href="module-useDashboard.html">useDashboard</a></li><li><a href="module-useHeader.html">useHeader</a></li><li><a href="module-useHome.html">useHome</a></li></ul><h3>Externals</h3><ul><li><a href="external-i18next.html">i18next</a></li><li><a href="external-initReactI18next.html">initReactI18next</a></li></ul><h3>Namespaces</h3><ul><li><a href="i18nConfig.html">i18nConfig</a></li><li><a href="module-services-aiService.html">aiService</a></li><li><a href="module-services-authService.html">authService</a></li><li><a href="module-services-interviewService.html">interviewService</a></li><li><a href="module-services-responseService.html">responseService</a></li><li><a href="module-services-statsService.html">statsService</a></li><li><a href="module-services-subscriptionService.html">subscriptionService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Interviews">Interviews</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Register">Register</a></li><li><a href="global.html#StatCard">StatCard</a></li><li><a href="global.html#Subscription">Subscription</a></li><li><a href="global.html#default">default</a></li><li><a href="global.html#fallbackLng">fallbackLng</a></li><li><a href="global.html#getCurrentLanguage">getCurrentLanguage</a></li><li><a href="global.html#interpolation">interpolation</a></li><li><a href="global.html#lng">lng</a></li><li><a href="global.html#resources">resources</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Dec 11 2025 22:20:26 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

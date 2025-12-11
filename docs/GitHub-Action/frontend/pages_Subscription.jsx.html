@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/Subscription.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/Subscription.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import { subscriptionService } from '../api';
+import { FiCheck, FiX } from 'react-icons/fi';
+
+/**
+ * Componente de gestión de suscripciones.
+ * Muestra planes Free y Premium con características, permite upgrade/cancel
+ * y maneja estado de suscripción actual del usuario.
+ * @returns {JSX.Element} Interfaz completa de planes de suscripción.
+ */
+const Subscription = () => {
+  /** Hook de traducción para internacionalización */
+  const { t } = useTranslation();
+  
+  /** @type {[object|null, Function]} Datos de la suscripción actual del usuario */
+  const [subscription, setSubscription] = useState(null);
+  
+  /** @type {[boolean, Function]} Estado de carga inicial de datos de suscripción */
+  const [loading, setLoading] = useState(true);
+  
+  /** @type {[boolean, Function]} Indica si el usuario tiene acceso Premium activo */
+  const [isPremium, setIsPremium] = useState(false);
+
+  /**
+   * Obtiene datos de suscripción y estado Premium desde la API.
+   * Se memoiza con useCallback para evitar re-renders innecesarios.
+   * @returns {Promise&lt;void>}
+   */
+  const fetchSubscription = useCallback(async () => {
+    try {
+      /** Obtiene datos de suscripción actual */
+      const response = await subscriptionService.getSubscription();
+      setSubscription(response.data.subscription);
+      
+      /** Verifica acceso Premium activo */
+      const premiumResponse = await subscriptionService.checkPremiumAccess();
+      setIsPremium(premiumResponse.data.isPremium);
+    } catch (error) {
+      toast.error(t('errors.serverError'));
+    } finally {
+      setLoading(false);
+    }
+  }, [t]);
+
+  /**
+   * Ejecuta fetchSubscription al montar el componente.
+   * Dependencia: fetchSubscription memoizado.
+   */
+  useEffect(() => {
+    fetchSubscription();
+  }, [fetchSubscription]);
+
+  /**
+   * Inicia proceso de upgrade a plan Premium.
+   * Redirige a URL de aprobación de pago de Stripe/PayPal.
+   * @returns {Promise&lt;void>}
+   */
+  const handleUpgrade = async () => {
+    try {
+      const response = await subscriptionService.createPayment({ plan: 'premium' });
+      window.location.href = response.data.approvalUrl;
+    } catch (error) {
+      toast.error(t('errors.serverError'));
+    }
+  };
+
+  /**
+   * Cancela la suscripción actual con confirmación del usuario.
+   * Recarga datos de suscripción tras cancelación exitosa.
+   * @returns {Promise&lt;void>}
+   */
+  const handleCancel = async () => {
+    if (window.confirm('Are you sure you want to cancel your subscription?')) {
+      try {
+        await subscriptionService.cancelSubscription();
+        toast.success('Subscription cancelled');
+        fetchSubscription();
+      } catch (error) {
+        toast.error(t('errors.serverError'));
+      }
+    }
+  };
+
+  /**
+   * Vista de carga con spinner centrado en pantalla completa.
+   */
+  if (loading) {
+    return (
+      &lt;div className="flex items-center justify-center min-h-screen">
+        &lt;div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500">&lt;/div>
+      &lt;/div>
+    );
+  }
+
+  /**
+   * Array de planes disponibles (Free y Premium) con características.
+   * Se genera dinámicamente con traducciones y estado actual.
+   * @type {Array}
+   */
+  const plans = [
+    {
+      name: t('subscription.freePlan'),
+      price: 'Free',
+      features: [
+        { name: t('subscription.customInterviews'), included: true },
+        { name: t('subscription.voiceInterview'), included: true },
+        { name: t('subscription.aiGeneratedQuestions'), included: true },
+        { name: t('subscription.viewStatistics'), included: false },
+        { name: t('subscription.downloadReports'), included: false }
+      ],
+      current: subscription?.plan === 'free',
+      action: null
+    },
+    {
+      name: t('subscription.premiumPlan'),
+      price: '$9.99',
+      period: t('subscription.perMonth'),
+      features: [
+        { name: t('subscription.customInterviews'), included: true },
+        { name: t('subscription.voiceInterview'), included: true },
+        { name: t('subscription.aiGeneratedQuestions'), included: true },
+        { name: t('subscription.viewStatistics'), included: true },
+        { name: t('subscription.downloadReports'), included: true }
+      ],
+      current: subscription?.plan === 'premium',
+      action: isPremium ? 'cancel' : 'upgrade'
+    }
+  ];
+
+  return (
+    /**
+     * Contenedor principal de la página de suscripciones.
+     * Diseño responsive con Tailwind CSS y tema oscuro.
+     */
+    &lt;div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-8">
+      &lt;div className="max-w-6xl mx-auto">
+        &lt;h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-8">
+          {t('subscription.title')}
+        &lt;/h1>
+        &lt;div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {plans.map((plan, index) => (
+            /**
+             * Tarjeta individual de plan con hover effects y estado actual.
+             * @param {Object} plan - Datos del plan (Free/Premium).
+             */
+            &lt;div
+              key={index}
+              className={`rounded-lg shadow-lg overflow-hidden transition transform hover:scale-105 ${
+                plan.current
+                  ? 'bg-gradient-to-br from-blue-500 to-purple-600 text-white ring-2 ring-blue-300'
+                  : 'bg-white dark:bg-gray-800'
+              }`}
+            >
+              &lt;div className="p-8">
+                &lt;h2 className={`text-2xl font-bold mb-2 ${!plan.current &amp;&amp; 'text-gray-800 dark:text-white'}`}>
+                  {plan.name}
+                &lt;/h2>
+                &lt;div className={`text-3xl font-bold mb-1 ${!plan.current &amp;&amp; 'text-gray-800 dark:text-white'}`}>
+                  {plan.price}
+                &lt;/div>
+                {plan.period &amp;&amp; (
+                  &lt;p className={`text-sm mb-6 ${!plan.current &amp;&amp; 'text-gray-600 dark:text-gray-400'}`}>
+                    {plan.period}
+                  &lt;/p>
+                )}
+                {plan.current &amp;&amp; (
+                  &lt;div className="mb-6 bg-white bg-opacity-20 rounded px-3 py-2">
+                    &lt;p className="text-sm font-semibold">Current Plan&lt;/p>
+                  &lt;/div>
+                )}
+                &lt;button
+                  onClick={() => {
+                    if (plan.action === 'upgrade') {
+                      handleUpgrade();
+                    } else if (plan.action === 'cancel') {
+                      handleCancel();
+                    }
+                  }}
+                  disabled={plan.current || !plan.action}
+                  className={`w-full py-3 rounded-lg font-bold mb-6 transition ${
+                    plan.current
+                      ? 'bg-white bg-opacity-20 cursor-default'
+                      : plan.action === 'upgrade'
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-700 text-white hover:from-blue-700 hover:to-purple-800'
+                      : 'bg-red-500 text-white hover:bg-red-600'
+                  }`}
+                >
+                  {plan.current ? 'Current Plan' : plan.action === 'upgrade' ? t('subscription.upgrade') : 'Cancel'}
+                &lt;/button>
+                &lt;div className="space-y-3">
+                  {plan.features.map((feature, idx) => (
+                    &lt;div key={idx} className="flex items-center gap-3">
+                      {feature.included ? (
+                        /**
+                         * Icono check verde para características incluidas.
+                         */
+                        &lt;FiCheck className={`text-xl ${plan.current ? 'text-white' : 'text-green-500'}`} />
+                      ) : (
+                        /**
+                         * Icono cross rojo para características no incluidas.
+                         */
+                        &lt;FiX className={`text-xl ${plan.current ? 'text-white text-opacity-50' : 'text-red-500'}`} />
+                      )}
+                      &lt;span className={`text-sm ${!plan.current &amp;&amp; 'text-gray-700 dark:text-gray-300'}`}>
+                        {feature.name}
+                      &lt;/span>
+                    &lt;/div>
+                  ))}
+                &lt;/div>
+              &lt;/div>
+            &lt;/div>
+          ))}
+        &lt;/div>
+        {subscription?.endDate &amp;&amp; (
+          &lt;div className="mt-8 bg-blue-100 dark:bg-blue-900 border-l-4 border-blue-500 p-4 rounded">
+            &lt;p className="text-blue-800 dark:text-blue-200">
+              Subscription ends on: {new Date(subscription.endDate).toLocaleDateString()}
+            &lt;/p>
+          &lt;/div>
+        )}
+      &lt;/div>
+    &lt;/div>
+  );
+};
+
+/**
+ * Exporta el componente Subscription como módulo por defecto.
+ * @type {React.FC}
+ */
+export default Subscription;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-App.html">App</a></li><li><a href="module-Header.html">Header</a></li><li><a href="module-Home.html">Home</a></li><li><a href="module-apiClient.html">apiClient</a></li><li><a href="module-components_Header.html">components/Header</a></li><li><a href="module-components_StatCard.html">components/StatCard</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pages_InterviewSession.html">pages/InterviewSession</a></li><li><a href="module-pages_Settings.html">pages/Settings</a></li><li><a href="module-services.html">services</a></li><li><a href="module-stores.html">stores</a></li><li><a href="module-useDashboard.html">useDashboard</a></li><li><a href="module-useHeader.html">useHeader</a></li><li><a href="module-useHome.html">useHome</a></li></ul><h3>Externals</h3><ul><li><a href="external-i18next.html">i18next</a></li><li><a href="external-initReactI18next.html">initReactI18next</a></li></ul><h3>Namespaces</h3><ul><li><a href="i18nConfig.html">i18nConfig</a></li><li><a href="module-services-aiService.html">aiService</a></li><li><a href="module-services-authService.html">authService</a></li><li><a href="module-services-interviewService.html">interviewService</a></li><li><a href="module-services-responseService.html">responseService</a></li><li><a href="module-services-statsService.html">statsService</a></li><li><a href="module-services-subscriptionService.html">subscriptionService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Interviews">Interviews</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Register">Register</a></li><li><a href="global.html#StatCard">StatCard</a></li><li><a href="global.html#Subscription">Subscription</a></li><li><a href="global.html#default">default</a></li><li><a href="global.html#fallbackLng">fallbackLng</a></li><li><a href="global.html#getCurrentLanguage">getCurrentLanguage</a></li><li><a href="global.html#interpolation">interpolation</a></li><li><a href="global.html#lng">lng</a></li><li><a href="global.html#resources">resources</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Dec 11 2025 22:20:26 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/Home.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/Home.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Página de inicio de la aplicación.
+ * Muestra hero, características, planes de precios y llamadas a la acción, respetando el tema claro/oscuro.
+ *
+ * @module Home
+ * @returns {JSX.Element} Componente de la página principal
+ */
+
+import React from 'react';
+import { FiArrowRight, FiMic, FiBarChart2, FiLock } from 'react-icons/fi';
+import { useTranslation } from 'react-i18next';
+import { useHome } from '../hooks/useHome';
+import { useThemeStore } from '../store';
+import '../assets/styles/Home.css';
+
+const Home = () => {
+  const { t } = useTranslation();
+  const { isDark } = useThemeStore();
+  const {
+    isAuthenticated,
+    navigateToRegister,
+    freePlan,
+    premiumPlan
+  } = useHome();
+
+  return (
+    &lt;div className={`home ${isDark ? 'home--dark' : ''}`}>
+      {/* Hero Section */}
+      &lt;section className="home__hero">
+        &lt;h2 className={`home__hero-title ${isDark ? 'home__hero-title--dark' : ''}`}>
+          {t('home.heroTitle')}
+        &lt;/h2>
+        &lt;p className={`home__hero-description ${isDark ? 'home__hero-description--dark' : ''}`}>
+          {t('home.heroDescription')}
+        &lt;/p>
+        {!isAuthenticated &amp;&amp; (
+          &lt;button
+            onClick={navigateToRegister}
+            className="home__hero-button"
+          >
+            {t('home.getStartedFree')} &lt;FiArrowRight />
+          &lt;/button>
+        )}
+      &lt;/section>
+
+      {/* Features Section */}
+      &lt;section className={`home__features ${isDark ? 'home__features--dark' : ''}`}>
+        &lt;div className="home__features-container">
+          &lt;h3 className={`home__features-title ${isDark ? 'home__features-title--dark' : ''}`}>
+            {t('home.featuresTitle')}
+          &lt;/h3>
+          &lt;div className="home__features-grid">
+            &lt;FeatureCard
+              icon={&lt;FiMic className="text-3xl" />}
+              title={t('home.voiceInterviewsTitle')}
+              description={t('home.voiceInterviewsDesc')}
+              isDark={isDark}
+            />
+            &lt;FeatureCard
+              icon={&lt;FiBarChart2 className="text-3xl" />}
+              title={t('home.analyticsTitle')}
+              description={t('home.analyticsDesc')}
+              isDark={isDark}
+            />
+            &lt;FeatureCard
+              icon={&lt;FiLock className="text-3xl" />}
+              title={t('home.secureTitle')}
+              description={t('home.secureDesc')}
+              isDark={isDark}
+            />
+          &lt;/div>
+        &lt;/div>
+      &lt;/section>
+
+      {/* Pricing Section */}
+      &lt;section className={`home__pricing ${isDark ? 'home__pricing--dark' : ''}`}>
+        &lt;div className="home__pricing-container">
+          &lt;h3 className={`home__pricing-title ${isDark ? 'home__pricing-title--dark' : ''}`}>
+            {t('home.pricingTitle')}
+          &lt;/h3>
+          &lt;div className="home__pricing-grid">
+            &lt;PricingCard {...freePlan} isDark={isDark} />
+            &lt;PricingCard {...premiumPlan} isDark={isDark} />
+          &lt;/div>
+        &lt;/div>
+      &lt;/section>
+
+      {/* CTA Section */}
+      &lt;section className={`home__cta ${isDark ? 'home__cta--dark' : ''}`}>
+        &lt;div className="home__cta-container">
+          &lt;h3 className={`home__cta-title ${isDark ? 'home__cta-title--dark' : ''}`}>
+            {t('home.ctaTitle')}
+          &lt;/h3>
+          &lt;p className={`home__cta-description ${isDark ? 'home__cta-description--dark' : ''}`}>
+            {t('home.ctaDescription')}
+          &lt;/p>
+          {!isAuthenticated &amp;&amp; (
+            &lt;button
+              onClick={navigateToRegister}
+              className="home__cta-button"
+            >
+              {t('home.getStartedNow')}
+            &lt;/button>
+          )}
+        &lt;/div>
+      &lt;/section>
+
+      {/* Footer */}
+      &lt;footer className={`home__footer ${isDark ? 'home__footer--dark' : ''}`}>
+        &lt;div className="home__footer-container">
+          &lt;p>{t('home.footerRights')}&lt;/p>
+        &lt;/div>
+      &lt;/footer>
+    &lt;/div>
+  );
+};
+
+/**
+ * Tarjeta de característica de la sección de features.
+ *
+ * @param {Object} props - Propiedades del componente
+ * @param {JSX.Element} props.icon - Icono representativo de la característica
+ * @param {string} props.title - Título de la característica
+ * @param {string} props.description - Descripción de la característica
+ * @param {boolean} props.isDark - Indica si el tema oscuro está activo
+ * @returns {JSX.Element} Tarjeta de feature estilizada
+ */
+const FeatureCard = ({ icon, title, description, isDark }) => (
+  &lt;div className={`feature-card ${isDark ? 'feature-card--dark' : ''}`}>
+    &lt;div className="feature-card__icon">
+      {icon}
+    &lt;/div>
+    &lt;h4 className={`feature-card__title ${isDark ? 'feature-card__title--dark' : ''}`}>
+      {title}
+    &lt;/h4>
+    &lt;p className={`feature-card__description ${isDark ? 'feature-card__description--dark' : ''}`}>
+      {description}
+    &lt;/p>
+  &lt;/div>
+);
+
+/**
+ * Tarjeta de precios para mostrar un plan (free o premium).
+ *
+ * @param {Object} props - Propiedades del componente
+ * @param {string} props.plan - Nombre del plan
+ * @param {string} props.price - Precio del plan (por ejemplo "$0" o "$9.99")
+ * @param {string} [props.period] - Periodo de facturación (por ejemplo "/mes")
+ * @param {string[]} props.features - Lista de características del plan
+ * @param {string} props.cta - Texto del botón de llamada a la acción
+ * @param {boolean} props.featured - Indica si el plan es destacado (premium)
+ * @param {boolean} props.isDark - Indica si el tema oscuro está activo
+ * @returns {JSX.Element} Tarjeta de plan de precios
+ */
+const PricingCard = ({ plan, price, period, features, cta, featured, isDark }) => (
+  &lt;div className={`pricing-card ${featured ? 'pricing-card--featured' : isDark ? 'pricing-card--dark' : ''}`}>
+    &lt;h4 className={`pricing-card__plan ${featured ? 'pricing-card__plan--featured' : isDark ? 'pricing-card__plan--dark' : ''}`}>
+      {plan}
+    &lt;/h4>
+    &lt;div className={`pricing-card__price ${featured ? 'pricing-card__price--featured' : isDark ? 'pricing-card__price--dark' : ''}`}>
+      {price}
+    &lt;/div>
+    {period &amp;&amp; (
+      &lt;p className={`pricing-card__period ${featured ? 'pricing-card__period--featured' : isDark ? 'pricing-card__period--dark' : ''}`}>
+        {period}
+      &lt;/p>
+    )}
+    &lt;ul className="pricing-card__features">
+      {features.map((feature, i) => (
+        &lt;li
+          key={i}
+          className={`pricing-card__feature ${featured ? 'pricing-card__feature--featured' : isDark ? 'pricing-card__feature--dark' : ''}`}
+        >
+          {feature}
+        &lt;/li>
+      ))}
+    &lt;/ul>
+    &lt;button className={`pricing-card__button ${featured ? 'pricing-card__button--premium' : 'pricing-card__button--free'}`}>
+      {cta}
+    &lt;/button>
+  &lt;/div>
+);
+
+export default Home;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-App.html">App</a></li><li><a href="module-Header.html">Header</a></li><li><a href="module-Home.html">Home</a></li><li><a href="module-apiClient.html">apiClient</a></li><li><a href="module-components_Header.html">components/Header</a></li><li><a href="module-components_StatCard.html">components/StatCard</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pages_InterviewSession.html">pages/InterviewSession</a></li><li><a href="module-pages_Settings.html">pages/Settings</a></li><li><a href="module-services.html">services</a></li><li><a href="module-stores.html">stores</a></li><li><a href="module-useDashboard.html">useDashboard</a></li><li><a href="module-useHeader.html">useHeader</a></li><li><a href="module-useHome.html">useHome</a></li></ul><h3>Externals</h3><ul><li><a href="external-i18next.html">i18next</a></li><li><a href="external-initReactI18next.html">initReactI18next</a></li></ul><h3>Namespaces</h3><ul><li><a href="i18nConfig.html">i18nConfig</a></li><li><a href="module-services-aiService.html">aiService</a></li><li><a href="module-services-authService.html">authService</a></li><li><a href="module-services-interviewService.html">interviewService</a></li><li><a href="module-services-responseService.html">responseService</a></li><li><a href="module-services-statsService.html">statsService</a></li><li><a href="module-services-subscriptionService.html">subscriptionService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Interviews">Interviews</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Register">Register</a></li><li><a href="global.html#StatCard">StatCard</a></li><li><a href="global.html#Subscription">Subscription</a></li><li><a href="global.html#default">default</a></li><li><a href="global.html#fallbackLng">fallbackLng</a></li><li><a href="global.html#getCurrentLanguage">getCurrentLanguage</a></li><li><a href="global.html#interpolation">interpolation</a></li><li><a href="global.html#lng">lng</a></li><li><a href="global.html#resources">resources</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Dec 11 2025 22:20:26 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/Interviews.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/Interviews.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { interviewService } from '../api';
+import { FiSearch, FiTrash2, FiEye, FiDownload } from 'react-icons/fi';
+import { useThemeStore } from '../store';
+import '../assets/styles/Interviews.css';
+/**
+ * Componente Interviews que muestra la lista de entrevistas del usuario con funcionalidades de búsqueda, visualización, descarga y eliminación.
+ * @returns {JSX.Element} El componente renderizado de la lista de entrevistas.
+ */
+const Interviews = () => {
+  /** Hook de traducción para internacionalización */
+  const { t } = useTranslation();
+  /** Estado del tema oscuro/claro desde el store */
+  const { isDark } = useThemeStore();
+  /** Hook de navegación de React Router */
+  const navigate = useNavigate();
+  /** Estado para almacenar la lista de entrevistas */
+  const [interviews, setInterviews] = useState([]);
+    /** Estado de carga mientras se obtienen las entrevistas */
+  const [loading, setLoading] = useState(true);
+  /** Estado para el término de búsqueda */
+  const [searchTerm, setSearchTerm] = useState('');
+  /**
+   * Función para obtener la lista de entrevistas desde la API.
+   * Maneja errores y actualiza el estado de carga.
+   * @returns {Promise&lt;void>} Promesa que resuelve cuando se completa la obtención.
+   */
+  const fetchInterviews = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await interviewService.getInterviews();
+      setInterviews(response.data.interviews);
+    } catch (error) {
+      toast.error(t('errors.serverError'));
+    } finally {
+      setLoading(false);
+    }
+  }, [t]);
+  /**
+   * Effect que ejecuta fetchInterviews al montar el componente.
+   * Se re-ejecuta cuando fetchInterviews cambia.
+   */
+  useEffect(() => {
+    fetchInterviews();
+  }, [fetchInterviews]);
+  /**
+   * Maneja la descarga del reporte de una entrevista específica.
+   * Muestra notificaciones de progreso y error.
+   * @param {string} interviewId - ID de la entrevista para descargar
+   * @returns {Promise&lt;void>} Promesa que resuelve cuando completa el proceso
+   */
+  const handleDownloadReport = async (interviewId) => {
+    try {
+      toast.info('Preparando reporte para descargar...');
+      // Aquí iría la lógica para descargar el reporte
+      // Por ahora solo mostramos un mensaje
+      toast.success('Funcionalidad de descarga disponible próximamente');
+    } catch (error) {
+      toast.error('Error al descargar el reporte');
+    }
+  };
+  /**
+   * Maneja la eliminación de una entrevista específica.
+   * Confirma con el usuario antes de proceder y actualiza la lista.
+   * @param {string} id - ID de la entrevista a eliminar
+   * @returns {Promise&lt;void>} Promesa que resuelve cuando completa la eliminación
+   */
+  const handleDeleteInterview = async (id) => {
+    if (window.confirm('Are you sure?')) {
+      try {
+        await interviewService.deleteInterview(id);
+        setInterviews(interviews.filter(i => i._id !== id));
+        toast.success('Interview deleted');
+      } catch (error) {
+        toast.error(t('errors.serverError'));
+      }
+    }
+  };
+  /**
+   * Computed value que filtra las entrevistas según el término de búsqueda.
+   * Realiza búsqueda case-insensitive en título, repoUrl y repositoryUrl.
+   * @type {Array} Array filtrado de entrevistas que coinciden con searchTerm
+   * @depends {interviews} Lista completa de entrevistas del estado
+   * @depends {searchTerm} Término actual de búsqueda
+   */
+  const filteredInterviews = interviews.filter(i =>
+    i.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (i.repoUrl &amp;&amp; i.repoUrl.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (i.repositoryUrl &amp;&amp; i.repositoryUrl.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+  /**
+   * Renderiza la interfaz principal de la lista de entrevistas.
+   * Incluye header con título y botón de navegación, barra de búsqueda,
+   * estados de carga/vacío y grilla de tarjetas de entrevistas.
+   * @returns {JSX.Element} Markup completo del componente Interviews
+   */
+  return (
+    &lt;div className={`interviews ${isDark ? 'interviews--dark' : ''}`}>
+      &lt;div className="interviews__container">
+        &lt;div className="interviews__header">
+          &lt;h1 className={`interviews__title ${isDark ? 'interviews__title--dark' : ''}`}>
+            {t('interview.myInterviews')}
+          &lt;/h1>
+          &lt;div className="interviews__actions">
+            &lt;button
+              onClick={() => navigate('/dashboard')}
+              className={`interviews__button interviews__button--dashboard ${isDark ? 'interviews__button--dashboard--dark' : ''}`}
+            >
+              ← {t('dashboard.title')}
+            &lt;/button>
+          &lt;/div>
+        &lt;/div>
+
+        &lt;div className="interviews__search">
+          &lt;div className="interviews__search-wrapper">
+            &lt;FiSearch className="interviews__search-icon" />
+            &lt;input
+              type="text"
+              placeholder={t('interview.search')}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className={`interviews__search-input ${isDark ? 'interviews__search-input--dark' : ''}`}
+            />
+          &lt;/div>
+        &lt;/div>
+
+        {loading ? (
+          &lt;div className="interviews__loading">
+            &lt;div className="interviews__loading-spinner">&lt;/div>
+          &lt;/div>
+        ) : filteredInterviews.length === 0 ? (
+          &lt;div className={`interviews__empty ${isDark ? 'interviews__empty--dark' : ''}`}>
+            &lt;p>{t('interview.noInterviews')}&lt;/p>
+          &lt;/div>
+        ) : (
+          &lt;div className="interviews__grid">
+            {filteredInterviews.map((interview, index) => (
+              &lt;div
+              /**
+               * Tarjeta individual de entrevista.
+               * Soporta tema oscuro/claro dinámicamente.
+               * @param {Object} interview - Datos de la entrevista
+               * @param {string} interview._id - ID único de MongoDB
+               * @param {string} interview.title - Título de la entrevista
+               * @param {string} interview.status - Estado (completed|in_progress|scheduled)
+               * @param {string} [interview.repoUrl] - URL del repositorio
+               * @param {string} [interview.repositoryUrl] - URL alternativa del repositorio
+               * @param {string} interview.difficulty - Nivel (junior|mid|senior|manual)
+               * @param {number} interview.totalScore - Puntaje total
+               */
+                key={interview._id || interview.id || `interview-${index}`}
+                className={`interview-card ${isDark ? 'interview-card--dark' : ''}`}
+              >
+                &lt;div className="interview-card__header">
+                  &lt;h3 className={`interview-card__title ${isDark ? 'interview-card__title--dark' : ''}`}>
+                    {interview.title}
+                  &lt;/h3>
+                  &lt;span className={`interview-card__status interview-card__status--${interview.status === 'completed' ? 'completed' : interview.status === 'in_progress' ? 'in-progress' : 'scheduled'}`}>
+                    {t(`interview.${interview.status === 'completed' ? 'completed' : interview.status === 'in_progress' ? 'inProgress' : 'scheduled'}`)}
+                  &lt;/span>
+                &lt;/div>
+                &lt;div className="interview-card__info">
+                  &lt;div className={`interview-card__info-item ${isDark ? 'interview-card__info-item--dark' : ''}`}>
+                    &lt;span className="interview-card__info-label">Repositorio:&lt;/span>
+                    {interview.repoUrl || interview.repositoryUrl ? (
+                      &lt;a href={interview.repoUrl || interview.repositoryUrl} target="_blank" rel="noopener noreferrer" style={{color: '#3b82f6', wordBreak: 'break-all'}}>
+                        {interview.repoUrl || interview.repositoryUrl}
+                      &lt;/a>
+                    ) : (
+                      &lt;span>-&lt;/span>
+                    )}
+                  &lt;/div>
+                  &lt;div className={`interview-card__info-item ${isDark ? 'interview-card__info-item--dark' : ''}`}>
+                    &lt;span className="interview-card__info-label">{t('interview.difficulty')}:&lt;/span>
+                    &lt;span>
+                      {interview.difficulty === 'junior' ? 'Fácil' : 
+                       interview.difficulty === 'mid' ? 'Intermedio' : 
+                       interview.difficulty === 'senior' ? 'Difícil' : 'Manual'}
+                    &lt;/span>
+                  &lt;/div>
+                  &lt;div className={`interview-card__info-item ${isDark ? 'interview-card__info-item--dark' : ''}`}>
+                    &lt;span className="interview-card__info-label">{t('interview.score')}:&lt;/span>
+                    &lt;span>{interview.totalScore}%&lt;/span>
+                  &lt;/div>
+                &lt;/div>
+                &lt;div className="interview-card__actions">
+                  &lt;button
+                    onClick={() => navigate(`/interview/${interview._id}`)}
+                    className="interview-card__button interview-card__button--view"
+                  >
+                    &lt;FiEye /> {t('interview.view')}
+                  &lt;/button>
+                  &lt;button
+                    onClick={() => handleDownloadReport(interview._id)}
+                    className="interview-card__button interview-card__button--download"
+                    disabled={interview.status !== 'completed'}
+                  >
+                    &lt;FiDownload /> {t('dashboard.downloadReport')}
+                  &lt;/button>
+                  &lt;button
+                    onClick={() => handleDeleteInterview(interview._id)}
+                    className="interview-card__button interview-card__button--delete"
+                  >
+                    &lt;FiTrash2 /> {t('common.delete')}
+                  &lt;/button>
+                &lt;/div>
+              &lt;/div>
+            ))}
+          &lt;/div>
+        )}
+      &lt;/div>
+    &lt;/div>
+  );
+};
+/**
+ * Exporta el componente Interviews como módulo por defecto.
+ * @type {React.FC} Componente funcional React completamente tipado
+ */
+export default Interviews;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-App.html">App</a></li><li><a href="module-Header.html">Header</a></li><li><a href="module-Home.html">Home</a></li><li><a href="module-apiClient.html">apiClient</a></li><li><a href="module-components_Header.html">components/Header</a></li><li><a href="module-components_StatCard.html">components/StatCard</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pages_InterviewSession.html">pages/InterviewSession</a></li><li><a href="module-pages_Settings.html">pages/Settings</a></li><li><a href="module-services.html">services</a></li><li><a href="module-stores.html">stores</a></li><li><a href="module-useDashboard.html">useDashboard</a></li><li><a href="module-useHeader.html">useHeader</a></li><li><a href="module-useHome.html">useHome</a></li></ul><h3>Externals</h3><ul><li><a href="external-i18next.html">i18next</a></li><li><a href="external-initReactI18next.html">initReactI18next</a></li></ul><h3>Namespaces</h3><ul><li><a href="i18nConfig.html">i18nConfig</a></li><li><a href="module-services-aiService.html">aiService</a></li><li><a href="module-services-authService.html">authService</a></li><li><a href="module-services-interviewService.html">interviewService</a></li><li><a href="module-services-responseService.html">responseService</a></li><li><a href="module-services-statsService.html">statsService</a></li><li><a href="module-services-subscriptionService.html">subscriptionService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Interviews">Interviews</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Register">Register</a></li><li><a href="global.html#StatCard">StatCard</a></li><li><a href="global.html#Subscription">Subscription</a></li><li><a href="global.html#default">default</a></li><li><a href="global.html#fallbackLng">fallbackLng</a></li><li><a href="global.html#getCurrentLanguage">getCurrentLanguage</a></li><li><a href="global.html#interpolation">interpolation</a></li><li><a href="global.html#lng">lng</a></li><li><a href="global.html#resources">resources</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Dec 11 2025 22:20:26 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
