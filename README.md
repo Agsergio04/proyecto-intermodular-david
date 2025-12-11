@@ -62,7 +62,34 @@ Asi mismo nosotros tenemos un enfoque didactico para el aprendizaje del uso de u
 
 Para acceder a la puesta en produccion realizada en Render (Tanto el Backend como el Frontend) se accede a traves del siguiente [enlace](ai-interview-frontend-q9db.onrender.com) (https://ai-interview-frontend-q9db.onrender.com) .  
 
-## Prueba Realizada
+## Prueba Realizada 
+Aqui hago la prueba de la realizacion de una entrevista con este enlace del repositorio -> `https://github.com/Agsergio04/proyecto-intermodular-david` y veo los resultados realizados.  
+
+Entro a la pagina: 
+![Imagen 1](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_1.png)
+Me registro: 
+![Imagen 2](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_2.png)
+Sale el Dashboard en el cual sale la media de todas las entrevistas realizadas : 
+![Imagen 3](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_3.png)
+Creo una entrevista con este repostiorio con el lenguaje en español y elijo hacerla sencilla : 
+![Imagen 4](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_4.png)
+Veo que a la hora de realizarla sale el numero de la pregunta con una entrada de texto para poder realizarla o si quiero avanzar ir a otra pregunta : 
+![Imagen 5](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_5.png) 
+Respondi a la pregunta anterior con lo cual me ha llevado a la siguiente pregunta a realizar : 
+![Imagen 6](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_6.png)
+Decidi volver a la anterior para ver que habia puesto dado que se almacena en el recuadro la ultima respuesta realizada : 
+![Imagen 7](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_7.png)
+Tras realizar la entrevista hasta la ultima pregunta me hubiera gustado acabarla pero como no realice todos las las preguntas porque se me olvido me obliga a rellenar el campo para poder acabarla y entregarla : 
+![Imagen 8](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_8.png)
+Tras darle al boton te lleva a la pregunta sin realizar mas temprana que tenga,siendo en estecaso la pregunta nº 3 : 
+![Imagen 9](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_9.png)
+Despues de responder a las preguntas tienes que esperar a que se genere el resultado de las mismas un cierto periodo de tiempo: 
+![Imagen 10](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_10.png)
+Pasado el tiempo del generado del feedback te lleva al apartado de las entrevistas en el que te lleva a las entrevistas que has realizado ya con la nota dada: 
+![Imagen 11](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_11.png)
+Metiendote en la entrevista realizada puedes ver un feedback detallado por cada pregunta junto con la nota correspondiente segun la respuesta dada frente a la pregunta a responder: 
+![Imagen 12](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_12.png)  
+
 ## Guia de Instalacion
 ## Documentacion
 ## Wiki del Proyecto
