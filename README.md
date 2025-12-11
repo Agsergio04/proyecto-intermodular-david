@@ -13,6 +13,7 @@
 - [Puesta en Produccion](#puesta-en-produccion)
 - [Wiki del Proyecto](#wiki-del-proyecto)
 - [Equipo del proyecto](#equipo-de-desarrollo)
+- [Tiempo total del proyecto Realizado](#tiempo-total-proyecto)
 
 
 ## Descripcion del proyecto
@@ -110,5 +111,8 @@ PreguntaT ha sido desarrollado por los siguientes profesionales:
 **Responsabilidades** : Realizacion de tareas varias como el frontend y documentacion.
 
 
+### Tiempo total proyecto
 
+Para este proyecto se ha realizado este total de horas en este pdf : 
+![total horas](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/TogglTrack_Report_Summary_report_(from_10_31_2025_to_12_11_2025).pdf)
 
