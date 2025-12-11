@@ -92,6 +92,40 @@ Metiendote en la entrevista realizada puedes ver un feedback detallado por cada 
 ![Imagen 12](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_12.png)  
 
 ## Guia de Instalacion
+
+#### 1. Requisitos Previos
+
+- Docker y Docker Compose instalados.
+- Git instalado.
+- Acceso a variables de entorno (ver punto 3).
+
+#### 2. Clona el repositorio
+
+```bash
+git clone https://github.com/Agsergio04/proyecto-intermodular-david.git
+cd proyecto-intermodular-david
+```
+
+#### 3. Configura las variables de entorno
+
+Consulta el archivo [`ENV_LOCAL_CONFIGURATION.md`](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/ENV_LOCAL_CONFIGURATION.md) para instrucciones detalladas para definir las variables de entorno necesarias.
+
+#### 4. Levanta el entorno con Docker
+
+Hay dos guías útiles:
+- Instalación general y uso: [`GUIA_LOCALHOST.md`](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/GUIA_LOCALHOST.md)
+- Docker avanzado: [`Guia_de_preparacion_de_docker.md`](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/Guia_de_preparacion_de_docker.md)
+
+Pasos básicos:
+
+```bash
+#Para descargar los contenedores
+docker-compose build --no-cache
+
+#Para desplegarlo en modo daemon
+docker-compose up -d 
+```
+
 ## Documentacion
 ## Wiki del Proyecto
 ## Equipo de Desarrollo
