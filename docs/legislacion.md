@@ -1051,6 +1051,4 @@ exports.exportUserData = async (req, res) => {
 
 ---
 
-**Documento conforme al Criterio 3c - Nivel Excelente**
-**Proyecto: PrepáraT - Plataforma de Entrevistas IA**
 **Fecha: Diciembre 2024**
