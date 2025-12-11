@@ -136,6 +136,8 @@ Aqui la documentacion requerida para los criterios de evaluacion:
 - [recursos](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/recursos.md)
 - [Github Actions](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/Github-Action/GITHUB_ACTIONS.md)
 - [documentacion de la api](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/documentacion_api.md)
+- [backend JDOCS](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/GitHub-Action/backend_docu.md)
+- [Frontend JDOCS](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/GitHub-Action/frontend_docu.md)
 
 ## Wiki del Proyecto
 Aqui tienes el enlace de la wiki del proyecto :  
