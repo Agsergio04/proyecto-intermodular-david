@@ -7,11 +7,33 @@ import { useAuthStore, useThemeStore } from '../store';
 import { FiMail, FiLock, FiUser } from 'react-icons/fi';
 import '../assets/styles/Register.css';
 
+/**
+ * Componente de registro de nuevos usuarios.
+ * Maneja creación de cuentas con nombre, apellido, email, contraseña y idioma,
+ * almacenamiento de token/usuario y redirección al dashboard.
+ * @returns {JSX.Element} Formulario de registro responsive con tema oscuro/claro.
+ */
 const Register = () => {
+  /** Hook de navegación de React Router */
   const navigate = useNavigate();
+  
+  /** Hook de traducción para internacionalización */
   const { t } = useTranslation();
+  
+  /** Estado del tema oscuro/claro desde el store */
   const { isDark } = useThemeStore();
+  
+  /** @type {[boolean, Function]} Estado de carga del formulario de registro */
   const [loading, setLoading] = useState(false);
+  
+  /**
+   * @type {[Object, Function]} Estado del formulario de registro completo.
+   * @property {string} email - Dirección de correo electrónico.
+   * @property {string} password - Contraseña del usuario.
+   * @property {string} firstName - Nombre del usuario.
+   * @property {string} lastName - Apellido del usuario.
+   * @property {string} language - Idioma preferido ('en'|'es'|'fr'|'de').
+   */
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -20,6 +42,11 @@ const Register = () => {
     language: 'en'
   });
 
+  /**
+   * Maneja cambios en todos los campos del formulario (input y select).
+   * Actualiza formData dinámicamente usando el atributo name del elemento.
+   * @param {React.ChangeEvent<HTMLInputElement | HTMLSelectElement>} e - Evento de cambio.
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -28,6 +55,12 @@ const Register = () => {
     }));
   };
 
+  /**
+   * Maneja el envío del formulario de registro.
+   * Valida campos obligatorios, realiza petición API, guarda token/usuario y redirige.
+   * @param {React.FormEvent<HTMLFormElement>} e - Evento de submit del formulario.
+   * @returns {Promise<void>}
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -40,7 +73,6 @@ const Register = () => {
     try {
       const response = await authService.register(formData);
       const { token, user } = response.data;
-      
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
       
@@ -61,7 +93,6 @@ const Register = () => {
         <h2 className={`register__title ${isDark ? 'register__title--dark' : ''}`}>
           {t('auth.registerTitle')}
         </h2>
-
         <form onSubmit={handleSubmit} className="register__form">
           <div className="register__field">
             <label className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
@@ -79,7 +110,6 @@ const Register = () => {
               />
             </div>
           </div>
-
           <div className="register__field">
             <label className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
               {t('common.lastName')}
@@ -96,7 +126,6 @@ const Register = () => {
               />
             </div>
           </div>
-
           <div className="register__field">
             <label className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
               {t('common.email')}
@@ -113,7 +142,6 @@ const Register = () => {
               />
             </div>
           </div>
-
           <div className="register__field">
             <label className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
               {t('common.password')}
@@ -130,7 +158,6 @@ const Register = () => {
               />
             </div>
           </div>
-
           <div className="register__field">
             <label className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
               {t('common.language')}
@@ -147,7 +174,6 @@ const Register = () => {
               <option value="de">Deutsch</option>
             </select>
           </div>
-
           <button
             type="submit"
             disabled={loading}
@@ -156,7 +182,6 @@ const Register = () => {
             {loading ? t('common.loading') : t('common.register')}
           </button>
         </form>
-
         <p className={`register__link ${isDark ? 'register__link--dark' : ''}`}>
           {t('auth.haveAccount')}
           <span
@@ -171,4 +196,8 @@ const Register = () => {
   );
 };
 
+/**
+ * Exporta el componente Register como módulo por defecto.
+ * @type {React.FC}
+ */
 export default Register;

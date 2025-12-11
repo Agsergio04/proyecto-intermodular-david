@@ -250,3 +250,11 @@ const server = app.listen(PORT, () => {
   console.log(`✓ Server running on port ${PORT}`);
 });
 
+/**
+ * Configuración de timeouts del servidor para operaciones largas
+ * Necesario para operaciones de IA que pueden tomar más tiempo
+ */
+server.setTimeout(120000); // 120 segundos timeout total
+server.headersTimeout = 125000; // Headers timeout ligeramente mayor
+
+module.exports = server;

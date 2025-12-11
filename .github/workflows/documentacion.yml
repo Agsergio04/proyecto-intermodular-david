@@ -15,21 +15,77 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y pandoc texlive-latex-base texlive-latex-extra
-
-      - name: Generate PDFs
         run: |
-          mkdir -p docs/GitHub-Action
-          pandoc README.md -o docs/GitHub-Action/README.pdf --pdf-engine=pdflatex
-          pandoc RENDER.md -o docs/GitHub-Action/DEPLOY_RENDER.pdf --pdf-engine=pdflatex
-          pandoc ENV_LOCAL_CONFIGURATION.md -o docs/GitHub-Action/ENV_LOCAL_CONFIGURATION.pdf --pdf-engine=pdflatex
-          pandoc GUIA_LOCALHOST.md -o docs/GitHub-Action/GUIA_LOCALHOST.pdf --pdf-engine=pdflatex
-          pandoc RENDER.md -o docs/GitHub-Action/RENDER.pdf --pdf-engine=pdflatex
-          pandoc Guia_de_preparacion_de_docker.md -o docs/GitHub-Action/Guia_de_preparacion_de_docker.pdf --pdf-engine=pdflatex
+          # Instalar pandoc y LaTeX para PDFs
+          sudo apt-get update && sudo apt-get install -y pandoc texlive-latex-base texlive-latex-extra
+          
+          # Instalar JSDoc globalmente
+          npm install -g jsdoc
 
-      - name: Push changes
+      - name: Install project dependencies
         run: |
-          git add docs/GitHub-Action/
-          git commit -m "docs: Actualizar documentación 
-          git push
+          # Instalar dependencias del backend
+          if [ -d "backend" ]; then
+            cd backend
+            npm install
+            cd ..
+          fi
+          
+          # Instalar dependencias del frontend
+          if [ -d "frontend" ]; then
+            cd frontend
+            npm install
+            cd ..
+          fi
+
+      - name: Generate JSDoc documentation
+        run: |
+          mkdir -p docs/GitHub-Action/backend
+          mkdir -p docs/GitHub-Action/frontend
+          
+          # Generar documentación del backend
+          if [ -d "backend" ]; then
+            echo "Generando documentación del backend..."
+            jsdoc -c ./backend/jsdoc.json -d ./docs/GitHub-Action/backend || echo "backend/jsdoc.json no encontrado, usando configuración por defecto..."
+            if [ ! -f "./backend/jsdoc.json" ]; then
+              jsdoc -r ./backend/src -d ./docs/GitHub-Action/backend --readme ./backend/README.md 2>/dev/null || jsdoc -r ./backend -d ./docs/GitHub-Action/backend
+            fi
+          fi
+          
+          # Generar documentación del frontend
+          if [ -d "frontend" ]; then
+            echo "Generando documentación del frontend..."
+            jsdoc -c ./frontend/jsdoc.json -d ./docs/GitHub-Action/frontend || echo "frontend/jsdoc.json no encontrado, usando configuración por defecto..."
+            if [ ! -f "./frontend/jsdoc.json" ]; then
+              jsdoc -r ./frontend/src -d ./docs/GitHub-Action/frontend --readme ./frontend/README.md 2>/dev/null || jsdoc -r ./frontend -d ./docs/GitHub-Action/frontend
+            fi
+          fi
+
+      - name: Generate PDFs from Markdown
+        run: |
+          # PDFs desde archivos Markdown
+          [ -f "README.md" ] && pandoc README.md -o docs/GitHub-Action/README.pdf --pdf-engine=pdflatex || true
+          [ -f "RENDER.md" ] && pandoc RENDER.md -o docs/GitHub-Action/DEPLOY_RENDER.pdf --pdf-engine=pdflatex || true
+          [ -f "ENV_LOCAL_CONFIGURATION.md" ] && pandoc ENV_LOCAL_CONFIGURATION.md -o docs/GitHub-Action/ENV_LOCAL_CONFIGURATION.pdf --pdf-engine=pdflatex || true
+          [ -f "GUIA_LOCALHOST.md" ] && pandoc GUIA_LOCALHOST.md -o docs/GitHub-Action/GUIA_LOCALHOST.pdf --pdf-engine=pdflatex || true
+          [ -f "Guia_de_preparacion_de_docker.md" ] && pandoc Guia_de_preparacion_de_docker.md -o docs/GitHub-Action/Guia_de_preparacion_de_docker.pdf --pdf-engine=pdflatex || true
+
+      - name: Commit and push documentation
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Verificar si hay cambios
+          if [ -n "$(git status --porcelain)" ]; then
+            git add docs/GitHub-Action/
+            git commit -m "docs: Actualizar documentación (JSDoc + Markdown PDFs) - $(date '+%Y-%m-%d %H:%M:%S')"
+            git push
+          else
+            echo "No hay cambios en la documentación"
+          fi

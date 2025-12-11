@@ -1,50 +1,326 @@
+/**
+ * Servicios de acceso a la API para autenticación, entrevistas, respuestas,
+ * estadísticas, suscripciones y funciones de IA.
+ * 
+ * Cada servicio agrupa endpoints relacionados y usa la instancia de Axios
+ * configurada en `api`.
+ * 
+ * @module services
+ */
 import api from './api';
+/**
+ * Datos para registro de usuario.
+ * @typedef {Object} RegisterData
+ * @property {string} name
+ * @property {string} email
+ * @property {string} password
+ */
 
+/**
+ * Datos para login de usuario.
+ * @typedef {Object} LoginData
+ * @property {string} email
+ * @property {string} password
+ */
+
+/**
+ * Datos para actualizar perfil.
+ * @typedef {Object} UpdateProfileData
+ * @property {string} [name]
+ * @property {string} [email]
+ * @property {string} [avatar]
+ */
+
+/**
+ * Datos para cambio de contraseña.
+ * @typedef {Object} ChangePasswordData
+ * @property {string} currentPassword
+ * @property {string} newPassword
+ */
+
+/**
+ * Servicio de autenticación.
+ * Gestiona registro, login, perfil, cambio de contraseña y logout.
+ * @namespace authService
+ */
 export const authService = {
+  /**
+   * Registra un nuevo usuario.
+   * @param {RegisterData} data - Datos de registro.
+   * @returns {Promise<import('axios').AxiosResponse>} Respuesta con usuario y token.
+   */
   register: (data) => api.post('/auth/register', data),
+   /**
+   * Inicia sesión de un usuario.
+   * @param {LoginData} data - Credenciales de login.
+   * @returns {Promise<import('axios').AxiosResponse>} Respuesta con usuario y token.
+   */
   login: (data) => api.post('/auth/login', data),
+   /**
+   * Obtiene la información del usuario autenticado.
+   * @returns {Promise<import('axios').AxiosResponse>} Respuesta con datos del usuario.
+   */
   getMe: () => api.get('/auth/me'),
+  /**
+   * Actualiza el perfil del usuario.
+   * @param {UpdateProfileData} data - Campos a actualizar.
+   * @returns {Promise<import('axios').AxiosResponse>} Respuesta con perfil actualizado.
+   */
+
   updateProfile: (data) => api.put('/auth/profile', data),
+  
+  /**
+   * Cambia la contraseña del usuario.
+   * @param {ChangePasswordData} data - Contraseña actual y nueva contraseña.
+   * @returns {Promise<import('axios').AxiosResponse>} Respuesta sin contenido o con mensaje.
+   */
   changePassword: (data) => api.put('/auth/change-password', data),
+   /**
+   * Cierra sesión del usuario en el frontend.
+   * Elimina token y datos de usuario del localStorage.
+   * No realiza llamada al backend.
+   * @returns {void}
+   */
   logout: () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
   }
 };
+/**
+ * Datos para generación de preguntas de entrevista.
+ * @typedef {Object} GenerateQuestionsData
+ * @property {string} repoUrl
+ * @property {string} [position]
+ * @property {string} [level]
+ */
 
+/**
+ * Datos base para crear una entrevista.
+ * @typedef {Object} CreateInterviewData
+ * @property {string} title
+ * @property {string} description
+ * @property {Array<Object>} questions
+ * @property {string} [position]
+ * @property {string} [level]
+ */
+
+/**
+ * Datos para actualizar el estado de una entrevista.
+ * @typedef {Object} UpdateInterviewStatusData
+ * @property {string} status - Ejemplo: 'pending' | 'in_progress' | 'completed'
+ */
+
+/**
+ * Servicio de entrevistas.
+ * Gestiona creación, listado, detalle, estado y eliminación de entrevistas.
+ * @namespace interviewService
+ */
 export const interviewService = {
+  /**
+   * Genera preguntas de entrevista a partir de datos proporcionados (por ejemplo, repoUrl).
+   * @param {GenerateQuestionsData} data - Datos para la generación de preguntas.
+   * @returns {Promise<import('axios').AxiosResponse>} Respuesta con lista de preguntas sugeridas.
+   */
   generateQuestions: (data) => api.post('/interviews/generate-questions', data),
+   /**
+   * Crea una nueva entrevista.
+   * @param {CreateInterviewData} data - Datos completos de la entrevista.
+   * @returns {Promise<import('axios').AxiosResponse>} Entrevista creada.
+   */
   createInterview: (data) => api.post('/interviews', data),
+  /**
+   * Obtiene todas las entrevistas del usuario.
+   * @returns {Promise<import('axios').AxiosResponse>} Lista de entrevistas.
+   */
   getInterviews: () => api.get('/interviews'),
+  /**
+   * Obtiene una entrevista concreta por ID.
+   * @param {string} id - ID de la entrevista.
+   * @returns {Promise<import('axios').AxiosResponse>} Detalle de la entrevista.
+   */
   getInterview: (id) => api.get(`/interviews/${id}`),
+  /**
+   * Actualiza el estado de una entrevista.
+   * @param {string} id - ID de la entrevista.
+   * @param {UpdateInterviewStatusData} data - Nuevo estado.
+   * @returns {Promise<import('axios').AxiosResponse>} Entrevista actualizada.
+   */
   updateInterviewStatus: (id, data) => api.put(`/interviews/${id}/status`, data),
+  /**
+   * Elimina una entrevista.
+   * @param {string} id - ID de la entrevista.
+   * @returns {Promise<import('axios').AxiosResponse>} Respuesta de borrado.
+   */
   deleteInterview: (id) => api.delete(`/interviews/${id}`)
 };
+/**
+ * Datos para enviar una respuesta de entrevista.
+ * @typedef {Object} SubmitResponseData
+ * @property {string} interviewId
+ * @property {string} questionId
+ * @property {string} answer
+ * @property {number} [durationSeconds]
+ */
 
+/**
+ * Datos para actualizar una respuesta.
+ * @typedef {Object} UpdateResponseData
+ * @property {string} [answer]
+ * @property {number} [score]
+ * @property {Object} [feedback]
+ */
+
+/**
+ * Servicio de respuestas de entrevistas.
+ * Gestiona envío, listado, detalle, actualización y generación de feedback.
+ * @namespace responseService
+ */
 export const responseService = {
+  /**
+   * Envía una respuesta a una pregunta de entrevista.
+   * @param {SubmitResponseData} data - Datos de la respuesta.
+   * @returns {Promise<import('axios').AxiosResponse>} Respuesta almacenada.
+   */
   submitResponse: (data) => api.post('/responses', data),
+  /**
+   * Obtiene todas las respuestas asociadas a una entrevista.
+   * @param {string} interviewId - ID de la entrevista.
+   * @returns {Promise<import('axios').AxiosResponse>} Lista de respuestas.
+   */
   getResponses: (interviewId) => api.get(`/responses/interview/${interviewId}`),
+  /**
+   * Obtiene una respuesta concreta.
+   * @param {string} id - ID de la respuesta.
+   * @returns {Promise<import('axios').AxiosResponse>} Detalle de la respuesta.
+   */
   getResponse: (id) => api.get(`/responses/${id}`),
+  /**
+   * Actualiza una respuesta existente.
+   * @param {string} id - ID de la respuesta.
+   * @param {UpdateResponseData} data - Campos a actualizar.
+   * @returns {Promise<import('axios').AxiosResponse>} Respuesta actualizada.
+   */
   updateResponse: (id, data) => api.put(`/responses/${id}`, data),
+  /**
+   * Genera feedback global para una entrevista a partir de sus respuestas.
+   * @param {string} interviewId - ID de la entrevista.
+   * @returns {Promise<import('axios').AxiosResponse>} Feedback generado.
+   */
   generateInterviewFeedback: (interviewId) => api.post(`/responses/interview/${interviewId}/generate-feedback`)
 };
-
+/**
+ * Servicio de estadísticas del usuario y entrevistas.
+ * @namespace statsService
+ */
 export const statsService = {
+  /**
+   * Obtiene estadísticas globales del usuario.
+   * @returns {Promise<import('axios').AxiosResponse>} Datos agregados de rendimiento.
+   */
   getUserStats: () => api.get('/stats'),
+  /**
+   * Obtiene estadísticas de una entrevista concreta.
+   * @param {string} id - ID de la entrevista.
+   * @returns {Promise<import('axios').AxiosResponse>} Estadísticas de la entrevista.
+   */
   getInterviewStats: (id) => api.get(`/stats/interview/${id}`),
+  /**
+   * Obtiene tendencias de rendimiento a lo largo del tiempo.
+   * @returns {Promise<import('axios').AxiosResponse>} Serie temporal de métricas.
+   */
   getPerformanceTrends: () => api.get('/stats/trends')
 };
+/**
+ * Datos para crear un pago de suscripción.
+ * @typedef {Object} CreatePaymentData
+ * @property {string} planId
+ * @property {string} [currency]
+ */
 
+/**
+ * Datos para ejecutar un pago de suscripción.
+ * @typedef {Object} ExecutePaymentData
+ * @property {string} paymentId
+ * @property {string} payerId
+ */
+
+/**
+ * Servicio de suscripciones y acceso premium.
+ * @namespace subscriptionService
+ */
 export const subscriptionService = {
+  /**
+   * Crea una intención de pago o sesión de pago para una suscripción.
+   * @param {CreatePaymentData} data - Datos del plan y configuración de pago.
+   * @returns {Promise<import('axios').AxiosResponse>} Información del pago (por ejemplo, URL de aprobación).
+   */
   createPayment: (data) => api.post('/subscriptions/create-payment', data),
+  /**
+   * Ejecuta/Confirma un pago de suscripción.
+   * @param {ExecutePaymentData} data - Identificadores de pago del proveedor.
+   * @returns {Promise<import('axios').AxiosResponse>} Suscripción activada.
+   */
   executePayment: (data) => api.post('/subscriptions/execute-payment', data),
+  /**
+   * Obtiene la suscripción actual del usuario.
+   * @returns {Promise<import('axios').AxiosResponse>} Datos de la suscripción.
+   */
   getSubscription: () => api.get('/subscriptions'),
+  /**
+   * Comprueba si el usuario tiene acceso premium activo.
+   * @returns {Promise<import('axios').AxiosResponse>} Indicador de acceso premium.
+   */
   checkPremiumAccess: () => api.get('/subscriptions/premium/check'),
+  /**
+   * Cancela la suscripción activa del usuario.
+   * @returns {Promise<import('axios').AxiosResponse>} Confirmación de cancelación.
+   */
   cancelSubscription: () => api.delete('/subscriptions')
 };
+/**
+ * Datos para transcripción de audio.
+ * Suele ser `FormData` con un archivo de audio, pero se deja genérico.
+ * @typedef {Object|FormData} TranscribeAudioData
+ */
 
+/**
+ * Datos para obtener la siguiente pregunta de IA.
+ * @typedef {Object} NextQuestionData
+ * @property {string} interviewId
+ * @property {string} [lastQuestionId]
+ * @property {string} [lastAnswer]
+ */
+
+/**
+ * Datos para evaluar una respuesta mediante IA.
+ * @typedef {Object} EvaluateResponseData
+ * @property {string} interviewId
+ * @property {string} questionId
+ * @property {string} answer
+ */
+
+/**
+ * Servicio de funcionalidades basadas en IA.
+ * Transcripción, siguiente pregunta y evaluación automática.
+ * @namespace aiService
+ */
 export const aiService = {
+  /**
+   * Transcribe un archivo de audio.
+   * @param {TranscribeAudioData} data - Datos de audio (normalmente FormData con el archivo).
+   * @returns {Promise<import('axios').AxiosResponse>} Texto transcrito y metadatos.
+   */
   transcribeAudio: (data) => api.post('/ai/transcribe', data),
+  /**
+   * Obtiene la siguiente pregunta de entrevista generada por IA.
+   * @param {NextQuestionData} data - Contexto de la entrevista y última respuesta.
+   * @returns {Promise<import('axios').AxiosResponse>} Nueva pregunta sugerida.
+   */
   getNextQuestion: (data) => api.post('/ai/next-question', data),
+  /**
+   * Evalúa la respuesta de un usuario a una pregunta.
+   * @param {EvaluateResponseData} data - Datos de la respuesta a evaluar.
+   * @returns {Promise<import('axios').AxiosResponse>} Puntuación y feedback generado.
+   */
   evaluateResponse: (data) => api.post('/ai/evaluate-response', data)
 };

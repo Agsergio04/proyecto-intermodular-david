@@ -1,3 +1,11 @@
+/**
+ * Página de inicio de la aplicación.
+ * Muestra hero, características, planes de precios y llamadas a la acción, respetando el tema claro/oscuro.
+ *
+ * @module Home
+ * @returns {JSX.Element} Componente de la página principal
+ */
+
 import React from 'react';
 import { FiArrowRight, FiMic, FiBarChart2, FiLock } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
@@ -107,6 +115,16 @@ const Home = () => {
   );
 };
 
+/**
+ * Tarjeta de característica de la sección de features.
+ *
+ * @param {Object} props - Propiedades del componente
+ * @param {JSX.Element} props.icon - Icono representativo de la característica
+ * @param {string} props.title - Título de la característica
+ * @param {string} props.description - Descripción de la característica
+ * @param {boolean} props.isDark - Indica si el tema oscuro está activo
+ * @returns {JSX.Element} Tarjeta de feature estilizada
+ */
 const FeatureCard = ({ icon, title, description, isDark }) => (
   <div className={`feature-card ${isDark ? 'feature-card--dark' : ''}`}>
     <div className="feature-card__icon">
@@ -121,6 +139,19 @@ const FeatureCard = ({ icon, title, description, isDark }) => (
   </div>
 );
 
+/**
+ * Tarjeta de precios para mostrar un plan (free o premium).
+ *
+ * @param {Object} props - Propiedades del componente
+ * @param {string} props.plan - Nombre del plan
+ * @param {string} props.price - Precio del plan (por ejemplo "$0" o "$9.99")
+ * @param {string} [props.period] - Periodo de facturación (por ejemplo "/mes")
+ * @param {string[]} props.features - Lista de características del plan
+ * @param {string} props.cta - Texto del botón de llamada a la acción
+ * @param {boolean} props.featured - Indica si el plan es destacado (premium)
+ * @param {boolean} props.isDark - Indica si el tema oscuro está activo
+ * @returns {JSX.Element} Tarjeta de plan de precios
+ */
 const PricingCard = ({ plan, price, period, features, cta, featured, isDark }) => (
   <div className={`pricing-card ${featured ? 'pricing-card--featured' : isDark ? 'pricing-card--dark' : ''}`}>
     <h4 className={`pricing-card__plan ${featured ? 'pricing-card__plan--featured' : isDark ? 'pricing-card__plan--dark' : ''}`}>
@@ -136,7 +167,10 @@ const PricingCard = ({ plan, price, period, features, cta, featured, isDark }) =
     )}
     <ul className="pricing-card__features">
       {features.map((feature, i) => (
-        <li key={i} className={`pricing-card__feature ${featured ? 'pricing-card__feature--featured' : isDark ? 'pricing-card__feature--dark' : ''}`}>
+        <li
+          key={i}
+          className={`pricing-card__feature ${featured ? 'pricing-card__feature--featured' : isDark ? 'pricing-card__feature--dark' : ''}`}
+        >
           {feature}
         </li>
       ))}

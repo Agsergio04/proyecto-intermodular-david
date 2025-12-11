@@ -7,16 +7,40 @@ import { useAuthStore, useThemeStore } from '../store';
 import { FiMail, FiLock } from 'react-icons/fi';
 import '../assets/styles/Login.css';
 
+/**
+ * Componente de login de usuario.
+ * Maneja autenticación mediante email y contraseña,
+ * almacenamiento de token/usuario y redirección al dashboard.
+ * @returns {JSX.Element} Formulario de login responsive con tema oscuro/claro.
+ */
 const Login = () => {
+  /** Hook de navegación de React Router */
   const navigate = useNavigate();
+  
+  /** Hook de traducción para internacionalización */
   const { t } = useTranslation();
+  
+  /** Estado del tema oscuro/claro desde el store */
   const { isDark } = useThemeStore();
+  
+  /** @type {[boolean, Function]} Estado de carga del formulario de login */
   const [loading, setLoading] = useState(false);
+  
+  /**
+   * @type {[Object, Function]} Estado del formulario con email y password.
+   * @property {string} email - Dirección de correo electrónico.
+   * @property {string} password - Contraseña del usuario.
+   */
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
 
+  /**
+   * Maneja cambios en los campos del formulario.
+   * Actualiza formData dinámicamente usando el atributo name del input.
+   * @param {React.ChangeEvent<HTMLInputElement>} e - Evento de cambio del input.
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -25,6 +49,12 @@ const Login = () => {
     }));
   };
 
+  /**
+   * Maneja el envío del formulario de login.
+   * Valida campos, realiza petición API, guarda token/usuario y redirige.
+   * @param {React.FormEvent<HTMLFormElement>} e - Evento de submit del formulario.
+   * @returns {Promise<void>}
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -38,14 +68,18 @@ const Login = () => {
       const response = await authService.login(formData);
       const { token, user } = response.data;
       
+      /** Almacena token en localStorage para persistencia */
       localStorage.setItem('token', token);
+      /** Almacena datos de usuario serializados */
       localStorage.setItem('user', JSON.stringify(user));
       
+      /** Actualiza estado global de autenticación */
       useAuthStore.setState({ user, token });
       
       toast.success(t('auth.loginSuccess'));
       navigate('/dashboard');
     } catch (error) {
+      /** Manejo de errores con mensaje personalizado desde API o fallback */
       const message = error.response?.data?.message || t('errors.serverError');
       toast.error(message);
     } finally {
@@ -54,13 +88,22 @@ const Login = () => {
   };
 
   return (
+    /**
+     * Contenedor principal del formulario de login.
+     * Aplica clases CSS condicionales para tema oscuro/claro.
+     */
     <div className={`login ${isDark ? 'login--dark' : ''}`}>
+      
+       
       <div className={`login__container ${isDark ? 'login__container--dark' : ''}`}>
+        
         <h2 className={`login__title ${isDark ? 'login__title--dark' : ''}`}>
           {t('auth.loginTitle')}
         </h2>
 
+      
         <form onSubmit={handleSubmit} className="login__form">
+          
           <div className="login__field">
             <label className={`login__label ${isDark ? 'login__label--dark' : ''}`}>
               {t('common.email')}
@@ -78,6 +121,7 @@ const Login = () => {
             </div>
           </div>
 
+         
           <div className="login__field">
             <label className={`login__label ${isDark ? 'login__label--dark' : ''}`}>
               {t('common.password')}
@@ -95,6 +139,7 @@ const Login = () => {
             </div>
           </div>
 
+          
           <button
             type="submit"
             disabled={loading}
@@ -104,6 +149,7 @@ const Login = () => {
           </button>
         </form>
 
+        
         <p className={`login__link ${isDark ? 'login__link--dark' : ''}`}>
           {t('auth.noAccount')}
           <span
@@ -118,4 +164,8 @@ const Login = () => {
   );
 };
 
+/**
+ * Exporta el componente Login como módulo por defecto.
+ * @type {React.FC}
+ */
 export default Login;

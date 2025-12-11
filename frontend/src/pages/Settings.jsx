@@ -1,3 +1,25 @@
+/**
+ * @fileoverview Página de configuración y preferencias del usuario.
+ * Permite gestionar perfil, contraseña, idioma, tema y suscripción.
+ * Integraciones:
+ * - Sincronización de perfil desde backend (GET /auth/me)
+ * - Actualización de perfil (PUT /auth/profile)
+ * - Cambio de contraseña (POST /auth/change-password)
+ * - Gestión de suscripciones (planes Free y Premium)
+ * - Internacionalización (i18n) con 4 idiomas
+ * - Modo oscuro/claro (localStorage)
+ * 
+ * @module pages/Settings
+ * @requires react
+ * @requires react-i18next
+ * @requires react-router-dom
+ * @requires react-toastify
+ * @requires react-icons/fi
+ * @requires ../api (authService)
+ * @requires ../store (useLanguageStore, useThemeStore)
+ * @requires ../assets/styles/Settings.css
+ */
+
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +29,21 @@ import { authService } from '../api';
 import { FiArrowLeft, FiCheckCircle, FiAlertTriangle } from 'react-icons/fi';
 import '../assets/styles/Settings.css';
 
-// Planes de suscripción
+/**
+ * Array de planes de suscripción disponibles para el usuario.
+ * Define dos niveles: Gratuito y Premium con características diferenciadas.
+ * 
+ * Estructura de cada plan:
+ * @typedef {Object} SubscriptionPlan
+ * @property {string} key - Identificador único del plan ('free' o 'premium')
+ * @property {string} name - Nombre legible del plan para mostrar en UI
+ * @property {string} description - Descripción breve del plan
+ * @property {string} price - Precio mostrado (ej: "0€" o "7.99€/mes")
+ * @property {Array<string>} features - Lista de características incluidas
+ * 
+ * @type {SubscriptionPlan[]}
+ * @constant
+ */
 const SubscriptionPlans = [
   {
     key: 'free',
@@ -34,32 +70,96 @@ const SubscriptionPlans = [
   },
 ];
 
+/**
+ * Componente de página de Configuración del Usuario.
+ * 
+ * Funcionalidades principales:
+ * 1. **Gestión de Suscripción**: Mostrar plan actual y opciones de upgrade
+ * 2. **Perfil**: Actualizar nombre y apellido del usuario
+ * 3. **Seguridad**: Cambiar contraseña con validaciones
+ * 4. **Preferencias**: Cambiar idioma (EN, ES, FR, DE)
+ * 5. **Información de Usuario**: Mostrar email e ID
+ * 6. **Cerrar Sesión**: Limpiar localStorage y redirigir a login
+ * 
+ * Estados gestionados:
+ * - user: Información actual del usuario desde backend
+ * - profileData: Datos de perfil temporales antes de guardar
+ * - passwordData: Datos de cambio de contraseña temporales
+ * - loading: Indica si hay petición al backend en progreso
+ * - showPlans: Controla visibilidad del grid de planes de suscripción
+ * 
+ * Sincronizaciones:
+ * - localStorage: Persiste usuario y token
+ * - Backend (authService): Sincroniza perfil en cada carga
+ * - Event 'userUpdated': Notifica a Header cuando cambia el usuario
+ * 
+ * @component
+ * @returns {React.ReactElement} Página de settings con formularios y opciones
+ * 
+ * @example
+ * // Uso en rutas de App.js
+ * <Route path="/settings" element={<Settings />} />
+ */
 const Settings = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { language, setLanguage } = useLanguageStore();
   const { isDark } = useThemeStore();
+  /** @type {[boolean, Function]} Indica si hay petición al backend en progreso */
   const [loading, setLoading] = useState(false);
 
-  // Carga inicial desde localStorage solo si no hay usuario
+  /**
+   * @type {[Object, Function]}
+   * Estado del usuario actual. Se inicializa desde localStorage y se sincroniza
+   * con backend en el useEffect de carga.
+   * Contiene: _id, email, firstName, lastName, subscriptionStatus, language
+   */
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem('user');
     return storedUser ? JSON.parse(storedUser) : {};
   });
+  /** @type {[boolean, Function]} Controla visibilidad del grid de planes de suscripción */
   const [showPlans, setShowPlans] = useState(false);
 
+  /**
+   * @type {[Object, Function]}
+   * Datos temporales del perfil antes de ser guardados en backend.
+   * Estructura: { firstName: string, lastName: string }
+   */
   const [profileData, setProfileData] = useState({
     firstName: user?.firstName || '',
     lastName: user?.lastName || '',
   });
 
+  /**
+   * @type {[Object, Function]}
+   * Datos temporales para cambio de contraseña antes de enviar al backend.
+   * Estructura: { currentPassword: string, newPassword: string, confirmNewPassword: string }
+   */
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
     confirmNewPassword: '',
   });
 
-  // GET actual del usuario SIEMPRE desde backend al cargar Settings
+  /**
+   * Hook de inicialización: sincroniza usuario desde backend al cargar Settings.
+   * Ejecutado una sola vez al montar el componente.
+   * 
+   * Flujo:
+   * 1. Realiza GET /auth/me al backend
+   * 2. Actualiza estado user con datos frescos
+   * 3. Persiste en localStorage para acceso offline
+   * 4. Actualiza profileData con datos del usuario
+   * 5. Maneja errores con toast
+   * 
+   * @dependencies [] - Se ejecuta solo una vez al montar
+   * @sideEffects
+   * - GET /auth/me: Obtiene usuario del backend
+   * - setUser(): Actualiza estado
+   * - localStorage.setItem('user'): Persiste datos
+   * - setProfileData(): Rellena formulario
+   */
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -77,9 +177,24 @@ const Settings = () => {
     fetchProfile();
   }, []);
 
-  // Suscripción
+  /**
+   * Extrae nivel de suscripción actual del usuario.
+   * Valores: 'premium' o 'free' (por defecto)
+   * @type {string}
+   */
   const subscription = user?.subscriptionStatus || 'free';
 
+  /**
+   * Actualiza estado temporal profileData al cambiar inputs del formulario.
+   * Esta función NO envía a backend; solo actualiza estado local.
+   * 
+   * @function handleProfileChange
+   * @param {React.ChangeEvent<HTMLInputElement>} e - Evento de cambio del input
+   * @sideEffects Actualiza state: profileData[name] = value
+   * 
+   * @example
+   * <input name="firstName" onChange={handleProfileChange} />
+   */
   const handleProfileChange = (e) => {
     const { name, value } = e.target;
     setProfileData((prev) => ({
@@ -88,6 +203,17 @@ const Settings = () => {
     }));
   };
 
+  /**
+   * Actualiza estado temporal passwordData al cambiar inputs del formulario.
+   * Esta función NO envía a backend; solo actualiza estado local.
+   * 
+   * @function handlePasswordChange
+   * @param {React.ChangeEvent<HTMLInputElement>} e - Evento de cambio del input
+   * @sideEffects Actualiza state: passwordData[name] = value
+   * 
+   * @example
+   * <input name="newPassword" type="password" onChange={handlePasswordChange} />
+   */
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
     setPasswordData((prev) => ({
@@ -96,6 +222,31 @@ const Settings = () => {
     }));
   };
 
+  /**
+   * Envía cambios de perfil al backend y actualiza estado local.
+   * 
+   * Validaciones:
+   * - firstName y lastName no pueden estar vacíos (trim)
+   * 
+   * Proceso:
+   * 1. Valida que ambos campos tengan contenido
+   * 2. Envia PUT /auth/profile con { firstName, lastName }
+   * 3. Actualiza estado user y profileData
+   * 4. Persiste en localStorage
+   * 5. Dispara evento 'userUpdated' para notificar a Header
+   * 6. Muestra toast de éxito/error
+   * 
+   * @async
+   * @function handleUpdateProfile
+   * @param {React.FormEvent<HTMLFormElement>} e - Evento del formulario
+   * @returns {Promise<void>}
+   * @sideEffects
+   * - PUT /auth/profile: Actualiza perfil en backend
+   * - setUser(): Actualiza estado
+   * - localStorage.setItem(): Persiste usuario
+   * - window.dispatchEvent('userUpdated'): Notifica componentes
+   * - toast.*(): Muestra notificaciones
+   */
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
 
@@ -125,6 +276,33 @@ const Settings = () => {
     }
   };
 
+  /**
+   * Cambiar contraseña del usuario con validaciones.
+   * 
+   * Validaciones realizadas:
+   * 1. currentPassword y newPassword no pueden estar vacíos
+   * 2. newPassword === confirmNewPassword (deben coincidir)
+   * 3. newPassword.length >= 6 (mínimo 6 caracteres)
+   * 
+   * Proceso:
+   * 1. Ejecuta validaciones (si falla, muestra toast y retorna)
+   * 2. Envia POST /auth/change-password con contraseñas
+   * 3. Limpia formulario (resetea passwordData)
+   * 4. Muestra toast de éxito
+   * 5. Maneja errores del backend
+   * 
+   * Nota: Después de cambio exitoso, usuario debe usar nueva contraseña en próximo login.
+   * 
+   * @async
+   * @function handleChangePassword
+   * @param {React.FormEvent<HTMLFormElement>} e - Evento del formulario
+   * @returns {Promise<void>}
+   * @sideEffects
+   * - POST /auth/change-password: Cambia contraseña en backend
+   * - setPasswordData(): Limpia formulario
+   * - setLoading(): Muestra estado durante petición
+   * - toast.*(): Notificaciones de validación/éxito/error
+   */
   const handleChangePassword = async (e) => {
     e.preventDefault();
     if (!passwordData.currentPassword.trim() || !passwordData.newPassword.trim()) {
@@ -160,6 +338,29 @@ const Settings = () => {
     }
   };
 
+  /**
+   * Cambia idioma de la aplicación y persiste la preferencia.
+   * 
+   * Idiomas soportados: 'en' | 'es' | 'fr' | 'de'
+   * 
+   * Proceso:
+   * 1. Actualiza Zustand store con setLanguage(lang)
+   * 2. Cambia idioma en i18next (i18n.changeLanguage)
+   * 3. Persiste preferencia en localStorage
+   * 4. Muestra toast de confirmación
+   * 
+   * @function handleLanguageChange
+   * @param {string} lang - Código de idioma ('en', 'es', 'fr', 'de')
+   * @returns {void}
+   * @sideEffects
+   * - setLanguage(): Actualiza store global de lenguaje
+   * - i18n.changeLanguage(): Cambia idioma de traducción
+   * - localStorage.setItem(): Persiste preferencia en user
+   * - toast.success(): Muestra confirmación
+   * 
+   * @example
+   * handleLanguageChange('es'); // Cambia a Español
+   */
   const handleLanguageChange = (lang) => {
     setLanguage(lang);
     i18n.changeLanguage(lang);
@@ -168,11 +369,39 @@ const Settings = () => {
     toast.success(`Language changed to ${lang}`);
   };
 
-  // Upgrade usuario (solo lógica de frontend)
+  /**
+   * Handler para upgrade a plan Premium.
+   * Actualmente muestra mensaje informativo; integración de pago pending.
+   * 
+   * TODO: Integrar con servicio de pago (PayPal, Stripe, etc)
+   * 
+   * @function handleUpgrade
+   * @returns {void}
+   * @sideEffects toast.info(): Muestra mensaje informativo
+   */
   const handleUpgrade = () => {
     toast.info('Redirigir a gestión de pago / upgrade');
   };
 
+  /**
+   * Cierra sesión del usuario.
+   * 
+   * Proceso:
+   * 1. Elimina token de autenticación de localStorage
+   * 2. Elimina información del usuario de localStorage
+   * 3. Muestra toast de confirmación
+   * 4. Redirige a página de login (/login)
+   * 
+   * Nota: También llamado desde "Danger Zone" que dice "deleteAccount"
+   * (en realidad es logout, no elimina cuenta del servidor)
+   * 
+   * @function handleLogout
+   * @returns {void}
+   * @sideEffects
+   * - localStorage.removeItem(): Limpia autenticación y usuario
+   * - toast.success(): Muestra confirmación
+   * - navigate('/login'): Redirige a login
+   */
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');

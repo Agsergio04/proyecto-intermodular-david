@@ -142,13 +142,22 @@
 .register__icon {
   color: var(--text-muted);
   margin-right: var(--spacing-sm);
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.register--dark .register__icon {
+  color: var(--text-muted-dark);
 }
 
 .register__input {
   width: 100%;
   background-color: transparent;
   outline: none;
+  border: none;
   color: var(--text-dark);
+  font-size: 1rem;
 }
 
 .register__input--dark {
@@ -159,16 +168,33 @@
   color: var(--text-muted);
 }
 
+.register__input--dark::placeholder {
+  color: var(--text-muted-dark);
+}
+
 .register__select {
   width: 100%;
   border: 2px solid var(--border-light);
   border-radius: var(--radius-md);
   padding: var(--spacing-sm) var(--spacing-md);
   background-color: #fafafa;
+  color: var(--text-dark);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.register__select option {
+  background-color: #fafafa;
+  color: var(--text-dark);
 }
 
 .register__select--dark {
   border-color: var(--border-dark);
+  background-color: #2F4467;
+  color: var(--text-light);
+}
+
+.register__select--dark option {
   background-color: #2F4467;
   color: var(--text-light);
 }
@@ -178,11 +204,12 @@
   background: var(--color-primary-light);
   color: var(--text-light);
   font-weight: bold;
-  padding: var(--spacing-sm);
+  padding: var(--spacing-md);
   border-radius: var(--radius-md);
   transition: all 0.2s;
   border: none;
   cursor: pointer;
+  font-size: 1rem;
 }
 
 .register--dark .register__submit {
@@ -201,7 +228,7 @@
 }
 
 .register__submit:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
@@ -227,20 +254,23 @@
 }
 
 .register__link-text {
-  color: var(--color-primary);
+  color: var(--color-primary-light);
   font-weight: 600;
   cursor: pointer;
   transition: color 0.2s;
+  margin-left: 0.25rem;
 }
 
 .register__link-text:hover {
-  color: var(--color-primary-hover);
+  color: var(--color-primary-light-hover);
+  text-decoration: underline;
 }
 
 .register__link-text--dark {
-  color: var(--color-primary);
+  color: var(--color-primary-dark);
 }
 
 .register__link-text--dark:hover {
-  color: var(--color-primary-hover);
+  color: var(--color-primary-dark-hover);
+  text-decoration: underline;
 }

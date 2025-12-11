@@ -6,15 +6,28 @@ import { interviewService } from '../api';
 import { FiSearch, FiTrash2, FiEye, FiDownload } from 'react-icons/fi';
 import { useThemeStore } from '../store';
 import '../assets/styles/Interviews.css';
-
+/**
+ * Componente Interviews que muestra la lista de entrevistas del usuario con funcionalidades de búsqueda, visualización, descarga y eliminación.
+ * @returns {JSX.Element} El componente renderizado de la lista de entrevistas.
+ */
 const Interviews = () => {
+  /** Hook de traducción para internacionalización */
   const { t } = useTranslation();
+  /** Estado del tema oscuro/claro desde el store */
   const { isDark } = useThemeStore();
+  /** Hook de navegación de React Router */
   const navigate = useNavigate();
+  /** Estado para almacenar la lista de entrevistas */
   const [interviews, setInterviews] = useState([]);
+    /** Estado de carga mientras se obtienen las entrevistas */
   const [loading, setLoading] = useState(true);
+  /** Estado para el término de búsqueda */
   const [searchTerm, setSearchTerm] = useState('');
-
+  /**
+   * Función para obtener la lista de entrevistas desde la API.
+   * Maneja errores y actualiza el estado de carga.
+   * @returns {Promise<void>} Promesa que resuelve cuando se completa la obtención.
+   */
   const fetchInterviews = useCallback(async () => {
     try {
       setLoading(true);
@@ -26,11 +39,19 @@ const Interviews = () => {
       setLoading(false);
     }
   }, [t]);
-
+  /**
+   * Effect que ejecuta fetchInterviews al montar el componente.
+   * Se re-ejecuta cuando fetchInterviews cambia.
+   */
   useEffect(() => {
     fetchInterviews();
   }, [fetchInterviews]);
-
+  /**
+   * Maneja la descarga del reporte de una entrevista específica.
+   * Muestra notificaciones de progreso y error.
+   * @param {string} interviewId - ID de la entrevista para descargar
+   * @returns {Promise<void>} Promesa que resuelve cuando completa el proceso
+   */
   const handleDownloadReport = async (interviewId) => {
     try {
       toast.info('Preparando reporte para descargar...');
@@ -41,7 +62,12 @@ const Interviews = () => {
       toast.error('Error al descargar el reporte');
     }
   };
-
+  /**
+   * Maneja la eliminación de una entrevista específica.
+   * Confirma con el usuario antes de proceder y actualiza la lista.
+   * @param {string} id - ID de la entrevista a eliminar
+   * @returns {Promise<void>} Promesa que resuelve cuando completa la eliminación
+   */
   const handleDeleteInterview = async (id) => {
     if (window.confirm('Are you sure?')) {
       try {
@@ -53,13 +79,24 @@ const Interviews = () => {
       }
     }
   };
-
+  /**
+   * Computed value que filtra las entrevistas según el término de búsqueda.
+   * Realiza búsqueda case-insensitive en título, repoUrl y repositoryUrl.
+   * @type {Array} Array filtrado de entrevistas que coinciden con searchTerm
+   * @depends {interviews} Lista completa de entrevistas del estado
+   * @depends {searchTerm} Término actual de búsqueda
+   */
   const filteredInterviews = interviews.filter(i =>
     i.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (i.repoUrl && i.repoUrl.toLowerCase().includes(searchTerm.toLowerCase())) ||
     (i.repositoryUrl && i.repositoryUrl.toLowerCase().includes(searchTerm.toLowerCase()))
   );
-
+  /**
+   * Renderiza la interfaz principal de la lista de entrevistas.
+   * Incluye header con título y botón de navegación, barra de búsqueda,
+   * estados de carga/vacío y grilla de tarjetas de entrevistas.
+   * @returns {JSX.Element} Markup completo del componente Interviews
+   */
   return (
     <div className={`interviews ${isDark ? 'interviews--dark' : ''}`}>
       <div className="interviews__container">
@@ -102,6 +139,18 @@ const Interviews = () => {
           <div className="interviews__grid">
             {filteredInterviews.map((interview, index) => (
               <div
+              /**
+               * Tarjeta individual de entrevista.
+               * Soporta tema oscuro/claro dinámicamente.
+               * @param {Object} interview - Datos de la entrevista
+               * @param {string} interview._id - ID único de MongoDB
+               * @param {string} interview.title - Título de la entrevista
+               * @param {string} interview.status - Estado (completed|in_progress|scheduled)
+               * @param {string} [interview.repoUrl] - URL del repositorio
+               * @param {string} [interview.repositoryUrl] - URL alternativa del repositorio
+               * @param {string} interview.difficulty - Nivel (junior|mid|senior|manual)
+               * @param {number} interview.totalScore - Puntaje total
+               */
                 key={interview._id || interview.id || `interview-${index}`}
                 className={`interview-card ${isDark ? 'interview-card--dark' : ''}`}
               >
@@ -166,5 +215,8 @@ const Interviews = () => {
     </div>
   );
 };
-
+/**
+ * Exporta el componente Interviews como módulo por defecto.
+ * @type {React.FC} Componente funcional React completamente tipado
+ */
 export default Interviews;

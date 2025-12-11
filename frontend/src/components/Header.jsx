@@ -1,11 +1,82 @@
+/**
+ * @fileoverview Componente Header/Navbar de la aplicación.
+ * Proporciona navegación global, autenticación, preferencias de idioma y tema.
+ * Se adapta responsivamente a móvil y escritorio.
+ * 
+ * Características:
+ * - Menú de navegación condicional (autenticado vs no autenticado)
+ * - Selector de idioma (EN, ES, FR, DE)
+ * - Toggle de tema oscuro/claro
+ * - Menú móvil responsive con hamburguesa
+ * - Oculta navegación durante sesión de entrevista activa
+ * - Sincronización con hooks personalizados y Zustand store
+ * 
+ * @module components/Header
+ * @requires react
+ * @requires react-router-dom
+ * @requires react-icons/fi
+ * @requires ../hooks/useHeader
+ * @requires ../assets/styles/Header.css
+ */
+
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { FiMoon, FiSun, FiMenu, FiX, FiUser, FiClock } from 'react-icons/fi';
 import { useHeader } from '../hooks/useHeader';
 import '../assets/styles/Header.css';
 
+/**
+ * Componente Header/Navbar principal de la aplicación.
+ * 
+ * Estructura:
+ * 1. **Sección Logo**: Logo clickeable que navega a home (/)
+ * 2. **Menú Desktop**: 
+ *    - Usuarios autenticados: Botones de entrevistas/settings, idioma, tema
+ *    - Usuarios sin autenticar: Idioma, tema, botones login/register
+ * 3. **Botón Mobile**: Hamburguesa que abre/cierra menú en móvil
+ * 4. **Menú Mobile**: Versión responsive del menú desktop
+ * 
+ * Comportamiento especial:
+ * - Durante sesión de entrevista (pathname=/interview/:id), oculta botones de navegación
+ * - Soporta 4 idiomas con selector dropdown
+ * - Toggle entre modo claro y oscuro persistido en localStorage
+ * - Responsive: Menú desktop en pantallas grandes, hamburguesa en móvil
+ * 
+ * Estados (desde useHeader hook):
+ * - isAuthenticated: Boolean de autenticación del usuario
+ * - isDark: Estado del tema (true=oscuro, false=claro)
+ * - language: Código de idioma actual ('en', 'es', 'fr', 'de')
+ * - mobileMenuOpen: Controla visibilidad del menú móvil
+ * 
+ * @component
+ * @returns {React.ReactElement} Header con navegación global y opciones de usuario
+ * 
+ * @example
+ * // Uso en App.js o layout principal
+ * <Header />
+ */
 const Header = () => {
+  /**
+   * Obtiene la ruta actual para detectar si estamos en sesión de entrevista.
+   * @type {Object} location - Objeto de react-router con pathname, search, etc
+   */
   const location = useLocation();
+  
+  /**
+   * Valores y funciones extraídas del hook personalizado useHeader.
+   * Este hook gestiona el estado global de autenticación, tema, idioma y navegación.
+   * 
+   * @type {Object}
+   * @property {boolean} isAuthenticated - Usuario autenticado o no
+   * @property {boolean} isDark - Tema oscuro activo
+   * @property {string} language - Idioma actual ('en'|'es'|'fr'|'de')
+   * @property {boolean} mobileMenuOpen - Menú móvil visible
+   * @property {Function} t - Función de traducción (i18n)
+   * @property {Function} handleLanguageChange - Cambia idioma global
+   * @property {Function} handleThemeToggle - Cambia tema dark/light
+   * @property {Function} toggleMobileMenu - Abre/cierra menú móvil
+   * @property {Function} navigateTo - Navega a ruta y cierra menú móvil
+   */
   const {
     isAuthenticated,
     isDark,
@@ -18,7 +89,15 @@ const Header = () => {
     navigateTo
   } = useHeader();
 
-  // Detectar si estamos en la página de entrevista activa
+  /**
+   * Detecta si el usuario está en una sesión de entrevista activa.
+   * Se usa para ocultar botones de navegación y dejar foco total en la entrevista.
+   * 
+   * @type {boolean}
+   * @example
+   * // true si pathname = '/interview/123abc'
+   * // false si pathname = '/interviews' o '/dashboard'
+   */
   const isInInterviewSession = location.pathname.startsWith('/interview/');
 
   return (
@@ -36,7 +115,17 @@ const Header = () => {
         {/* Desktop Menu */}
         <div className="header__menu">
           {isAuthenticated ? (
-            // Authenticated User Menu
+            /**
+             * Menú para usuarios autenticados.
+             * 
+             * Componentes:
+             * 1. Botones de navegación (Entrevistas/Settings): Se ocultan si isInInterviewSession=true
+             * 2. Selector de idioma con 4 opciones (EN/ES/FR/DE)
+             * 3. Toggle de tema (Sun icon para pasar a light, Moon para dark)
+             * 
+             * La ocultación de botones durante entrevista asegura que el usuario
+             * pueda concentrarse completamente sin distracciones de navegación.
+             */
             <>
               {/* Ocultar botones de navegación durante entrevista */}
               {!isInInterviewSession && (
@@ -83,7 +172,17 @@ const Header = () => {
               </button>
             </>
           ) : (
-            // Non-Authenticated User Menu
+            /**
+             * Menú para usuarios sin autenticar.
+             * 
+             * Componentes:
+             * 1. Selector de idioma con 4 opciones
+             * 2. Toggle de tema (Sun/Moon)
+             * 3. Botón "Login": Navega a /login
+             * 4. Botón "Register": Navega a /register
+             * 
+             * No hay acceso a Entrevistas ni Settings sin autenticación.
+             */
             <div className="header__auth-buttons">
               {/* Language Selector */}
               <select
@@ -125,6 +224,15 @@ const Header = () => {
           )}
         </div>
 
+        {/**
+         * Botón de hamburguesa para menú móvil.
+         * Visible solo en pantallas pequeñas (handled por CSS media queries).
+         * 
+         * Comportamiento:
+         * - Icono FiX (X) cuando menú está abierto
+         * - Icono FiMenu (hamburguesa) cuando menú está cerrado
+         * - onClick={toggleMobileMenu} abre/cierra el menú desplegable
+         */}
         {/* Mobile Menu Button */}
         <button
           onClick={toggleMobileMenu}
@@ -134,6 +242,24 @@ const Header = () => {
         </button>
       </div>
 
+      {/**
+       * Menú responsive para dispositivos móviles.
+       * Visible solo cuando mobileMenuOpen=true y en pantallas pequeñas.
+       * 
+       * Estructura:
+       * 1. Para usuarios autenticados:
+       *    - Botones de navegación (Entrevistas/Settings) - ocultos en sesión de entrevista
+       *    - Selector de idioma con etiquetas largas (English, Español, etc)
+       *    - Toggle tema con texto (Light/Dark Mode)
+       * 
+       * 2. Para usuarios no autenticados:
+       *    - Selector de idioma
+       *    - Toggle tema con texto
+       *    - Botón Login
+       *    - Botón Register
+       * 
+       * Nota: Se cierra automáticamente al navegar (toggleMobileMenu en navigateTo)
+       */}
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className={`header__mobile-menu ${isDark ? 'header__mobile-menu--dark' : ''}`}>

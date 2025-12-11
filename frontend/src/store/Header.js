@@ -1,3 +1,12 @@
+/**
+ * Componente Header principal de la aplicación.
+ * Gestiona navegación, autenticación, cambio de tema, idioma y menú móvil responsive.
+ * 
+ * @module Header
+ * @param {Object} props - Props del componente (ninguno requerido)
+ * @returns {JSX.Element} Elemento header con navegación completa
+ */
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -14,8 +23,13 @@ const Header = () => {
   }));
   const { isDark, toggleTheme } = useThemeStore();
   const { language, setLanguage } = useLanguageStore();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(/** @type {boolean} */ false);
 
+  /**
+   * Maneja el logout completo del usuario.
+   * Limpia stores, localStorage y redirige a login.
+   * @returns {void}
+   */
   const handleLogout = () => {
     logout();
     localStorage.removeItem('token');
@@ -23,11 +37,21 @@ const Header = () => {
     navigate('/login');
   };
 
+  /**
+   * Cambia el idioma de la aplicación.
+   * Actualiza store de lenguaje y react-i18next.
+   * @param {string} lang - Código del idioma ('en', 'es', 'fr', 'de')
+   * @returns {void}
+   */
   const handleLanguageChange = (lang) => {
     setLanguage(lang);
     i18n.changeLanguage(lang);
   };
 
+  /**
+   * Alterna entre tema oscuro y claro.
+   * @returns {void}
+   */
   const handleThemeToggle = () => {
     toggleTheme();
   };
@@ -85,7 +109,6 @@ const Header = () => {
                 <FiUser className="text-xl text-gray-700 dark:text-gray-300" />
               </button>
             )}
-
 
             {/* Logout */}
             <button

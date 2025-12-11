@@ -1,3 +1,60 @@
+/**
+ * Custom hook para gestionar el dashboard completo.
+ * Maneja estadísticas, tendencias, creación de entrevistas AI/manual,
+ * autenticación y navegación.
+ * 
+ * @module useDashboard
+ * @returns {Object} Estado y métodos del dashboard
+ * @example
+ * const {
+ *   stats, trends, loading, isPremium,
+ *   handleCreateInterview, downloadReport
+ * } = useDashboard();
+ */
+
+/**
+ * Interfaz de estadísticas del usuario.
+ * @typedef {Object} UserStats
+ * @property {number} totalInterviews - Total de entrevistas creadas
+ * @property {number} completedInterviews - Entrevistas completadas
+ * @property {number} averageScore - Puntaje promedio
+ * @property {number} totalDuration - Duración total en segundos
+ * @property {Object} interviewsByProfession - Entrevistas por profesión
+ */
+
+/**
+ * Interfaz de tendencias de rendimiento.
+ * @typedef {Array<Object>} PerformanceTrends
+ * @property {string} date
+ * @property {number} score
+ * @property {number} duration
+ */
+
+/**
+ * Datos del formulario de creación de entrevista AI.
+ * @typedef {Object} FormData
+ * @property {string} title - Título de la entrevista
+ * @property {string} repoUrl - URL del repositorio GitHub
+ * @property {'ai_generated'|'custom'} type - Tipo de generación
+ * @property {'junior'|'mid'|'senior'} difficulty - Dificultad
+ * @property {'en'|'es'} language - Idioma
+ */
+
+/**
+ * Datos del formulario manual.
+ * @typedef {Object} ManualFormData
+ * @property {string} title
+ * @property {string} repoUrl
+ * @property {'en'|'es'} language
+ * @property {Array<{questionText: string}>} questions - Preguntas manuales
+ */
+
+/**
+ * Nueva pregunta para formulario manual.
+ * @typedef {Object} NewQuestion
+ * @property {string} questionText - Texto de la pregunta
+ */
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -5,13 +62,13 @@ import { statsService, interviewService } from '../api';
 
 export const useDashboard = () => {
     const navigate = useNavigate();
-    const [stats, setStats] = useState(null);
-    const [trends, setTrends] = useState(null);
+    const [stats, setStats] = useState(/** @type {UserStats|null} */ null);
+    const [trends, setTrends] = useState(/** @type {PerformanceTrends|null} */ null);
     const [loading, setLoading] = useState(true);
     const [isPremium, setIsPremium] = useState(false);
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [formLoading, setFormLoading] = useState(false);
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState(/** @type {FormData} */ {
         title: '',
         repoUrl: '',
         type: 'ai_generated',
@@ -20,17 +77,21 @@ export const useDashboard = () => {
     });
 
     // Estados para formulario manual
-    const [manualFormData, setManualFormData] = useState({
+    const [manualFormData, setManualFormData] = useState(/** @type {ManualFormData} */ {
         title: '',
         repoUrl: '',
         language: 'en',
         questions: []
     });
 
-    const [newQuestion, setNewQuestion] = useState({
+    const [newQuestion, setNewQuestion] = useState(/** @type {NewQuestion} */ {
         questionText: ''
     });
 
+    /**
+     * Efecto inicial para verificar autenticación y cargar estadísticas.
+     * Redirige a login si no hay token.
+     */
     useEffect(() => {
         // Verificar autenticación
         const token = localStorage.getItem('token');
@@ -42,6 +103,10 @@ export const useDashboard = () => {
         fetchStats();
     }, [navigate]);
 
+    /**
+     * Carga estadísticas del usuario y tendencias de rendimiento.
+     * @returns {Promise<void>}
+     */
     const fetchStats = async () => {
         try {
             setLoading(true);
@@ -68,6 +133,10 @@ export const useDashboard = () => {
         }
     };
 
+    /**
+     * Descarga reporte de estadísticas (solo premium).
+     * @returns {Promise<void>}
+     */
     const downloadReport = async () => {
         if (!isPremium) {
             toast.warning('dashboard.needPremium');
@@ -76,6 +145,12 @@ export const useDashboard = () => {
         toast.info('Download feature coming soon');
     };
 
+    /**
+     * Maneja la creación de entrevistas con generación AI.
+     * Valida formulario, genera preguntas y crea entrevista.
+     * @param {React.FormEvent<HTMLFormElement>} e - Evento del formulario
+     * @returns {Promise<void>}
+     */
     const handleCreateInterview = async (e) => {
         e.preventDefault();
 
@@ -97,7 +172,7 @@ export const useDashboard = () => {
 
             // Determinar el número de preguntas según la dificultad
             const questionCount = formData.difficulty === 'junior' ? 5 : 
-                                 formData.difficulty === 'mid' ? 10 : 20;
+                                   formData.difficulty === 'mid' ? 10 : 20;
 
             if (formData.type === 'ai_generated') {
                 toast.info(`Generando ${questionCount} preguntas con IA...`);
@@ -199,8 +274,18 @@ export const useDashboard = () => {
         }
     };
 
+    /**
+     * Alterna visibilidad del formulario de creación.
+     * @returns {void}
+     */
     const toggleCreateForm = () => setShowCreateForm(!showCreateForm);
 
+    /**
+     * Actualiza un campo del formulario AI.
+     * @param {string} field - Nombre del campo
+     * @param {string} value - Nuevo valor
+     * @returns {void}
+     */
     const updateFormData = (field, value) => {
         console.log(`🔄 Actualizando campo: ${field} = ${value}`);
         setFormData(prev => {
@@ -210,8 +295,16 @@ export const useDashboard = () => {
         });
     };
 
+    /**
+     * Navega a la lista de entrevistas.
+     * @returns {void}
+     */
     const navigateToInterviews = () => navigate('/interviews');
 
+    /**
+     * Añade una nueva pregunta al formulario manual.
+     * @returns {void}
+     */
     const handleAddQuestion = () => {
         if (!newQuestion.questionText.trim()) {
             toast.warning('Por favor, escribe una pregunta');
@@ -238,6 +331,11 @@ export const useDashboard = () => {
         });
     };
 
+    /**
+     * Elimina una pregunta del formulario manual.
+     * @param {number} index - Índice de la pregunta
+     * @returns {void}
+     */
     const handleRemoveQuestion = (index) => {
         setManualFormData(prev => ({
             ...prev,
@@ -245,14 +343,31 @@ export const useDashboard = () => {
         }));
     };
 
+    /**
+     * Actualiza un campo del formulario manual.
+     * @param {string} field - Nombre del campo
+     * @param {string} value - Nuevo valor
+     * @returns {void}
+     */
     const updateManualFormData = (field, value) => {
         setManualFormData(prev => ({ ...prev, [field]: value }));
     };
 
+    /**
+     * Actualiza un campo de la nueva pregunta.
+     * @param {string} field - Nombre del campo
+     * @param {string} value - Nuevo valor
+     * @returns {void}
+     */
     const updateNewQuestion = (field, value) => {
         setNewQuestion(prev => ({ ...prev, [field]: value }));
     };
 
+    /**
+     * Crea una entrevista manual con preguntas personalizadas.
+     * @param {React.FormEvent<HTMLFormElement>} e - Evento del formulario
+     * @returns {Promise<void>}
+     */
     const handleCreateManualInterview = async (e) => {
         e.preventDefault();
 
