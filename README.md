@@ -114,5 +114,5 @@ PreguntaT ha sido desarrollado por los siguientes profesionales:
 ### Tiempo total proyecto
 
 Para este proyecto se ha realizado este total de horas en este pdf : 
-![total horas](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/TogglTrack_Report_Summary_report_(from_10_31_2025_to_12_11_2025).pdf)
+[total horas](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/TogglTrack_Report_Summary_report_(from_10_31_2025_to_12_11_2025).pdf)
 
