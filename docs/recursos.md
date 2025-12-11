@@ -1191,10 +1191,5 @@ Una tarea se considera **"Done"** cuando cumple **TODOS** estos criterios:
 
 ---
 
-**Documento mantenido por el Scrum Master del Sprint Actual**  
-**Próxima actualización programada:** 15 de diciembre de 2024 (Fin Sprint 3)  
+**Documento mantenido por el Scrum Master del Sprint Actual**   
 **Responsable siguiente actualización:** @pablitoclavito04 (Scrum Master Sprint 4)
-
----
-
-**FIN DEL DOCUMENTO**
