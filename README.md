@@ -95,6 +95,20 @@ Metiendote en la entrevista realizada puedes ver un feedback detallado por cada 
 ## Wiki del Proyecto
 ## Equipo de Desarrollo
 
+PreguntaT ha sido desarrollado por los siguientes profesionales: 
+
+### Primer Participante
+#### Sergio Aragón García 
+**GitHub** : [@Agsergio04](https://github.com/Agsergio04)  
+**Rol** : Desarrollador Full Stack / Líder de Proyecto  
+**Responsabilidades** : Coordinación del equipo, análisis de requisitos, diseño e implementación de funcionalidades principales, gestión de la integración entre frontend y backend, revisión de código y despliegue y documentacion.
+
+### Segundo Participante
+#### Pablo Sanz Aznar
+**GitHub** : [@pablitoclavito04](https://github.com/pablitoclavito04)  
+**Rol** : Frontend Developer   
+**Responsabilidades** : Realizacion de tareas varias como el frontend y documentacion.
+
 
 
 
