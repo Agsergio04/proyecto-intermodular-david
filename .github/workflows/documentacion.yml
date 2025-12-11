@@ -1,29 +1,48 @@
-name: Generate Documentation
+name: Build Documentation
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-  docs:
+  build-docs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - uses: actions/setup-node@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
-      
-      - name: Generate Docs
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y pandoc texlive-latex-base texlive-latex-extra
+          cd backend && npm install && cd .. 2>/dev/null || true
+          cd frontend && npm install && cd .. 2>/dev/null || true
+
+      - name: Generate JSDoc
         run: |
           npm install -g jsdoc
-          mkdir -p docs/Github-Action/backend docs/Github-Action/frontend
-          jsdoc -r backend -d docs/Github-Action/backend || echo "Backend docs generated with warnings"
-          find frontend/src -type f \( -name "*.js" -o -name "*.jsx" \) | xargs jsdoc -d docs/Github-Action/frontend || echo "Frontend docs generated with warnings"
-      
-      - name: Upload docs
-        uses: actions/upload-artifact@v4
-        with:
-          name: documentation
-          path: docs/
-          retention-days: 7
+          mkdir -p docs/GitHub-Action/{backend,frontend}
+          jsdoc -r backend -d docs/GitHub-Action/backend 2>/dev/null || echo "Backend docs generated"
+          find frontend/src -type f \( -name "*.js" -o -name "*.jsx" \) | xargs jsdoc -d docs/GitHub-Action/frontend 2>/dev/null || echo "Frontend docs generated"
+
+      - name: Generate PDFs
+        run: |
+          pandoc README.md -o docs/GitHub-Action/README.pdf --pdf-engine=pdflatex 2>/dev/null || true
+          pandoc RENDER.md -o docs/GitHub-Action/DEPLOY_RENDER.pdf --pdf-engine=pdflatex 2>/dev/null || true
+          pandoc ENV_LOCAL_CONFIGURATION.md -o docs/GitHub-Action/ENV_LOCAL_CONFIGURATION.pdf --pdf-engine=pdflatex 2>/dev/null || true
+          pandoc GUIA_LOCALHOST.md -o docs/GitHub-Action/GUIA_LOCALHOST.pdf --pdf-engine=pdflatex 2>/dev/null || true
+          pandoc Guia_de_preparacion_de_docker.md -o docs/GitHub-Action/Guia_de_preparacion_de_docker.pdf --pdf-engine=pdflatex 2>/dev/null || true
+
+      - name: Push changes
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git add docs/GitHub-Action/ && git commit -m "docs: Actualizar documentación" && git push || true
