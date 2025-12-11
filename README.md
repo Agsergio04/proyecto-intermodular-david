@@ -10,6 +10,7 @@
 - [Guia de Instalacion](#guia-de-instalacion)
 - [Prueba Realizanda](#prueba-realizada)
 - [Documentacion](#documentacion)
+- [Puesta en Produccion](#puesta-en-produccion)
 - [Wiki del Proyecto](#wiki-del-proyecto)
 - [Equipo del proyecto](#equipo-de-desarrollo)
 
@@ -26,23 +27,23 @@ Asi mismo nosotros tenemos un enfoque didactico para el aprendizaje del uso de u
 
 #### Frontend
 
-- **React** – Framework principal de UI ([MIT License](https://reactjs.org/))
-- **React Router DOM** – Enrutado del frontend ([MIT](https://github.com/remix-run/react-router))
-- **Axios** – Peticiones HTTP ([MIT](https://github.com/axios/axios))
-- **Tailwind CSS** – Framework de estilos utilitario (si se usa) ([MIT](https://tailwindcss.com/))
-- **Vite** – Bundler y entorno de desarrollo ([MIT](https://vitejs.dev/))
-- **Testing:** Jest, React Testing Library, Supertest ([MIT](https://jestjs.io/))
+- **React** – Framework principal de UI 
+- **React Router DOM** – Enrutado del frontend 
+- **Axios** – Peticiones HTTP 
+- **Tailwind CSS** – Framework de estilos utilitario 
+- **Vite** – Bundler y entorno de desarrollo 
+- **Testing:** Jest, React Testing Library, Supertest 
 - **Herramientas:** ESLint, Prettier para la calidad y el formato de código
 
 #### Backend
 
-- **Node.js** – Entorno de ejecución ([MIT](https://nodejs.org/))
-- **Express** – Framework para API REST ([MIT](https://expressjs.com/))
-- **Mongoose** – ODM para MongoDB ([MIT](https://mongoosejs.com/))
+- **Node.js** – Entorno de ejecución 
+- **Express** – Framework para API REST 
+- **Mongoose** – ODM para MongoDB 
 - **MongoDB Atlas** – Base de datos cloud
-- **Autenticación y Seguridad:** bcrypt, jsonwebtoken ([MIT](https://github.com/kelektiv/node.bcrypt.js), [MIT](https://github.com/auth0/node-jsonwebtoken))
-- **Testing:** Jest, Supertest ([MIT](https://jestjs.io/))
-- **Nodemon** – Hot reload en desarrollo ([MIT](https://www.npmjs.com/package/nodemon))
+- **Autenticación y Seguridad:** bcrypt, jsonwebtoken 
+- **Testing:** Jest, Supertest 
+- **Nodemon** – Hot reload en desarrollo 
 
 #### DevOps y Development
 
@@ -57,6 +58,9 @@ Asi mismo nosotros tenemos un enfoque didactico para el aprendizaje del uso de u
 - **PayPal** – Integración opcional de pagos (configurable desde variables de entorno)
 - **(Opcional) Otras APIs o servicios documentados en la configuración y recursos legales**
 
+### Puesta en Produccion  
+
+Para acceder a la puesta en produccion realizada en Render (Tanto el Backend como el Frontend) se accede a traves del siguiente [enlace](ai-interview-frontend-q9db.onrender.com) (ai-interview-frontend-q9db.onrender.com).  
 
 ### Prueba Realizada
 ### Guia de Instalacion
