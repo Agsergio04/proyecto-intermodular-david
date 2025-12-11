@@ -127,7 +127,16 @@ docker-compose up -d
 ```
 
 ## Documentacion
+Aqui la documentacion requerida para los criterios de evaluacion: 
+- [analisis-competencia](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/analisis-competencia.md)
+- [estructura-organizativa](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/estructura-organizativa.md)
+- [financiacion](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/analisis-financiacion.md)
+- [legislacion](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/analisis-legislacion.md)
+- [presupuesto](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/analisis-presupuesto.md)
+- [recursos](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/recursos.md)
+
 ## Wiki del Proyecto
+Aqui tienes el enlace de la wiki del proyecto : https://github.com/Agsergio04/proyecto-intermodular-david/wiki
 ## Equipo de Desarrollo
 
 PreguntaT ha sido desarrollado por los siguientes profesionales: 
