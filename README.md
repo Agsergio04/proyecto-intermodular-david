@@ -138,7 +138,14 @@ Aqui la documentacion requerida para los criterios de evaluacion:
 - [documentacion de la api](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/documentacion_api.md)
 
 ## Wiki del Proyecto
-Aqui tienes el enlace de la wiki del proyecto : https://github.com/Agsergio04/proyecto-intermodular-david/wiki
+Aqui tienes el enlace de la wiki del proyecto :  
+
+- [home](https://github.com/Agsergio04/proyecto-intermodular-david/wiki) :  Contexto y necesidades de PreguntaT
+- [Scrum](https://github.com/Agsergio04/proyecto-intermodular-david/wiki/Metodolog%C3%ADa-SCRUM) : Metodologia SCRUM realizada
+- [Gestion de Recursos y Tiempos](https://github.com/Agsergio04/proyecto-intermodular-david/wiki/Gesti%C3%B3n-de-Recursos-y-Tiempos) : Recursos y Tiempos tenidos 
+- [Planificacion Spring](https://github.com/Agsergio04/proyecto-intermodular-david/wiki/Planificaci%C3%B3n-de-Sprints) : Planificacion de los Springs
+- [Roles del equipo](https://github.com/Agsergio04/proyecto-intermodular-david/wiki/Roles-del-equipo) : Roles de equipo asignados al proyecto
+
 ## Equipo de Desarrollo
 
 PreguntaT ha sido desarrollado por los siguientes profesionales: 
