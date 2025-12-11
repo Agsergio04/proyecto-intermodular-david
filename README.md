@@ -135,6 +135,7 @@ Aqui la documentacion requerida para los criterios de evaluacion:
 - [presupuesto](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/analisis-presupuesto.md)
 - [recursos](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/recursos.md)
 - [Github Actions](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/Github-Action/GITHUB_ACTIONS.md)
+- [documentacion de la api](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/documentacion_api.md)
 
 ## Wiki del Proyecto
 Aqui tienes el enlace de la wiki del proyecto : https://github.com/Agsergio04/proyecto-intermodular-david/wiki
