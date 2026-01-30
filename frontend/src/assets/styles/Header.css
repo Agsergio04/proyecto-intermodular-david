@@ -1,0 +1,397 @@
+/*
+ * @fileoverview Styles for the application header
+ * @description Contains layout and responsive styles for the top navigation/header component.
+ */
+
+/* Header Component - BEM Nomenclature */
+
+:root {
+  /* Paleta de colores personalizada */
+  --black-olive: #423e37;
+  --xanthous: #e3b23c;
+  --eggshell: #edebd7;
+  --taupe-gray: #a39594;
+  --dim-gray: #6e675f;
+
+  /* Colores para modo claro - Azul */
+  --blue-primary: #3b82f6;
+  --blue-primary-hover: #2563eb;
+  --blue-light: #60a5fa;
+  --blue-dark: #1e40af;
+
+  /* Colores principales - Modo claro usa azul, modo oscuro usa amarillo */
+  --color-primary-light: var(--blue-primary);
+  --color-primary-light-hover: var(--blue-primary-hover);
+  --color-primary-dark: var(--xanthous);
+  --color-primary-dark-hover: #d4a02e;
+
+  /* Colores secundarios */
+  --color-secondary: var(--dim-gray);
+  --color-secondary-hover: #5d5651;
+  --color-success: #10b981;
+  --color-success-hover: #059669;
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+
+  /* Colores de fondo */
+  --bg-light: var(--eggshell);
+  --bg-dark: var(--black-olive);
+  --bg-card-light: #ffffff;
+  --bg-card-dark: var(--dim-gray);
+  --bg-input-dark: #5d5651;
+
+  /* Colores de texto - Mayor contraste */
+  --text-dark: #2d2a25;
+  --text-light: #ffffff;
+  --text-muted: #8a7f7e;
+  --text-muted-dark: #e8e3e2;
+
+  /* Colores de borde - Más visibles */
+  --border-light: #8a7f7e;
+  --border-dark: #5d5651;
+
+  /* Degradados */
+  --gradient-blue: var(--xanthous);
+  --gradient-green: #10b981;
+  --gradient-purple: var(--dim-gray);
+  --gradient-orange: var(--xanthous);
+
+  /* Sombras */
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+  /* Espaciado */
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+
+  /* Bordes redondeados */
+  --radius-md: 0.5rem;
+}
+
+/* Header Component */
+.header {
+  background-color: var(--bg-card-light);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  transition: background-color 0.3s;
+}
+
+.header--dark {
+  background-color: var(--bg-dark);
+}
+
+.header__container {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 4rem;
+}
+
+/* Logo */
+.header__logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+}
+
+.header__logo:hover {
+  background-color: var(--bg-light);
+}
+
+.header__logo--dark:hover {
+  background-color: var(--dim-gray);
+}
+
+.header__logo-text {
+  color: var(--text-dark);
+  font-weight: bold;
+  font-size: 1.5rem;
+  letter-spacing: -0.025em;
+}
+
+.header__logo-text--dark {
+  color: var(--text-light);
+}
+
+/* Desktop Menu */
+.header__menu {
+  display: none;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .header__menu {
+    display: flex;
+  }
+}
+
+/* Navigation Buttons */
+.header__nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header__nav-button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  background-color: var(--color-primary-light);
+  color: var(--text-light);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header__nav-button--dark {
+  background-color: var(--color-primary-dark);
+  color: var(--text-dark);
+}
+
+.header__nav-button:hover {
+  background-color: var(--color-primary-light-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header__nav-button--dark:hover {
+  background-color: var(--color-primary-dark-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Auth Buttons */
+.header__auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header__login-button {
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 2px solid var(--color-primary-light);
+  background: none;
+  cursor: pointer;
+  color: var(--color-primary-light);
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.header__login-button--dark {
+  border-color: var(--color-primary-dark);
+  color: var(--color-primary-dark);
+}
+
+.header__login-button:hover {
+  background-color: var(--color-primary-light);
+  color: var(--text-light);
+}
+
+.header__login-button--dark:hover {
+  background-color: var(--color-primary-dark);
+  color: var(--text-dark);
+}
+
+.header__register-button {
+  padding: 0.5rem 1.5rem;
+  border-radius: var(--radius-md);
+  border: none;
+  background-color: #3B82F6;
+  color: #FFFFFF;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.header__register-button--dark {
+  background-color: #E3B23C;
+  color: #000000;
+}
+
+.header__register-button:hover {
+  background-color: #2563EB;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.header__register-button--dark:hover {
+  background-color: #D4A02E;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Language Selector */
+.header__language-select {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-light);
+  background-color: transparent;
+  color: var(--text-dark);
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.header__language-select--dark {
+  border-color: var(--border-dark);
+  color: var(--text-light);
+}
+
+.header__language-select:hover {
+  background-color: var(--bg-light);
+}
+
+.header__language-select--dark:hover {
+  background-color: var(--dim-gray);
+}
+
+/* Theme Toggle */
+.header__theme-button {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.header__theme-button--dark {
+  color: var(--text-light);
+}
+
+.header__theme-button:hover {
+  background-color: var(--bg-light);
+}
+
+.header__theme-button--dark:hover {
+  background-color: var(--dim-gray);
+}
+
+.header__theme-icon {
+  font-size: 1.25rem;
+}
+
+/* Mobile Menu Button */
+.header__mobile-button {
+  display: flex;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--text-dark);
+}
+
+.header__mobile-button--dark {
+  color: var(--text-light);
+}
+
+@media (min-width: 768px) {
+  .header__mobile-button {
+    display: none;
+  }
+}
+
+/* Mobile Menu */
+.header__mobile-menu {
+  display: block;
+  background-color: var(--bg-card-light);
+  border-top: 1px solid var(--border-light);
+}
+
+.header__mobile-menu--dark {
+  background-color: var(--bg-dark);
+  border-top-color: var(--border-dark);
+}
+
+@media (min-width: 768px) {
+  .header__mobile-menu {
+    display: none;
+  }
+}
+
+.header__mobile-menu-content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.header__mobile-menu-button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--text-dark);
+  font-weight: 500;
+  text-align: left;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header__mobile-menu-button--dark {
+  color: var(--text-light);
+}
+
+.header__mobile-menu-button:hover {
+  background-color: var(--bg-light);
+}
+
+.header__mobile-menu-button--dark:hover {
+  background-color: var(--dim-gray);
+}
+
+/* Mobile Menu Item (igual que mobile-menu-button pero con azul en modo claro) */
+.header__mobile-menu-item {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  background-color: var(--color-primary-light);
+  cursor: pointer;
+  color: var(--text-light);
+  font-weight: 500;
+  text-align: left;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header__mobile-menu-item--dark {
+  background-color: var(--color-primary-dark);
+  color: var(--text-dark);
+}
+
+.header__mobile-menu-item:hover {
+  background-color: var(--color-primary-light-hover);
+  transform: translateY(-1px);
+}
+
+.header__mobile-menu-item--dark:hover {
+  background-color: var(--color-primary-dark-hover);
+  transform: translateY(-1px);
+}

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/Dashboard.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/Dashboard.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { FiDownload, FiTrendingUp, FiAward, FiClock, FiPlus, FiTrash2 } from 'react-icons/fi';
+import { useDashboard } from '../hooks/useDashboard';
+import { useThemeStore } from '../store';
+import { StatCard } from '../components/StatCard';
+import '../assets/styles/Dashboard.css';
+
+const COLORS = ['#3b82f6', '#8b5cf6', '#ef4444', '#10b981'];
+
+/**
+ * Dashboard page
+ * Shows user statistics, trends and provides UI to create interviews (AI/manual).
+ * Integrates with `useDashboard` hook for data and actions.
+ * @module pages/Dashboard
+ */
+const Dashboard = () => {
+  const { t } = useTranslation();
+  const { isDark } = useThemeStore();
+  const {
+    stats,
+    trends,
+    loading,
+    showCreateForm,
+    formLoading,
+    formData,
+    manualFormData,
+    newQuestion,
+    handleCreateInterview,
+    handleCreateManualInterview,
+    handleAddQuestion,
+    handleRemoveQuestion,
+    toggleCreateForm,
+    updateFormData,
+    updateManualFormData,
+    updateNewQuestion,
+    navigateToInterviews
+  } = useDashboard();
+
+  if (loading) {
+    return (
+        &lt;div className="dashboard__loading">
+          &lt;div className="dashboard__loading-spinner">&lt;/div>
+        &lt;/div>
+    );
+  }
+
+  return (
+      &lt;div className={`dashboard ${isDark ? 'dashboard--dark' : ''}`}>
+        &lt;div className="dashboard__container">
+          &lt;div className="dashboard__header">
+            &lt;h1 className={`dashboard__title ${isDark ? 'dashboard__title--dark' : ''}`}>
+              {t('dashboard.title')}
+            &lt;/h1>
+            &lt;div className="dashboard__actions">
+              &lt;button
+                  onClick={toggleCreateForm}
+                  disabled={formLoading}
+                  className="dashboard__button dashboard__button--new"
+              >
+                &lt;FiPlus /> {t('interview.newInterview')}
+              &lt;/button>
+            &lt;/div>
+          &lt;/div>
+
+          {showCreateForm &amp;&amp; (
+              &lt;div className={`dashboard__forms-wrapper ${isDark ? 'dashboard__forms-wrapper--dark' : ''}`}>
+                &lt;h2 className={`dashboard__forms-wrapper-title ${isDark ? 'dashboard__forms-wrapper-title--dark' : ''}`}>
+                  🎯 Nueva Entrevista
+                &lt;/h2>
+
+                {/* Card para Entrevistas por IA */}
+                &lt;div className={`dashboard__form-card dashboard__form-card--ai ${isDark ? 'dashboard__form-card--dark' : ''}`}>
+                  &lt;h3 className={`dashboard__form-title ${isDark ? 'dashboard__form-title--dark' : ''}`}>
+                    🤖 Generación por IA
+                  &lt;/h3>
+                  &lt;p className={`dashboard__form-subtitle ${isDark ? 'dashboard__form-subtitle--dark' : ''}`}>
+                    Genera preguntas automáticamente usando IA
+                  &lt;/p>
+                  &lt;form onSubmit={handleCreateInterview} className="dashboard__form-grid">
+                    &lt;input
+                        type="text"
+                        placeholder="Título de la entrevista"
+                        value={formData.title}
+                        onChange={(e) => updateFormData('title', e.target.value)}
+                        className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
+                        required
+                        disabled={formLoading}
+                    />
+                    &lt;input
+                        type="url"
+                        placeholder="URL del repositorio (GitHub, GitLab, etc.)"
+                        value={formData.repoUrl}
+                        onChange={(e) => updateFormData('repoUrl', e.target.value)}
+                        className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
+                        required
+                        disabled={formLoading}
+                    />
+                    &lt;select
+                        value={formData.difficulty}
+                        onChange={(e) => updateFormData('difficulty', e.target.value)}
+                        className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
+                        disabled={formLoading}
+                    >
+                      &lt;option value="junior">Fácil (5 preguntas)&lt;/option>
+                      &lt;option value="mid">Intermedio (10 preguntas)&lt;/option>
+                      &lt;option value="senior">Difícil (20 preguntas)&lt;/option>
+                    &lt;/select>
+                    &lt;select
+                        value={formData.language}
+                        onChange={(e) => updateFormData('language', e.target.value)}
+                        className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
+                        disabled={formLoading}
+                    >
+                      &lt;option value="en">English&lt;/option>
+                      &lt;option value="es">Español&lt;/option>
+                      &lt;option value="fr">Français&lt;/option>
+                      &lt;option value="de">Deutsch&lt;/option>
+                    &lt;/select>
+                    &lt;div className="dashboard__form-actions">
+                      &lt;button
+                          type="submit"
+                          disabled={formLoading}
+                          className="dashboard__button dashboard__button--save"
+                      >
+                        {formLoading ? (
+                            &lt;>
+                              &lt;div className="dashboard__spinner">&lt;/div>
+                              Creando...
+                            &lt;/>
+                        ) : (
+                            '🚀 Crear Entrevista'
+                        )}
+                      &lt;/button>
+                      &lt;button
+                          type="button"
+                          onClick={toggleCreateForm}
+                          disabled={formLoading}
+                          className="dashboard__button dashboard__button--cancel"
+                      >
+                        Cancelar
+                      &lt;/button>
+                    &lt;/div>
+                  &lt;/form>
+                &lt;/div>
+
+                {/* Card para Entrevistas Manuales */}
+                &lt;div className={`dashboard__form-card dashboard__form-card--manual ${isDark ? 'dashboard__form-card--dark' : ''}`}>
+                  &lt;h3 className={`dashboard__form-title ${isDark ? 'dashboard__form-title--dark' : ''}`}>
+                    ✏️ Generación Manual
+                  &lt;/h3>
+                  &lt;p className={`dashboard__form-subtitle ${isDark ? 'dashboard__form-subtitle--dark' : ''}`}>
+                    Crea tus propias preguntas manualmente
+                  &lt;/p>
+                  &lt;form onSubmit={handleCreateManualInterview} className="dashboard__form-grid">
+                    &lt;input
+                        type="text"
+                        placeholder="Título de la entrevista"
+                        value={manualFormData.title}
+                        onChange={(e) => updateManualFormData('title', e.target.value)}
+                        className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
+                        required
+                        disabled={formLoading}
+                    />
+                    &lt;input
+                        type="url"
+                        placeholder="URL del repositorio (GitHub, GitLab, etc.)"
+                        value={manualFormData.repoUrl}
+                        onChange={(e) => updateManualFormData('repoUrl', e.target.value)}
+                        className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
+                        required
+                        disabled={formLoading}
+                    />
+                    &lt;select
+                        value={manualFormData.language}
+                        onChange={(e) => updateManualFormData('language', e.target.value)}
+                        className={`dashboard__form-input ${isDark ? 'dashboard__form-input--dark' : ''}`}
+                        disabled={formLoading}
+                    >
+                      &lt;option value="en">English&lt;/option>
+                      &lt;option value="es">Español&lt;/option>
+                      &lt;option value="fr">Français&lt;/option>
+                      &lt;option value="de">Deutsch&lt;/option>
+                    &lt;/select>
+
+                    {/* Sección para añadir preguntas */}
+                    &lt;div className="dashboard__questions-section">
+                      &lt;h3 className={`dashboard__questions-title ${isDark ? 'dashboard__questions-title--dark' : ''}`}>
+                        📝 Preguntas ({manualFormData.questions.length})
+                      &lt;/h3>
+
+                      &lt;div className="dashboard__add-question">
+                        &lt;textarea
+                            placeholder="Escribe tu pregunta aquí..."
+                            value={newQuestion.questionText}
+                            onChange={(e) => updateNewQuestion('questionText', e.target.value)}
+                            className={`dashboard__question-input ${isDark ? 'dashboard__question-input--dark' : ''}`}
+                            rows="3"
+                            disabled={formLoading}
+                        />
+                        &lt;div className="dashboard__add-question-footer">
+                          &lt;button
+                              type="button"
+                              onClick={handleAddQuestion}
+                              disabled={formLoading}
+                              className="dashboard__add-question-button"
+                          >
+                            &lt;FiPlus /> Añadir Pregunta
+                          &lt;/button>
+                        &lt;/div>
+                      &lt;/div>
+
+                      {manualFormData.questions.length > 0 &amp;&amp; (
+                          &lt;div className="dashboard__questions-list">
+                            {manualFormData.questions.map((q, index) => {
+                              console.log(`📋 Pregunta ${index + 1}:`, q);
+                              return (
+                                &lt;div key={index} className={`dashboard__question-item ${isDark ? 'dashboard__question-item--dark' : ''}`}>
+                                  &lt;div className="dashboard__question-header">
+                                    &lt;span className="dashboard__question-number">{index + 1}&lt;/span>
+                                    &lt;button
+                                        type="button"
+                                        onClick={() => handleRemoveQuestion(index)}
+                                        disabled={formLoading}
+                                        className="dashboard__question-remove"
+                                    >
+                                      &lt;FiTrash2 />
+                                    &lt;/button>
+                                  &lt;/div>
+                                  &lt;p className="dashboard__question-text">{q.questionText || 'Sin texto'}&lt;/p>
+                                &lt;/div>
+                              );
+                            })}
+                          &lt;/div>
+                      )}
+                    &lt;/div>
+
+                    &lt;div className="dashboard__form-actions">
+                      &lt;button
+                          type="submit"
+                          disabled={formLoading || manualFormData.questions.length === 0}
+                          className="dashboard__button dashboard__button--save"
+                      >
+                        {formLoading ? (
+                            &lt;>
+                              &lt;div className="dashboard__spinner">&lt;/div>
+                              Creando...
+                            &lt;/>
+                        ) : (
+                            '🚀 Crear Entrevista'
+                        )}
+                      &lt;/button>
+                      &lt;button
+                          type="button"
+                          onClick={toggleCreateForm}
+                          disabled={formLoading}
+                          className="dashboard__button dashboard__button--cancel"
+                      >
+                        Cancelar
+                      &lt;/button>
+                    &lt;/div>
+                  &lt;/form>
+                &lt;/div>
+              &lt;/div>
+          )}
+
+          &lt;div className="dashboard__stats-grid">
+            &lt;StatCard
+                title={t('dashboard.totalInterviews')}
+                value={stats?.totalInterviews || 0}
+                icon={&lt;FiTrendingUp className="text-2xl" />}
+                color="stat-card--gray"
+                isDark={isDark}
+            />
+            &lt;StatCard
+                title={t('dashboard.completedInterviews')}
+                value={stats?.completedInterviews || 0}
+                icon={&lt;FiAward className="text-2xl" />}
+                color="stat-card--yellow"
+                isDark={isDark}
+            />
+            &lt;StatCard
+                title={t('dashboard.averageScore')}
+                value={`${stats?.averageScore || 0}%`}
+                icon={&lt;FiAward className="text-2xl" />}
+                color="stat-card--purple"
+                isDark={isDark}
+            />
+            &lt;StatCard
+                title={t('dashboard.totalDuration')}
+                value={`${Math.round((stats?.totalDuration || 0) / 60)} min`}
+                icon={&lt;FiClock className="text-2xl" />}
+                color="stat-card--orange"
+                isDark={isDark}
+            />
+          &lt;/div>
+
+          &lt;div className="dashboard__charts-grid">
+            &lt;div className={`dashboard__chart-card ${isDark ? 'dashboard__chart-card--dark' : ''}`}>
+              &lt;h2 className={`dashboard__chart-title ${isDark ? 'dashboard__chart-title--dark' : ''}`}>
+                {t('dashboard.performanceTrends')}
+              &lt;/h2>
+              {trends &amp;&amp; trends.length > 0 ? (
+                  &lt;ResponsiveContainer width="100%" height={300}>
+                    &lt;LineChart data={trends}>
+                      &lt;CartesianGrid strokeDasharray="3 3" />
+                      &lt;XAxis dataKey="date" />
+                      &lt;YAxis />
+                      &lt;Tooltip />
+                      &lt;Legend />
+                      &lt;Line type="monotone" dataKey="score" stroke="#3b82f6" name={t('interview.score')} />
+                    &lt;/LineChart>
+                  &lt;/ResponsiveContainer>
+              ) : (
+                  &lt;p className={`dashboard__chart-empty ${isDark ? 'dashboard__chart-empty--dark' : ''}`}>{t('interview.noInterviews')}&lt;/p>
+              )}
+            &lt;/div>
+
+            &lt;div className={`dashboard__chart-card ${isDark ? 'dashboard__chart-card--dark' : ''}`}>
+              &lt;h2 className={`dashboard__chart-title ${isDark ? 'dashboard__chart-title--dark' : ''}`}>
+                {t('dashboard.scoreDistribution')}
+              &lt;/h2>
+              {stats?.interviewsByProfession &amp;&amp; Object.keys(stats.interviewsByProfession).length > 0 ? (
+                  &lt;ResponsiveContainer width="100%" height={300}>
+                    &lt;PieChart>
+                      &lt;Pie
+                          data={Object.entries(stats.interviewsByProfession).map(([profession, count]) => ({
+                            name: profession,
+                            value: count
+                          }))}
+                          cx="50%"
+                          cy="50%"
+                          labelLine={false}
+                          label={({ name, value }) => `${name}: ${value}`}
+                          outerRadius={80}
+                          fill="#8884d8"
+                          dataKey="value"
+                      >
+                        {Object.keys(stats.interviewsByProfession).map((_, index) => (
+                            &lt;Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      &lt;/Pie>
+                      &lt;Tooltip />
+                    &lt;/PieChart>
+                  &lt;/ResponsiveContainer>
+              ) : (
+                  &lt;p className={`dashboard__chart-empty ${isDark ? 'dashboard__chart-empty--dark' : ''}`}>{t('interview.noInterviews')}&lt;/p>
+              )}
+            &lt;/div>
+          &lt;/div>
+        &lt;/div>
+      &lt;/div>
+  );
+};
+
+export default Dashboard;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-App.html">App</a></li><li><a href="module-Header.html">Header</a></li><li><a href="module-Home.html">Home</a></li><li><a href="module-apiClient.html">apiClient</a></li><li><a href="module-components_Header.html">components/Header</a></li><li><a href="module-components_StatCard.html">components/StatCard</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pages_Dashboard.html">pages/Dashboard</a></li><li><a href="module-pages_Home.html">pages/Home</a></li><li><a href="module-pages_InterviewSession.html">pages/InterviewSession</a></li><li><a href="module-pages_Interviews.html">pages/Interviews</a></li><li><a href="module-pages_Login.html">pages/Login</a></li><li><a href="module-pages_Settings.html">pages/Settings</a></li><li><a href="module-services.html">services</a></li><li><a href="module-stores.html">stores</a></li><li><a href="module-useDashboard.html">useDashboard</a></li><li><a href="module-useHeader.html">useHeader</a></li><li><a href="module-useHome.html">useHome</a></li></ul><h3>Externals</h3><ul><li><a href="external-i18next.html">i18next</a></li><li><a href="external-initReactI18next.html">initReactI18next</a></li></ul><h3>Namespaces</h3><ul><li><a href="i18nConfig.html">i18nConfig</a></li><li><a href="module-services-aiService.html">aiService</a></li><li><a href="module-services-authService.html">authService</a></li><li><a href="module-services-interviewService.html">interviewService</a></li><li><a href="module-services-responseService.html">responseService</a></li><li><a href="module-services-statsService.html">statsService</a></li><li><a href="module-services-subscriptionService.html">subscriptionService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Register">Register</a></li><li><a href="global.html#StatCard">StatCard</a></li><li><a href="global.html#default">default</a></li><li><a href="global.html#fallbackLng">fallbackLng</a></li><li><a href="global.html#getCurrentLanguage">getCurrentLanguage</a></li><li><a href="global.html#interpolation">interpolation</a></li><li><a href="global.html#lng">lng</a></li><li><a href="global.html#resources">resources</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Jan 29 2026 10:00:05 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

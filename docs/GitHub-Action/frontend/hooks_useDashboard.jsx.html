@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: hooks/useDashboard.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: hooks/useDashboard.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Custom hook para gestionar el dashboard completo.
+ * Maneja estadísticas, tendencias, creación de entrevistas AI/manual,
+ * autenticación y navegación.
+ * 
+ * @module useDashboard
+ * @returns {Object} Estado y métodos del dashboard
+ * @example
+ * const {
+ *   stats, trends, loading, isPremium,
+ *   handleCreateInterview, downloadReport
+ * } = useDashboard();
+ */
+
+/**
+ * Interfaz de estadísticas del usuario.
+ * @typedef {Object} UserStats
+ * @property {number} totalInterviews - Total de entrevistas creadas
+ * @property {number} completedInterviews - Entrevistas completadas
+ * @property {number} averageScore - Puntaje promedio
+ * @property {number} totalDuration - Duración total en segundos
+ * @property {Object} interviewsByProfession - Entrevistas por profesión
+ */
+
+/**
+ * Interfaz de tendencias de rendimiento.
+ * @typedef {Array&lt;Object>} PerformanceTrends
+ * @property {string} date
+ * @property {number} score
+ * @property {number} duration
+ */
+
+/**
+ * Datos del formulario de creación de entrevista AI.
+ * @typedef {Object} FormData
+ * @property {string} title - Título de la entrevista
+ * @property {string} repoUrl - URL del repositorio GitHub
+ * @property {'ai_generated'|'custom'} type - Tipo de generación
+ * @property {'junior'|'mid'|'senior'} difficulty - Dificultad
+ * @property {'en'|'es'} language - Idioma
+ */
+
+/**
+ * Datos del formulario manual.
+ * @typedef {Object} ManualFormData
+ * @property {string} title
+ * @property {string} repoUrl
+ * @property {'en'|'es'} language
+ * @property {Array&lt;{questionText: string}>} questions - Preguntas manuales
+ */
+
+/**
+ * Nueva pregunta para formulario manual.
+ * @typedef {Object} NewQuestion
+ * @property {string} questionText - Texto de la pregunta
+ */
+
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { statsService, interviewService } from '../api';
+
+export const useDashboard = () => {
+    const navigate = useNavigate();
+    const [stats, setStats] = useState(/** @type {UserStats|null} */ null);
+    const [trends, setTrends] = useState(/** @type {PerformanceTrends|null} */ null);
+    const [loading, setLoading] = useState(true);
+    const [isPremium, setIsPremium] = useState(false);
+    const [showCreateForm, setShowCreateForm] = useState(false);
+    const [formLoading, setFormLoading] = useState(false);
+    const [formData, setFormData] = useState(/** @type {FormData} */ {
+        title: '',
+        repoUrl: '',
+        type: 'ai_generated',
+        difficulty: 'mid',
+        language: 'en'
+    });
+
+    // Estados para formulario manual
+    const [manualFormData, setManualFormData] = useState(/** @type {ManualFormData} */ {
+        title: '',
+        repoUrl: '',
+        language: 'en',
+        questions: []
+    });
+
+    const [newQuestion, setNewQuestion] = useState(/** @type {NewQuestion} */ {
+        questionText: ''
+    });
+
+    /**
+     * Efecto inicial para verificar autenticación y cargar estadísticas.
+     * Redirige a login si no hay token.
+     */
+    useEffect(() => {
+        // Verificar autenticación
+        const token = localStorage.getItem('token');
+        if (!token) {
+            toast.error('Debes iniciar sesión para acceder al dashboard');
+            navigate('/login');
+            return;
+        }
+        fetchStats();
+    }, [navigate]);
+
+    /**
+     * Carga estadísticas del usuario y tendencias de rendimiento.
+     * @returns {Promise&lt;void>}
+     */
+    const fetchStats = async () => {
+        try {
+            setLoading(true);
+            const response = await statsService.getUserStats();
+            setStats(response.data.stats);
+
+            const trendsResponse = await statsService.getPerformanceTrends();
+            setTrends(trendsResponse.data.trends);
+
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            setIsPremium(user?.subscriptionStatus === 'premium');
+        } catch (error) {
+            console.error('Error fetching stats:', error);
+            setStats({
+                totalInterviews: 0,
+                completedInterviews: 0,
+                averageScore: 0,
+                totalDuration: 0,
+                interviewsByProfession: {}
+            });
+            setTrends([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    /**
+     * Descarga reporte de estadísticas (solo premium).
+     * @returns {Promise&lt;void>}
+     */
+    const downloadReport = async () => {
+        if (!isPremium) {
+            toast.warning('dashboard.needPremium');
+            return;
+        }
+        toast.info('Download feature coming soon');
+    };
+
+    /**
+     * Maneja la creación de entrevistas con generación AI.
+     * Valida formulario, genera preguntas y crea entrevista.
+     * @param {React.FormEvent&lt;HTMLFormElement>} e - Evento del formulario
+     * @returns {Promise&lt;void>}
+     */
+    const handleCreateInterview = async (e) => {
+        e.preventDefault();
+
+        console.log('🔍 FormData completo:', formData);
+        console.log('🔍 repoUrl value:', formData.repoUrl);
+        console.log('🔍 repoUrl length:', formData.repoUrl?.length);
+        console.log('🔍 repoUrl trimmed:', formData.repoUrl?.trim());
+
+        if (!formData.title.trim() || !formData.repoUrl.trim()) {
+            toast.warning('Por favor, rellena el título y la URL del repositorio');
+            return;
+        }
+
+        setFormLoading(true);
+
+        try {
+            let questions = [];
+            let repoContext = null;
+
+            // Determinar el número de preguntas según la dificultad
+            const questionCount = formData.difficulty === 'junior' ? 5 : 
+                                   formData.difficulty === 'mid' ? 10 : 20;
+
+            if (formData.type === 'ai_generated') {
+                toast.info(`Generando ${questionCount} preguntas con IA...`);
+
+                try {
+                    const requestBody = {
+                        repoUrl: formData.repoUrl.trim(),
+                        difficulty: formData.difficulty,
+                        language: formData.language,
+                        count: questionCount
+                    };
+                    console.log('📤 Body enviado a generateQuestions:', requestBody);
+                    console.log('📤 repoUrl específicamente:', requestBody.repoUrl);
+                    console.log('📤 Número de preguntas:', questionCount);
+
+                    const questionsResponse = await interviewService.generateQuestions(requestBody);
+
+                    questions = questionsResponse.data?.questions || [];
+                    repoContext = questionsResponse.data?.repoContext || null;
+
+                    console.log('📦 Contexto del repositorio recibido:', repoContext ? 'Sí' : 'No');
+
+                    if (!questions || questions.length === 0) {
+                        toast.error('No se pudieron generar preguntas. Inténtalo de nuevo.');
+                        setFormLoading(false);
+                        return;
+                    }
+
+                    toast.success(`${questions.length} preguntas generadas!`);
+                } catch (genError) {
+                    console.error('❌ Error generando preguntas:', genError);
+                    console.error('❌ Error response:', genError.response?.data);
+                    console.error('❌ Error status:', genError.response?.status);
+                    console.error('❌ Error message:', genError.message);
+
+                    const errorMsg = genError.response?.data?.error
+                        || genError.response?.data?.message
+                        || genError.message
+                        || 'Error desconocido al generar preguntas';
+
+                    toast.error(`Error generando preguntas: ${errorMsg}`);
+                    setFormLoading(false);
+                    return;
+                }
+            } else {
+                questions = [
+                    { questionText: "Pregunta 1", difficulty: formData.difficulty },
+                    { questionText: "Pregunta 2", difficulty: formData.difficulty },
+                    { questionText: "Pregunta 3", difficulty: formData.difficulty },
+                    { questionText: "Pregunta 4", difficulty: formData.difficulty },
+                    { questionText: "Pregunta 5", difficulty: formData.difficulty }
+                ];
+            }
+
+            const createResponse = await interviewService.createInterview({
+                title: formData.title,
+                repoUrl: formData.repoUrl,
+                type: formData.type,
+                difficulty: formData.difficulty,
+                language: formData.language,
+                questions: questions,
+                repoContext: repoContext // ✅ Incluir el contexto del repositorio
+            });
+
+            toast.success('Entrevista creada correctamente!');
+            setShowCreateForm(false);
+            setFormData({
+                title: '',
+                repoUrl: '',
+                type: 'ai_generated',
+                difficulty: 'mid',
+                language: 'en'
+            });
+
+            await fetchStats();
+
+            const interviewId = createResponse.data.interview.id || createResponse.data.interview._id;
+
+            setTimeout(() => {
+                navigate(`/interview/${interviewId}`);
+            }, 500);
+
+        } catch (error) {
+            console.error('❌ Error creando entrevista:', error);
+
+            // Verificar si el error es por falta de autenticación
+            if (error.response?.status === 401 || error.response?.data?.message === 'No token provided') {
+                toast.error('Tu sesión ha expirado. Por favor, inicia sesión nuevamente');
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                navigate('/login');
+                return;
+            }
+
+            const errorMessage = error.message || error.response?.data?.message || 'Error creando entrevista';
+            toast.error(errorMessage);
+        } finally {
+            setFormLoading(false);
+        }
+    };
+
+    /**
+     * Alterna visibilidad del formulario de creación.
+     * @returns {void}
+     */
+    const toggleCreateForm = () => setShowCreateForm(!showCreateForm);
+
+    /**
+     * Actualiza un campo del formulario AI.
+     * @param {string} field - Nombre del campo
+     * @param {string} value - Nuevo valor
+     * @returns {void}
+     */
+    const updateFormData = (field, value) => {
+        console.log(`🔄 Actualizando campo: ${field} = ${value}`);
+        setFormData(prev => {
+            const newData = { ...prev, [field]: value };
+            console.log('🔄 FormData actualizado:', newData);
+            return newData;
+        });
+    };
+
+    /**
+     * Navega a la lista de entrevistas.
+     * @returns {void}
+     */
+    const navigateToInterviews = () => navigate('/interviews');
+
+    /**
+     * Añade una nueva pregunta al formulario manual.
+     * @returns {void}
+     */
+    const handleAddQuestion = () => {
+        if (!newQuestion.questionText.trim()) {
+            toast.warning('Por favor, escribe una pregunta');
+            return;
+        }
+
+        const questionToAdd = {
+            questionText: newQuestion.questionText
+        };
+        
+        console.log('➕ Añadiendo pregunta:', questionToAdd);
+
+        setManualFormData(prev => {
+            const updated = {
+                ...prev,
+                questions: [...prev.questions, questionToAdd]
+            };
+            console.log('📝 Estado actualizado:', updated.questions);
+            return updated;
+        });
+
+        setNewQuestion({
+            questionText: ''
+        });
+    };
+
+    /**
+     * Elimina una pregunta del formulario manual.
+     * @param {number} index - Índice de la pregunta
+     * @returns {void}
+     */
+    const handleRemoveQuestion = (index) => {
+        setManualFormData(prev => ({
+            ...prev,
+            questions: prev.questions.filter((_, i) => i !== index)
+        }));
+    };
+
+    /**
+     * Actualiza un campo del formulario manual.
+     * @param {string} field - Nombre del campo
+     * @param {string} value - Nuevo valor
+     * @returns {void}
+     */
+    const updateManualFormData = (field, value) => {
+        setManualFormData(prev => ({ ...prev, [field]: value }));
+    };
+
+    /**
+     * Actualiza un campo de la nueva pregunta.
+     * @param {string} field - Nombre del campo
+     * @param {string} value - Nuevo valor
+     * @returns {void}
+     */
+    const updateNewQuestion = (field, value) => {
+        setNewQuestion(prev => ({ ...prev, [field]: value }));
+    };
+
+    /**
+     * Crea una entrevista manual con preguntas personalizadas.
+     * @param {React.FormEvent&lt;HTMLFormElement>} e - Evento del formulario
+     * @returns {Promise&lt;void>}
+     */
+    const handleCreateManualInterview = async (e) => {
+        e.preventDefault();
+
+        if (!manualFormData.title.trim() || !manualFormData.repoUrl.trim()) {
+            toast.warning('Por favor, rellena el título y la URL del repositorio');
+            return;
+        }
+
+        if (manualFormData.questions.length === 0) {
+            toast.warning('Añade al menos una pregunta');
+            return;
+        }
+
+        setFormLoading(true);
+
+        try {
+            const response = await interviewService.createInterview({
+                title: manualFormData.title,
+                repoUrl: manualFormData.repoUrl,
+                type: 'custom',
+                language: manualFormData.language,
+                questions: manualFormData.questions
+            });
+
+            toast.success('Entrevista creada correctamente!');
+            setShowCreateForm(false);
+            setManualFormData({
+                title: '',
+                repoUrl: '',
+                language: 'en',
+                questions: []
+            });
+
+            await fetchStats();
+
+            const interviewId = response.data.interview.id || response.data.interview._id;
+            setTimeout(() => {
+                navigate(`/interview/${interviewId}`);
+            }, 500);
+        } catch (error) {
+            console.error('Error creando entrevista:', error);
+            const errorMessage = error.response?.data?.message || 'Error creando entrevista';
+            toast.error(errorMessage);
+        } finally {
+            setFormLoading(false);
+        }
+    };
+
+    return {
+        stats,
+        trends,
+        loading,
+        isPremium,
+        showCreateForm,
+        formLoading,
+        formData,
+        manualFormData,
+        newQuestion,
+        downloadReport,
+        handleCreateInterview,
+        handleCreateManualInterview,
+        handleAddQuestion,
+        handleRemoveQuestion,
+        toggleCreateForm,
+        updateFormData,
+        updateManualFormData,
+        updateNewQuestion,
+        navigateToInterviews
+    };
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-App.html">App</a></li><li><a href="module-Header.html">Header</a></li><li><a href="module-Home.html">Home</a></li><li><a href="module-apiClient.html">apiClient</a></li><li><a href="module-components_Header.html">components/Header</a></li><li><a href="module-components_StatCard.html">components/StatCard</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pages_Dashboard.html">pages/Dashboard</a></li><li><a href="module-pages_Home.html">pages/Home</a></li><li><a href="module-pages_InterviewSession.html">pages/InterviewSession</a></li><li><a href="module-pages_Interviews.html">pages/Interviews</a></li><li><a href="module-pages_Login.html">pages/Login</a></li><li><a href="module-pages_Settings.html">pages/Settings</a></li><li><a href="module-services.html">services</a></li><li><a href="module-stores.html">stores</a></li><li><a href="module-useDashboard.html">useDashboard</a></li><li><a href="module-useHeader.html">useHeader</a></li><li><a href="module-useHome.html">useHome</a></li></ul><h3>Externals</h3><ul><li><a href="external-i18next.html">i18next</a></li><li><a href="external-initReactI18next.html">initReactI18next</a></li></ul><h3>Namespaces</h3><ul><li><a href="i18nConfig.html">i18nConfig</a></li><li><a href="module-services-aiService.html">aiService</a></li><li><a href="module-services-authService.html">authService</a></li><li><a href="module-services-interviewService.html">interviewService</a></li><li><a href="module-services-responseService.html">responseService</a></li><li><a href="module-services-statsService.html">statsService</a></li><li><a href="module-services-subscriptionService.html">subscriptionService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Register">Register</a></li><li><a href="global.html#StatCard">StatCard</a></li><li><a href="global.html#default">default</a></li><li><a href="global.html#fallbackLng">fallbackLng</a></li><li><a href="global.html#getCurrentLanguage">getCurrentLanguage</a></li><li><a href="global.html#interpolation">interpolation</a></li><li><a href="global.html#lng">lng</a></li><li><a href="global.html#resources">resources</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Jan 29 2026 10:00:05 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

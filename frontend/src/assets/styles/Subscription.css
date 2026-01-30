@@ -1,0 +1,321 @@
+/* Subscription Component - BEM Nomenclature con Variables CSS */
+
+:root {
+  /* Paleta de colores personalizada */
+  --black-olive: #423e37;
+  --xanthous: #e3b23c;
+  --eggshell: #edebd7;
+  --taupe-gray: #a39594;
+  --dim-gray: #6e675f;
+
+  /* Colores principales */
+  --color-primary: var(--xanthous);
+  --color-primary-hover: #d4a02e;
+  --color-secondary: var(--dim-gray);
+  --color-secondary-hover: #5d5651;
+  --color-success: #10b981;
+  --color-success-hover: #059669;
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+  --color-warning: var(--xanthous);
+  --color-warning-hover: #d4a02e;
+  --color-purple: var(--dim-gray);
+  --color-purple-hover: #5d5651;
+
+  /* Colores de fondo */
+  --bg-light: var(--eggshell);
+  --bg-dark: var(--black-olive);
+  --bg-card-light: #ffffff;
+  --bg-card-dark: var(--dim-gray);
+  --bg-input-dark: #5d5651;
+
+  /* Colores de texto - Mayor contraste */
+  --text-dark: #2d2a25;
+  --text-light: #ffffff;
+  --text-muted: #8a7f7e;
+  --text-muted-dark: #e8e3e2;
+
+  /* Colores de borde - Más visibles */
+  --border-light: #8a7f7e;
+  --border-dark: #5d5651;
+
+  /* Degradados */
+  --gradient-blue: var(--xanthous);
+  --gradient-green: #10b981;
+  --gradient-purple: var(--dim-gray);
+  --gradient-orange: var(--xanthous);
+
+  /* Sombras */
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+  /* Espaciado */
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+
+  /* Bordes redondeados */
+  --radius-md: 0.5rem;
+}
+
+  /* Tamaños de fuente Subscription */
+  --subscription-font-xs: 0.875rem;
+  --subscription-font-lg: 1.25rem;
+  --subscription-font-xl: 1.5rem;
+  --subscription-font-2xl: 1.875rem;
+
+  /* Tamaños Subscription */
+  --subscription-spinner-size: 3rem;
+}
+
+.subscription {
+  min-height: 100vh;
+  background-color: var(--subscription-bg-light);
+  padding: var(--subscription-spacing-2xl);
+}
+
+.subscription--dark {
+  background-color: var(--subscription-bg-dark);
+}
+
+.subscription__container {
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.subscription__title {
+  font-size: var(--subscription-font-2xl);
+  font-weight: bold;
+  color: var(--subscription-text-dark);
+  margin-bottom: var(--subscription-spacing-2xl);
+}
+
+.subscription__title--dark {
+  color: var(--subscription-text-white);
+}
+
+/* Plans Grid */
+.subscription__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--subscription-spacing-2xl);
+}
+
+@media (min-width: 768px) {
+  .subscription__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Plan Card */
+.subscription-plan {
+  border-radius: var(--subscription-radius-md);
+  box-shadow: var(--subscription-shadow-md);
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.subscription-plan:hover {
+  transform: scale(1.05);
+}
+
+.subscription-plan--free {
+  background-color: var(--subscription-bg-card-light);
+}
+
+.subscription-plan--free--dark {
+  background-color: var(--subscription-bg-card-dark);
+}
+
+.subscription-plan--premium {
+  background: var(--subscription-bg-premium);
+  color: var(--subscription-text-white);
+}
+
+.subscription-plan--current {
+  border: 2px solid var(--subscription-border-current);
+}
+
+.subscription-plan__content {
+  padding: var(--subscription-spacing-2xl);
+}
+
+.subscription-plan__name {
+  font-size: var(--subscription-font-xl);
+  font-weight: bold;
+  margin-bottom: var(--subscription-spacing-sm);
+}
+
+.subscription-plan__name--free {
+  color: var(--subscription-text-dark);
+}
+
+.subscription-plan__name--free--dark {
+  color: var(--subscription-text-white);
+}
+
+.subscription-plan__name--premium {
+  color: var(--subscription-text-white);
+}
+
+.subscription-plan__price {
+  font-size: var(--subscription-font-2xl);
+  font-weight: bold;
+  margin-bottom: var(--subscription-spacing-xs);
+}
+
+.subscription-plan__price--free {
+  color: var(--subscription-text-dark);
+}
+
+.subscription-plan__price--free--dark {
+  color: var(--subscription-text-white);
+}
+
+.subscription-plan__price--premium {
+  color: var(--subscription-text-white);
+}
+
+.subscription-plan__period {
+  font-size: var(--subscription-font-xs);
+  margin-bottom: var(--subscription-spacing-xl);
+}
+
+.subscription-plan__period--free {
+  color: var(--subscription-text-gray);
+}
+
+.subscription-plan__period--free--dark {
+  color: var(--subscription-text-gray-light);
+}
+
+.subscription-plan__period--premium {
+  color: var(--subscription-text-white-transparent);
+}
+
+/* Current Plan Badge */
+.subscription-plan__badge {
+  margin-bottom: var(--subscription-spacing-xl);
+  background-color: var(--subscription-bg-badge);
+  border-radius: var(--subscription-radius-sm);
+  padding: var(--subscription-spacing-sm) var(--subscription-spacing-md);
+}
+
+.subscription-plan__badge-text {
+  font-size: var(--subscription-font-xs);
+  font-weight: 600;
+}
+
+/* Action Button */
+.subscription-plan__button {
+  width: 100%;
+  padding: var(--subscription-spacing-md);
+  border-radius: var(--subscription-radius-md);
+  font-weight: bold;
+  margin-bottom: var(--subscription-spacing-xl);
+  transition: all 0.2s;
+}
+
+.subscription-plan__button--current {
+  background-color: var(--subscription-bg-button-current);
+  cursor: default;
+}
+
+.subscription-plan__button--upgrade {
+  background: var(--subscription-bg-button-upgrade);
+  color: var(--subscription-text-white);
+}
+
+.subscription-plan__button--upgrade:hover {
+  background: var(--subscription-bg-button-upgrade-hover);
+}
+
+.subscription-plan__button--cancel {
+  background-color: var(--subscription-danger);
+  color: var(--subscription-text-white);
+}
+
+.subscription-plan__button--cancel:hover {
+  background-color: var(--subscription-danger-hover);
+}
+
+.subscription-plan__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Features List */
+.subscription-plan__features {
+  display: flex;
+  flex-direction: column;
+  gap: var(--subscription-spacing-md);
+}
+
+.subscription-plan__feature {
+  display: flex;
+  align-items: center;
+  gap: var(--subscription-spacing-md);
+}
+
+.subscription-plan__feature-icon {
+  font-size: var(--subscription-font-lg);
+}
+
+.subscription-plan__feature-icon--included {
+  color: var(--subscription-success);
+}
+
+.subscription-plan__feature-icon--included--premium {
+  color: var(--subscription-text-white);
+}
+
+.subscription-plan__feature-icon--not-included {
+  color: var(--subscription-danger);
+}
+
+.subscription-plan__feature-icon--not-included--dark {
+  color: var(--subscription-danger-light);
+}
+
+.subscription-plan__feature-text {
+  font-size: var(--subscription-font-xs);
+}
+
+.subscription-plan__feature-text--free {
+  color: var(--subscription-text-medium);
+}
+
+.subscription-plan__feature-text--free--dark {
+  color: var(--subscription-text-gray-lighter);
+}
+
+.subscription-plan__feature-text--premium {
+  color: var(--subscription-text-white-transparent);
+}
+
+/* Loading State */
+.subscription__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.subscription__loading-spinner {
+  animation: spin 1s linear infinite;
+  border-radius: var(--subscription-radius-full);
+  height: var(--subscription-spinner-size);
+  width: var(--subscription-spinner-size);
+  border-top: 2px solid var(--subscription-primary);
+  border-bottom: 2px solid var(--subscription-primary);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+

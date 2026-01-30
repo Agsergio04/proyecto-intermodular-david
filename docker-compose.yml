@@ -1,0 +1,67 @@
+services:
+  # MongoDB
+  mongo:
+    image: mongo:7.0
+    container_name: ai_interview_mongo
+    restart: always
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ai_network
+
+  # Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ai_interview_backend
+    restart: always
+    ports:
+      - "127.0.0.1:5000:5000"
+    env_file:
+      - ./backend/.env.local
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/ai-interview
+      FRONTEND_URL: http://localhost:3000
+    depends_on:
+      mongo:
+        condition: service_healthy
+    command: sh -c "sleep 5 && npm run seed && node server.js"
+    networks:
+      - ai_network
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ai_interview_frontend
+    restart: always
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      - DANGEROUSLY_DISABLE_HOST_CHECK=true
+      - FAST_REFRESH=false
+    env_file:
+      - ./frontend/.env.local
+    depends_on:
+      - backend
+    networks:
+      - ai_network
+    stdin_open: true
+    tty: true
+
+volumes:
+  mongo_data:
+    driver: local
+
+networks:
+  ai_network:
+    driver: bridge

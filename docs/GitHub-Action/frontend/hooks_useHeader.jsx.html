@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: hooks/useHeader.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: hooks/useHeader.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Custom hook para gestionar el header de la aplicación.
+ * Maneja autenticación, tema oscuro/claro, idioma, menú móvil y navegación.
+ * 
+ * @module useHeader
+ * @returns {Object} Estado y handlers del header
+ * @example
+ * const {
+ *   isAuthenticated, isDark, language, mobileMenuOpen,
+ *   handleLanguageChange, handleThemeToggle, navigateTo
+ * } = useHeader();
+ */
+
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useThemeStore, useLanguageStore } from '../store';
+
+export const useHeader = () => {
+  const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(/** @type {boolean} */ false);
+
+  const { isDark, toggleTheme } = useThemeStore();
+  const { language, setLanguage } = useLanguageStore();
+
+  /**
+   * Estado de autenticación basado en token del localStorage.
+   * @type {boolean}
+   */
+  const token = localStorage.getItem('token');
+  const isAuthenticated = !!token;
+
+  /**
+   * Cambia el idioma de la aplicación.
+   * Actualiza tanto el store como react-i18next.
+   * @param {'en'|'es'|'fr'|string} lang - Código del idioma
+   * @returns {void}
+   */
+  const handleLanguageChange = (lang) => {
+    setLanguage(lang);
+    i18n.changeLanguage(lang);
+  };
+
+  /**
+   * Alterna entre tema oscuro y claro.
+   * @returns {void}
+   */
+  const handleThemeToggle = () => {
+    toggleTheme();
+  };
+
+  /**
+   * Alterna visibilidad del menú móvil.
+   * @returns {void}
+   */
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  /**
+   * Navega a una ruta específica y cierra menú móvil.
+   * @param {string} path - Ruta de destino
+   * @returns {void}
+   */
+  const navigateTo = (path) => {
+    navigate(path);
+    setMobileMenuOpen(false);
+  };
+
+  return {
+    /**
+     * @type {boolean} Usuario autenticado (token presente)
+     */
+    isAuthenticated,
+    
+    /**
+     * @type {boolean} Tema oscuro activado
+     */
+    isDark,
+    
+    /**
+     * @type {string} Idioma actual ('en', 'es', etc.)
+     */
+    language,
+    
+    /**
+     * @type {boolean} Menú móvil abierto
+     */
+    mobileMenuOpen,
+    
+    /**
+     * @type {import('react-i18next').TFunction} Función de traducción
+     */
+    t,
+    
+    /**
+     * @type {Function} Handler para cambio de idioma
+     */
+    handleLanguageChange,
+    
+    /**
+     * @type {Function} Handler para alternar tema
+     */
+    handleThemeToggle,
+    
+    /**
+     * @type {Function} Handler para menú móvil
+     */
+    toggleMobileMenu,
+    
+    /**
+     * @type {Function} Handler para navegación
+     */
+    navigateTo
+  };
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-App.html">App</a></li><li><a href="module-Header.html">Header</a></li><li><a href="module-Home.html">Home</a></li><li><a href="module-apiClient.html">apiClient</a></li><li><a href="module-components_Header.html">components/Header</a></li><li><a href="module-components_StatCard.html">components/StatCard</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pages_Dashboard.html">pages/Dashboard</a></li><li><a href="module-pages_Home.html">pages/Home</a></li><li><a href="module-pages_InterviewSession.html">pages/InterviewSession</a></li><li><a href="module-pages_Interviews.html">pages/Interviews</a></li><li><a href="module-pages_Login.html">pages/Login</a></li><li><a href="module-pages_Settings.html">pages/Settings</a></li><li><a href="module-services.html">services</a></li><li><a href="module-stores.html">stores</a></li><li><a href="module-useDashboard.html">useDashboard</a></li><li><a href="module-useHeader.html">useHeader</a></li><li><a href="module-useHome.html">useHome</a></li></ul><h3>Externals</h3><ul><li><a href="external-i18next.html">i18next</a></li><li><a href="external-initReactI18next.html">initReactI18next</a></li></ul><h3>Namespaces</h3><ul><li><a href="i18nConfig.html">i18nConfig</a></li><li><a href="module-services-aiService.html">aiService</a></li><li><a href="module-services-authService.html">authService</a></li><li><a href="module-services-interviewService.html">interviewService</a></li><li><a href="module-services-responseService.html">responseService</a></li><li><a href="module-services-statsService.html">statsService</a></li><li><a href="module-services-subscriptionService.html">subscriptionService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Register">Register</a></li><li><a href="global.html#StatCard">StatCard</a></li><li><a href="global.html#default">default</a></li><li><a href="global.html#fallbackLng">fallbackLng</a></li><li><a href="global.html#getCurrentLanguage">getCurrentLanguage</a></li><li><a href="global.html#interpolation">interpolation</a></li><li><a href="global.html#lng">lng</a></li><li><a href="global.html#resources">resources</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Jan 29 2026 10:00:05 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

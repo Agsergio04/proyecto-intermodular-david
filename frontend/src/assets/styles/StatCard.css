@@ -1,0 +1,148 @@
+/* StatCard Component - Con paleta unificada */
+
+:root {
+  /* Paleta de colores personalizada */
+  --black-olive: #423e37;
+  --xanthous: #e3b23c;
+  --eggshell: #edebd7;
+  --taupe-gray: #a39594;
+  --dim-gray: #6e675f;
+
+  /* Azul para modo claro */
+  --blue-primary: #3b82f6;
+  --blue-primary-hover: #2563eb;
+  --blue-light: #60a5fa;
+  --blue-lighter: #93c5fd;
+
+  /* Colores principales - Modo claro usa azul, modo oscuro usa amarillo/gris */
+  --color-primary-light: var(--blue-primary);
+  --color-primary-light-hover: var(--blue-primary-hover);
+  --color-primary-dark: var(--xanthous);
+  --color-primary-dark-hover: #d4a02e;
+
+  /* Colores secundarios */
+  --color-secondary: var(--dim-gray);
+  --color-secondary-hover: #5d5651;
+  --color-success: #10b981;
+  --color-success-hover: #059669;
+
+  /* Colores de fondo */
+  --bg-light: var(--eggshell);
+  --bg-dark: var(--black-olive);
+  --bg-card-light: #ffffff;
+  --bg-card-dark: var(--dim-gray);
+  --bg-input-dark: #5d5651;
+
+  /* Colores de texto - Mayor contraste */
+  --text-dark: #2d2a25;
+  --text-light: #ffffff;
+  --text-muted: #8a7f7e;
+  --text-muted-dark: #e8e3e2;
+
+  /* Colores de borde - Más visibles */
+  --border-light: #8a7f7e;
+  --border-dark: #5d5651;
+
+  /* Degradados */
+  --gradient-blue: var(--xanthous);
+  --gradient-green: #10b981;
+  --gradient-purple: var(--dim-gray);
+  --gradient-orange: var(--xanthous);
+
+  /* Sombras */
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+  /* Espaciado */
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+
+  /* Bordes redondeados */
+  --radius-md: 0.5rem;
+}
+
+.stat-card {
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Modo Claro - Todas las cards en azul */
+.stat-card--gray {
+  background: linear-gradient(135deg, var(--blue-primary), var(--blue-primary-hover));
+}
+
+.stat-card--yellow {
+  background: linear-gradient(135deg, var(--blue-light), var(--blue-primary));
+}
+
+.stat-card--purple {
+  background: linear-gradient(135deg, var(--blue-primary), var(--blue-primary-hover));
+}
+
+.stat-card--orange {
+  background: linear-gradient(135deg, var(--blue-light), var(--blue-primary));
+}
+
+/* Modo Oscuro - Gris y amarillo */
+.stat-card--gray.stat-card--dark-mode {
+  background: #384E6B;
+}
+
+.stat-card--yellow.stat-card--dark-mode {
+  background: #BE8F0E;
+}
+
+.stat-card--purple.stat-card--dark-mode {
+  background: #73439D;
+}
+
+.stat-card--orange.stat-card--dark-mode {
+  background: #C14B0B;
+}
+
+/* Contenido de la card */
+.stat-card__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.stat-card__content--dark {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.stat-card__title {
+  font-size: 0.875rem;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+}
+
+.stat-card__title--dark {
+  color: #FFFFFF;
+}
+
+.stat-card__value {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.stat-card__value--dark {
+  color: #FFFFFF;
+}
+
+.stat-card__icon {
+  font-size: 2rem;
+  opacity: 0.8;
+  color: #000000;
+}
+
+.stat-card__icon--dark {
+  color: #FFFFFF;
+}

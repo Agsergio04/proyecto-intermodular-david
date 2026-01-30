@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: store/Header.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: store/Header.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Main application Header component.
+ * Manages navigation, authentication actions, theme toggle, language selection and responsive mobile menu.
+ *
+ * @module Header
+ * @param {Object} props - Component props (none required)
+ * @returns {JSX.Element} Header element with full navigation controls
+ */
+
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useAuthStore, useThemeStore, useLanguageStore } from './index';
+import { FiLogOut, FiMoon, FiSun, FiGlobe, FiMenu, FiX, FiUser } from 'react-icons/fi';
+import { useState } from 'react';
+
+const Header = () => {
+  const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
+  const { user, logout } = useAuthStore((state) => ({
+    user: state.user,
+    logout: state.logout
+  }));
+  const { isDark, toggleTheme } = useThemeStore();
+  const { language, setLanguage } = useLanguageStore();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(/** @type {boolean} */ false);
+
+  /** Handle user logout: clears stores/localStorage and redirects to login. */
+  const handleLogout = () => {
+    logout();
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/login');
+  };
+
+  /**
+  /** Change application language and update i18n/store. */
+  const handleLanguageChange = (lang) => {
+    setLanguage(lang);
+    i18n.changeLanguage(lang);
+  };
+
+  /** Toggle between dark and light theme. */
+  const handleThemeToggle = () => {
+    toggleTheme();
+  };
+
+  return (
+    &lt;header className="bg-white dark:bg-gray-800 shadow-lg">
+      &lt;div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        &lt;div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          &lt;div
+            onClick={() => navigate('/dashboard')}
+            className="flex items-center gap-2 cursor-pointer"
+          >
+            &lt;div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+              &lt;span className="text-white font-bold text-lg">AI&lt;/span>
+            &lt;/div>
+            &lt;span className="hidden sm:inline font-bold text-lg text-gray-800 dark:text-white">
+              {t('common.appName')}
+            &lt;/span>
+          &lt;/div>
+
+          {/* Desktop Menu */}
+          &lt;div className="hidden md:flex items-center gap-4">
+            {/* Language Selector */}
+            &lt;select
+              value={language}
+              onChange={(e) => handleLanguageChange(e.target.value)}
+              className="text-gray-700 dark:text-gray-300 bg-transparent border border-gray-300 dark:border-gray-600 rounded px-2 py-1"
+            >
+              &lt;option value="en">EN&lt;/option>
+              &lt;option value="es">ES&lt;/option>
+              &lt;option value="fr">FR&lt;/option>
+              &lt;option value="de">DE&lt;/option>
+            &lt;/select>
+
+            {/* Theme Toggle */}
+            &lt;button
+              onClick={handleThemeToggle}
+              className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+            >
+              {isDark ? (
+                &lt;FiSun className="text-yellow-500 text-xl" />
+              ) : (
+                &lt;FiMoon className="text-gray-700 text-xl" />
+              )}
+            &lt;/button>
+
+            {/* User Info */}
+            {user &amp;&amp; (
+              &lt;button
+                onClick={() => navigate('/settings')}
+                className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition flex items-center justify-center"
+                title="Configuración de usuario"
+              >
+                &lt;FiUser className="text-xl text-gray-700 dark:text-gray-300" />
+              &lt;/button>
+            )}
+
+            {/* Logout */}
+            &lt;button
+              onClick={handleLogout}
+              className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
+            >
+              &lt;FiLogOut /> {t('common.logout')}
+            &lt;/button>
+          &lt;/div>
+
+          {/* Mobile Menu Button */}
+          &lt;button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2"
+          >
+            {mobileMenuOpen ? &lt;FiX size={24} /> : &lt;FiMenu size={24} />}
+          &lt;/button>
+        &lt;/div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen &amp;&amp; (
+          &lt;div className="md:hidden pb-4 flex flex-col gap-4">
+            &lt;select
+              value={language}
+              onChange={(e) => handleLanguageChange(e.target.value)}
+              className="text-gray-700 dark:text-gray-300 bg-transparent border border-gray-300 dark:border-gray-600 rounded px-2 py-1"
+            >
+              &lt;option value="en">English&lt;/option>
+              &lt;option value="es">Español&lt;/option>
+              &lt;option value="fr">Français&lt;/option>
+              &lt;option value="de">Deutsch&lt;/option>
+            &lt;/select>
+
+            &lt;button
+              onClick={handleThemeToggle}
+              className="flex items-center gap-2 text-gray-700 dark:text-gray-300"
+            >
+              {isDark ? &lt;FiSun /> : &lt;FiMoon />}
+              {isDark ? 'Light Mode' : 'Dark Mode'}
+            &lt;/button>
+
+            &lt;button
+              onClick={handleLogout}
+              className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
+            >
+              &lt;FiLogOut /> {t('common.logout')}
+            &lt;/button>
+          &lt;/div>
+        )}
+      &lt;/div>
+    &lt;/header>
+  );
+};
+
+export default Header;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-App.html">App</a></li><li><a href="module-Header.html">Header</a></li><li><a href="module-Home.html">Home</a></li><li><a href="module-apiClient.html">apiClient</a></li><li><a href="module-components_Header.html">components/Header</a></li><li><a href="module-components_StatCard.html">components/StatCard</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pages_Dashboard.html">pages/Dashboard</a></li><li><a href="module-pages_Home.html">pages/Home</a></li><li><a href="module-pages_InterviewSession.html">pages/InterviewSession</a></li><li><a href="module-pages_Interviews.html">pages/Interviews</a></li><li><a href="module-pages_Login.html">pages/Login</a></li><li><a href="module-pages_Settings.html">pages/Settings</a></li><li><a href="module-services.html">services</a></li><li><a href="module-stores.html">stores</a></li><li><a href="module-useDashboard.html">useDashboard</a></li><li><a href="module-useHeader.html">useHeader</a></li><li><a href="module-useHome.html">useHome</a></li></ul><h3>Externals</h3><ul><li><a href="external-i18next.html">i18next</a></li><li><a href="external-initReactI18next.html">initReactI18next</a></li></ul><h3>Namespaces</h3><ul><li><a href="i18nConfig.html">i18nConfig</a></li><li><a href="module-services-aiService.html">aiService</a></li><li><a href="module-services-authService.html">authService</a></li><li><a href="module-services-interviewService.html">interviewService</a></li><li><a href="module-services-responseService.html">responseService</a></li><li><a href="module-services-statsService.html">statsService</a></li><li><a href="module-services-subscriptionService.html">subscriptionService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Register">Register</a></li><li><a href="global.html#StatCard">StatCard</a></li><li><a href="global.html#default">default</a></li><li><a href="global.html#fallbackLng">fallbackLng</a></li><li><a href="global.html#getCurrentLanguage">getCurrentLanguage</a></li><li><a href="global.html#interpolation">interpolation</a></li><li><a href="global.html#lng">lng</a></li><li><a href="global.html#resources">resources</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Jan 29 2026 10:00:05 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

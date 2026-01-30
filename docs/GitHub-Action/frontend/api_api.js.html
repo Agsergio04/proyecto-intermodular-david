@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: api/api.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: api/api.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Cliente HTTP configurado con Axios para interactuar con la API backend.
+ * Incluye manejo automático de tokens JWT, logging detallado y configuración robusta de URLs.
+ * @module apiClient
+ * @example
+ * import api from './api';
+ * 
+ * // GET request
+ * const response = await api.get('/users');
+ * 
+ * // POST request
+ * const newUser = await api.post('/users', { name: 'John' });
+ */
+import axios from 'axios';
+
+/**
+ * URL base de la API. Se construye dinámicamente desde variables de entorno.
+ * Siempre asegura que termine en `/api` para consistencia.
+ * @type {string}
+ * @default 'http://localhost:5000/api'
+ */
+let API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
+/**
+ * Normaliza la URL base asegurando que siempre termine en `/api`.
+ * Elimina barras finales duplicadas y agrega `/api` si es necesario.
+ */
+
+if (API_URL &amp;&amp; !API_URL.endsWith('/api')) {
+  API_URL = API_URL.replace(/\/$/, '') + '/api';
+}
+/**
+ * Logging de configuración de API para debugging.
+ * Muestra tanto la variable de entorno como la URL final procesada.
+ */
+console.log('🔧 API Configuration:', {
+  REACT_APP_API_URL: process.env.REACT_APP_API_URL,
+  API_URL: API_URL
+});
+/**
+ * Instancia principal de Axios configurada para todas las peticiones HTTP.
+ * @type {import('axios').AxiosInstance}
+ * @property {string} baseURL - URL base de todas las peticiones
+ * @property {Object} defaults.headers - Headers por defecto
+ * @property {number} timeout - Timeout de 120 segundos (2 minutos) para operaciones largas
+ */
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  timeout: 120000 // 120 segundos (2 minutos) timeout para operaciones de IA
+});
+
+/**
+ * Interceptor de peticiones salientes.
+ * @param {import('axios').AxiosRequestConfig} config - Configuración de la petición
+ * @returns {Promise&lt;import('axios').AxiosRequestConfig>} Configuración modificada
+ * @description
+ * - Agrega token JWT desde localStorage como `Authorization: Bearer`
+ * - Loggea método, URL y body de la petición
+ * - Aplica timeout más largo para endpoints de IA (generate-feedback, generate-questions)
+ */
+api.interceptors.request.use(
+  /** @param {import('axios').AxiosRequestConfig} config */
+  config => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    
+    // Aplicar timeout más largo para operaciones de IA
+    if (config.url?.includes('generate-feedback') || config.url?.includes('generate-questions')) {
+      config.timeout = 180000; // 3 minutos para operaciones de IA
+      console.log('⏱️  Timeout extendido (180s) para:', config.url);
+    }
+    
+    console.log('📤 API Request:', config.method?.toUpperCase(), config.url);
+    if (config.data) {
+      console.log('📤 Request Body:', JSON.stringify(config.data));
+      if (config.url?.includes('generate-questions')) {
+        console.log('📤 GENERATE-QUESTIONS - Body keys:', Object.keys(config.data));
+        console.log('📤 GENERATE-QUESTIONS - repoUrl:', config.data.repoUrl);
+      }
+    }
+    return config;
+  },
+  /** @param {Error} error */
+  error => {
+    console.error('❌ Request Error:', error);
+    return Promise.reject(error);
+  }
+);
+
+/**
+ * Interceptor de respuestas entrantes.
+ * @param {import('axios').AxiosResponse} response - Respuesta exitosa
+ * @returns {Promise&lt;import('axios').AxiosResponse>} Respuesta procesada
+ * @description Loggea status y URL de respuestas exitosas
+ */
+api.interceptors.response.use(
+  /** @param {import('axios').AxiosResponse} response */
+  response => {
+    console.log('✅ API Response:', response.status, response.config.url);
+    return response;
+  },
+  /**
+   * @param {import('axios').AxiosError} error - Error de respuesta
+   * @returns {Promise&lt;never>} Error rechazado
+   * @description Loggea detalles completos de errores HTTP con status, URL y data
+   */
+  error => {
+    console.error('❌ API Error:', {
+      url: error.config?.url,
+      method: error.config?.method,
+      status: error.response?.status,
+      message: error.message,
+      data: error.response?.data
+    });
+    return Promise.reject(error);
+  }
+);
+/**
+ * Cliente HTTP listo para usar con toda la configuración aplicada.
+ * @type {import('axios').AxiosInstance}
+ * @example
+ * // Todas las peticiones incluirán automáticamente el token y logging
+ * const users = await api.get('/users');
+ * const newPost = await api.post('/posts', postData);
+ */
+export default api;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-App.html">App</a></li><li><a href="module-Header.html">Header</a></li><li><a href="module-Home.html">Home</a></li><li><a href="module-apiClient.html">apiClient</a></li><li><a href="module-components_Header.html">components/Header</a></li><li><a href="module-components_StatCard.html">components/StatCard</a></li><li><a href="module-main.html">main</a></li><li><a href="module-pages_Dashboard.html">pages/Dashboard</a></li><li><a href="module-pages_Home.html">pages/Home</a></li><li><a href="module-pages_InterviewSession.html">pages/InterviewSession</a></li><li><a href="module-pages_Interviews.html">pages/Interviews</a></li><li><a href="module-pages_Login.html">pages/Login</a></li><li><a href="module-pages_Settings.html">pages/Settings</a></li><li><a href="module-services.html">services</a></li><li><a href="module-stores.html">stores</a></li><li><a href="module-useDashboard.html">useDashboard</a></li><li><a href="module-useHeader.html">useHeader</a></li><li><a href="module-useHome.html">useHome</a></li></ul><h3>Externals</h3><ul><li><a href="external-i18next.html">i18next</a></li><li><a href="external-initReactI18next.html">initReactI18next</a></li></ul><h3>Namespaces</h3><ul><li><a href="i18nConfig.html">i18nConfig</a></li><li><a href="module-services-aiService.html">aiService</a></li><li><a href="module-services-authService.html">authService</a></li><li><a href="module-services-interviewService.html">interviewService</a></li><li><a href="module-services-responseService.html">responseService</a></li><li><a href="module-services-statsService.html">statsService</a></li><li><a href="module-services-subscriptionService.html">subscriptionService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Register">Register</a></li><li><a href="global.html#StatCard">StatCard</a></li><li><a href="global.html#default">default</a></li><li><a href="global.html#fallbackLng">fallbackLng</a></li><li><a href="global.html#getCurrentLanguage">getCurrentLanguage</a></li><li><a href="global.html#interpolation">interpolation</a></li><li><a href="global.html#lng">lng</a></li><li><a href="global.html#resources">resources</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Thu Jan 29 2026 10:00:05 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
