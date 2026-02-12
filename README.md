@@ -1,19 +1,16 @@
 
 # PreguntaT  
-## Indice
-- [Breve descripcion](#descripcion-del-proyecto)
+## Índice
+
+- [Descripción del Proyecto](#descripcion-del-proyecto)
 - [Stack Tecnológico](#stack-tecnologico)
-    - [Frontend](#frontend)
-    - [Backend](#backend)
-    - [DevOps y Development](#devops-y-development)
-    - [Servicios y APIs Adicionales](#servicios-y-apis-adicionales) 
-- [Guia de Instalacion](#guia-de-instalacion)
-- [Prueba Realizanda](#prueba-realizada)
-- [Documentacion](#documentacion)
-- [Puesta en Produccion](#puesta-en-produccion)
-- [Wiki del Proyecto](#wiki-del-proyecto)
-- [Equipo del proyecto](#equipo-de-desarrollo)
-- [Tiempo total del proyecto Realizado](#tiempo-total-proyecto)
+- [Instalación y Configuración](#instalacion-y-configuracion)
+- [Demostración](#prueba-realizada)
+- [Despliegue en Producción](#puesta-en-produccion)
+- [Documentación API](#documentacion-api)
+- [Seguridad](#seguridad)
+- [Equipo de Desarrollo](#equipo-de-desarrollo)
+- [Licencia](#licencia)
 
 
 # Descripcion sencilla
@@ -102,65 +99,98 @@ Pasado el tiempo del generado del feedback te lleva al apartado de las entrevist
 Metiendote en la entrevista realizada puedes ver un feedback detallado por cada pregunta junto con la nota correspondiente segun la respuesta dada frente a la pregunta a responder: 
 ![Imagen 12](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_12.png)  
 
-## Guia de Instalacion
+## Instalación y Configuración
 
-#### 1. Requisitos Previos
+### Requisitos Previos
 
-- Docker y Docker Compose instalados.
-- Git instalado.
-- Acceso a variables de entorno (ver punto 3).
+- **Docker y Docker Compose** instalados
+- **Git** instalado
+- **Node.js** v18+ (para desarrollo local sin Docker)
 
-#### 2. Clona el repositorio
+### Pasos de Instalación
+
+#### 1. Clonar el Repositorio
 
 ```bash
 git clone https://github.com/Agsergio04/proyecto-intermodular-david.git
 cd proyecto-intermodular-david
 ```
 
-#### 3. Configura las variables de entorno
+#### 2. Configurar Variables de Entorno
 
-Consulta el archivo [`ENV_LOCAL_CONFIGURATION.md`](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/ENV_LOCAL_CONFIGURATION.md) para instrucciones detalladas para definir las variables de entorno necesarias.
+Crea los archivos `.env.local` en las carpetas `backend/` y `frontend/`:
 
-#### 4. Levanta el entorno con Docker
+**Backend** (`backend/.env.local`):
+```env
+# Base de Datos
+MONGODB_URI=mongodb://localhost:27017/ai-interview
 
-Hay dos guías útiles:
-- Instalación general y uso: [`GUIA_LOCALHOST.md`](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/GUIA_LOCALHOST.md)
-- Docker avanzado: [`Guia_de_preparacion_de_docker.md`](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/Guia_de_preparacion_de_docker.md)
+# Servidor
+PORT=5000
+NODE_ENV=development
 
-Pasos básicos:
+# Autenticación
+JWT_SECRET=tu-clave-secreta-muy-segura
 
-```bash
-#Para descargar los contenedores
-docker-compose build --no-cache
+# Google Gemini AI
+GEMINI_API_KEY=tu-api-key-de-google-gemini
 
-#Para desplegarlo en modo daemon
-docker-compose up -d 
+# PayPal (opcional)
+PAYPAL_CLIENT_ID=tu-paypal-client-id
+PAYPAL_SECRET=tu-paypal-secret
 ```
 
-## Documentacion
-Aqui la documentacion requerida para los criterios de evaluacion: 
-- [analisis-competencia](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/analisis-competencia.md)
-- [estructura-organizativa](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/estructura-organizativa.md)
-- [financiacion](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/analisis-financiacion.md)
-- [legislacion](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/analisis-legislacion.md)
-- [presupuesto](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/analisis-presupuesto.md)
-- [recursos](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/recursos.md)
-- [Github Actions](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/Github-Action/GITHUB_ACTIONS.md)
-- [documentacion de la api](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/documentacion_api.md)
-- [backend JDOCS](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/GitHub-Action/backend_docu.md)
-- [Frontend JDOCS](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/GitHub-Action/frontend_docu.md)
-- [Trivy: informe y uso](trivy/README.md)
+**Frontend** (`frontend/.env.local`):
+```env
+REACT_APP_API_URL=http://localhost:5000/api
+```
 
-## Wiki del Proyecto
-Aqui tienes el enlace de la wiki del proyecto :  
+#### 3. Desplegar con Docker
 
-- [home](https://github.com/Agsergio04/proyecto-intermodular-david/wiki) :  Contexto y necesidades de PreguntaT
-- [Scrum](https://github.com/Agsergio04/proyecto-intermodular-david/wiki/Metodolog%C3%ADa-SCRUM) : Metodologia SCRUM realizada
-- [Gestion de Recursos y Tiempos](https://github.com/Agsergio04/proyecto-intermodular-david/wiki/Gesti%C3%B3n-de-Recursos-y-Tiempos) : Recursos y Tiempos tenidos 
-- [Planificacion Spring](https://github.com/Agsergio04/proyecto-intermodular-david/wiki/Planificaci%C3%B3n-de-Sprints) : Planificacion de los Springs
-- [Roles del equipo](https://github.com/Agsergio04/proyecto-intermodular-david/wiki/Roles-del-equipo) : Roles de equipo asignados al proyecto
+```bash
+# Descargar imágenes y construir contenedores
+docker-compose build --no-cache
 
-## Equipo de Desarrollo
+# Iniciar servicios en segundo plano
+docker-compose up -d
+
+# Ver logs en tiempo real
+docker-compose logs -f
+```
+
+La aplicación estará disponible en:
+- **Frontend**: http://localhost:3000
+- **Backend**: http://localhost:5000
+
+#### 4. Detener Servicios
+
+```bash
+# Parar contenedores
+docker-compose down
+
+# Parar y eliminar volúmenes
+docker-compose down -v
+```
+
+## Documentación API
+
+- [Documentación de la API REST](docs/documentacion_api.md)
+- [Política de Seguridad](SECURITY.md)
+- [Informe de Seguridad - Trivy](trivy/README.md)
+
+## Seguridad
+
+Este proyecto implementa medidas de seguridad robustas:
+
+- **Helmet.js**: Headers HTTP de seguridad automáticos
+- **CORS**: Validación de orígenes permitidos
+- **Rate Limiting**: Protección contra DDoS (100 req/IP cada 15 min)
+- **JWT**: Autenticación segura con tokens
+- **Bcrypt**: Hash de contraseñas con 10 rounds de sal
+- **Validación de Entrada**: Validación con express-validator
+- **MongoDB**: Acceso autenticado a la base de datos
+
+Para más información, consulta [SECURITY.md](SECURITY.md).
 
 PreguntaT ha sido desarrollado por los siguientes profesionales: 
 
@@ -174,14 +204,8 @@ PreguntaT ha sido desarrollado por los siguientes profesionales:
 #### Pablo Sanz Aznar
 **GitHub** : [@pablitoclavito04](https://github.com/pablitoclavito04)  
 **Rol** : Frontend Developer   
-**Responsabilidades** : Realizacion de tareas varias como el frontend y documentacion.
+**Responsabilidades** : Desarrollo del frontend y documentación.
 
+## Licencia
 
-### Tiempo total proyecto
-
-Para este proyecto se ha realizado este total de horas en este pdf : 
-[total horas](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/informe-horas.pdf)
-
-### Utilizacion de trivy 
-
-para la configuracion de trivy para la generacion de informe me gustaria realizar : 
+Este proyecto está bajo la licencia ISC. Consulta el archivo [LICENSE.md](LICENSE.md) para más detalles. : 
