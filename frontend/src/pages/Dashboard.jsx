@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { FiDownload, FiTrendingUp, FiAward, FiClock, FiPlus, FiTrash2 } from 'react-icons/fi';
+import { FiTrendingUp, FiAward, FiClock, FiPlus, FiTrash2 } from 'react-icons/fi';
 import { useDashboard } from '../hooks/useDashboard';
 import { useThemeStore } from '../store';
 import { StatCard } from '../components/StatCard';
@@ -34,8 +34,7 @@ const Dashboard = () => {
     toggleCreateForm,
     updateFormData,
     updateManualFormData,
-    updateNewQuestion,
-    navigateToInterviews
+    updateNewQuestion
   } = useDashboard();
 
   if (loading) {

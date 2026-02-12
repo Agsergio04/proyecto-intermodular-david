@@ -110,12 +110,13 @@ const Login = () => {
         <form onSubmit={handleSubmit} className="login__form">
           
           <div className="login__field">
-            <label className={`login__label ${isDark ? 'login__label--dark' : ''}`}>
+            <label htmlFor="login-email" className={`login__label ${isDark ? 'login__label--dark' : ''}`}>
               {t('common.email')}
             </label>
             <div className={`login__input-wrapper ${isDark ? 'login__input-wrapper--dark' : ''}`}>
               <FiMail className="login__icon" />
               <input
+                id="login-email"
                 type="email"
                 name="email"
                 value={formData.email}
@@ -128,12 +129,13 @@ const Login = () => {
 
          
           <div className="login__field">
-            <label className={`login__label ${isDark ? 'login__label--dark' : ''}`}>
+            <label htmlFor="login-password" className={`login__label ${isDark ? 'login__label--dark' : ''}`}>
               {t('common.password')}
             </label>
             <div className={`login__input-wrapper ${isDark ? 'login__input-wrapper--dark' : ''}`}>
               <FiLock className="login__icon" />
               <input
+                id="login-password"
                 type="password"
                 name="password"
                 value={formData.password}

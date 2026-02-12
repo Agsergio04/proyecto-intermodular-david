@@ -3,6 +3,19 @@
  * @description Contains layout and responsive styles for the top navigation/header component.
  */
 
+/* Accessibility - Screen Reader Only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 /* Header Component - BEM Nomenclature */
 
 :root {
@@ -239,33 +252,33 @@
 .header__language-select {
   padding: 0.5rem;
   border-radius: 0.5rem;
-  border: 1px solid var(--border-light);
-  background-color: transparent;
+  border: 2px solid var(--border-light);
+  background-color: var(--bg-card-light);
   color: var(--text-dark);
   cursor: pointer;
   font-size: 0.875rem;
+  font-weight: 500;
   transition: all 0.2s;
 }
 
 .header__language-select--dark {
   border-color: var(--border-dark);
+  background-color: var(--bg-card-dark);
   color: var(--text-light);
 }
 
 .header__language-select:hover {
   background-color: var(--bg-light);
+  border-color: var(--color-primary-light);
 }
 
 .header__language-select--dark:hover {
-  background-color: var(--dim-gray);
+  background-color: #707070;
+  border-color: var(--color-primary-dark);
 }
 
-/* Theme Toggle */
-.header__theme-button {
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  border: none;
-  background: none;
+/* Theme T2px solid transparent;
+  background: transparent;
   cursor: pointer;
   color: var(--text-dark);
   display: flex;
@@ -280,6 +293,12 @@
 
 .header__theme-button:hover {
   background-color: var(--bg-light);
+  border-color: var(--color-primary-light);
+}
+
+.header__theme-button--dark:hover {
+  background-color: #707070;
+  border-color: var(--color-primary-dark);
 }
 
 .header__theme-button--dark:hover {
@@ -293,8 +312,8 @@
 /* Mobile Menu Button */
 .header__mobile-button {
   display: flex;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
+  padding:2px solid transparent;
+  background: transparent.5rem;
   border: none;
   background: none;
   cursor: pointer;

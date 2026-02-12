@@ -95,12 +95,13 @@ const Register = () => {
         </h2>
         <form onSubmit={handleSubmit} className="register__form">
           <div className="register__field">
-            <label className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
+            <label htmlFor="register-firstName" className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
               {t('common.firstName')}
             </label>
             <div className={`register__input-wrapper ${isDark ? 'register__input-wrapper--dark' : ''}`}>
               <FiUser className="register__icon" />
               <input
+                id="register-firstName"
                 type="text"
                 name="firstName"
                 value={formData.firstName}
@@ -111,12 +112,13 @@ const Register = () => {
             </div>
           </div>
           <div className="register__field">
-            <label className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
+            <label htmlFor="register-lastName" className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
               {t('common.lastName')}
             </label>
             <div className={`register__input-wrapper ${isDark ? 'register__input-wrapper--dark' : ''}`}>
               <FiUser className="register__icon" />
               <input
+                id="register-lastName"
                 type="text"
                 name="lastName"
                 value={formData.lastName}
@@ -127,12 +129,13 @@ const Register = () => {
             </div>
           </div>
           <div className="register__field">
-            <label className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
+            <label htmlFor="register-email" className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
               {t('common.email')}
             </label>
             <div className={`register__input-wrapper ${isDark ? 'register__input-wrapper--dark' : ''}`}>
               <FiMail className="register__icon" />
               <input
+                id="register-email"
                 type="email"
                 name="email"
                 value={formData.email}
@@ -143,12 +146,13 @@ const Register = () => {
             </div>
           </div>
           <div className="register__field">
-            <label className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
+            <label htmlFor="register-password" className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
               {t('common.password')}
             </label>
             <div className={`register__input-wrapper ${isDark ? 'register__input-wrapper--dark' : ''}`}>
               <FiLock className="register__icon" />
               <input
+                id="register-password"
                 type="password"
                 name="password"
                 value={formData.password}
@@ -159,10 +163,11 @@ const Register = () => {
             </div>
           </div>
           <div className="register__field">
-            <label className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
+            <label htmlFor="register-language" className={`register__label ${isDark ? 'register__label--dark' : ''}`}>
               {t('common.language')}
             </label>
             <select
+              id="register-language"
               name="language"
               value={formData.language}
               onChange={handleChange}

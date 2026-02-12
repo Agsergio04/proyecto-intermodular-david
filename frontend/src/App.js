@@ -99,55 +99,58 @@ function App() {
         {/* Header con navegación disponible en todas las páginas */}
         <Header />
         
-        {/* Sistema de rutas de la aplicación */}
-        <Routes>
-          {/* ===== Rutas Públicas ===== */}
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+        {/* Main content area - Landmark para accesibilidad */}
+        <main>
+          {/* Sistema de rutas de la aplicación */}
+          <Routes>
+            {/* ===== Rutas Públicas ===== */}
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-          {/* ===== Rutas Protegidas (requieren autenticación) ===== */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/interviews"
-            element={
-              <ProtectedRoute>
-                <Interviews />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/interview/:interviewId"
-            element={
-              <ProtectedRoute>
-                <InterviewSession />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/subscription"
-            element={
-              <ProtectedRoute>
-                <Subscription />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <ProtectedRoute>
-                <Settings />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
+            {/* ===== Rutas Protegidas (requieren autenticación) ===== */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/interviews"
+              element={
+                <ProtectedRoute>
+                  <Interviews />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/interview/:interviewId"
+              element={
+                <ProtectedRoute>
+                  <InterviewSession />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/subscription"
+              element={
+                <ProtectedRoute>
+                  <Subscription />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  <Settings />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </main>
 
         {/* Sistema de notificaciones toast para feedback al usuario */}
         <ToastContainer

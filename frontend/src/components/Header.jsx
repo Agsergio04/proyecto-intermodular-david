@@ -139,7 +139,11 @@ const Header = () => {
               )}
 
               {/* Language Selector */}
+              <label htmlFor="lang-select-desktop-auth" className="sr-only">
+                {t('common.language') || 'Select language'}
+              </label>
               <select
+                id="lang-select-desktop-auth"
                 value={language}
                 onChange={(e) => handleLanguageChange(e.target.value)}
                 className={`header__language-select ${isDark ? 'header__language-select--dark' : ''}`}
@@ -153,6 +157,7 @@ const Header = () => {
               {/* Theme Toggle */}
               <button
                 onClick={handleThemeToggle}
+                aria-label={isDark ? t('common.lightMode') || 'Light mode' : t('common.darkMode') || 'Dark mode'}
                 className={`header__theme-button ${isDark ? 'header__theme-button--dark' : ''}`}
               >
                 {isDark ? (
@@ -174,7 +179,11 @@ const Header = () => {
              */
             <div className="header__auth-buttons">
               {/* Language Selector */}
+              <label htmlFor="lang-select-desktop-unauth" className="sr-only">
+                {t('common.language') || 'Select language'}
+              </label>
               <select
+                id="lang-select-desktop-unauth"
                 value={language}
                 onChange={(e) => handleLanguageChange(e.target.value)}
                 className={`header__language-select ${isDark ? 'header__language-select--dark' : ''}`}
@@ -188,6 +197,7 @@ const Header = () => {
               {/* Theme Toggle */}
               <button
                 onClick={handleThemeToggle}
+                aria-label={isDark ? t('common.lightMode') || 'Light mode' : t('common.darkMode') || 'Dark mode'}
                 className={`header__theme-button ${isDark ? 'header__theme-button--dark' : ''}`}
               >
                 {isDark ? (
@@ -225,6 +235,7 @@ const Header = () => {
         {/* Mobile Menu Button */}
         <button
           onClick={toggleMobileMenu}
+          aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
           className={`header__mobile-button ${isDark ? 'header__mobile-button--dark' : ''}`}
         >
           {mobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
@@ -265,7 +276,11 @@ const Header = () => {
                   </button>
                 </>
               )}
+              <label htmlFor="lang-select-mobile-auth" className="sr-only">
+                {t('common.language') || 'Select language'}
+              </label>
               <select
+                id="lang-select-mobile-auth"
                 value={language}
                 onChange={(e) => handleLanguageChange(e.target.value)}
                 className={`header__language-select ${isDark ? 'header__language-select--dark' : ''}`}
@@ -277,6 +292,7 @@ const Header = () => {
               </select>
               <button
                 onClick={handleThemeToggle}
+                aria-label={isDark ? 'Light Mode' : 'Dark Mode'}
                 className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
               >
                 {isDark ? <FiSun /> : <FiMoon />}
@@ -285,7 +301,11 @@ const Header = () => {
             </>
           ) : (
             <>
+              <label htmlFor="lang-select-mobile-unauth" className="sr-only">
+                {t('common.language') || 'Select language'}
+              </label>
               <select
+                id="lang-select-mobile-unauth"
                 value={language}
                 onChange={(e) => handleLanguageChange(e.target.value)}
                 className={`header__language-select ${isDark ? 'header__language-select--dark' : ''}`}
@@ -297,6 +317,7 @@ const Header = () => {
               </select>
               <button
                 onClick={handleThemeToggle}
+                aria-label={isDark ? 'Light Mode' : 'Dark Mode'}
                 className={`header__mobile-menu-item ${isDark ? 'header__mobile-menu-item--dark' : ''}`}
               >
                 {isDark ? <FiSun /> : <FiMoon />}
