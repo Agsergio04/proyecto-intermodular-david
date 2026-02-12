@@ -14,8 +14,6 @@ let ai = null;
 
 if (API_KEY) {
   ai = new GoogleGenerativeAI(API_KEY);
-} else {
-  console.warn('GEMINI_API_KEY not set. AI features will be disabled.');
 }
 
 /**
@@ -80,11 +78,9 @@ router.post('/transcribe', authMiddleware, async (req, res) => {
       const transcript = response.response.text().trim();
       res.status(200).json({ text: transcript });
     } catch (error) {
-      console.error('Transcription error:', error);
       res.status(500).json({ message: 'Error transcribing audio', error: error.message });
     }
   } catch (error) {
-    console.error('Transcription error:', error);
     res.status(500).json({ message: 'Error transcribing audio', error: error.message });
   }
 });
@@ -108,10 +104,8 @@ router.post('/next-question', authMiddleware, async (req, res) => {
     return res.status(503).json({ message: 'AI service not available. GEMINI_API_KEY not configured.' });
   }
   try {
-    // Placeholder: lógica real debe generar la pregunta usando `ai`
     return res.status(501).json({ message: 'Not implemented: next-question generation' });
   } catch (error) {
-    console.error('next-question error:', error);
     return res.status(500).json({ message: 'Error generating next question', error: error.message });
   }
 });
@@ -136,7 +130,6 @@ router.post('/evaluate-response', authMiddleware, async (req, res) => {
     // Placeholder: lógica real debe evaluar la respuesta y devolver detalles
     return res.status(501).json({ message: 'Not implemented: evaluate-response' });
   } catch (error) {
-    console.error('evaluate-response error:', error);
     return res.status(500).json({ message: 'Error evaluating response', error: error.message });
   }
 });

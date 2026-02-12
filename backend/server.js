@@ -29,13 +29,9 @@ function loadEnvironment() {
   const envPath = path.resolve(__dirname, '.env');
 
   if (fs.existsSync(envLocalPath)) {
-    console.log('✅ Loading .env.local');
     require('dotenv').config({ path: envLocalPath });
   } else if (fs.existsSync(envPath)) {
-    console.log('✅ Loading .env');
     require('dotenv').config({ path: envPath });
-  } else {
-    console.log('⚠️  No .env file found, using environment variables');
   }
 }
 
@@ -77,7 +73,7 @@ const app = express();
  * @see https://expressjs.com/en/guide/behind-proxies.html
  * @returns {void}
  */
-app.set('trust proxy', 1); // ✅ Esencial para deployments en contenedores
+app.set('trust proxy', 1); //  Esencial para deployments en contenedores
 
 // ============================================================================
 // MIDDLEWARE DE SEGURIDAD
@@ -103,14 +99,18 @@ const allowedOrigins = [
  * @returns {void}
  */
 function corsOriginValidator(origin, callback) {
-  // ✅ Permite requests sin origen (mobile apps, Postman, curl)
+  // Permite requests sin origen (mobile apps, Postman, curl)
   if (!origin) return callback(null, true);
 
   if (allowedOrigins.indexOf(origin) !== -1) {
     callback(null, true);
   } else {
-    console.log('⚠️  CORS blocked origin:', origin);
-    callback(null, true); // ✅ Development: allow anyway
+    // En desarrollo: permite todos los orígenes; En producción: rechaza no autorizados
+    if (process.env.NODE_ENV === 'development') {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS policy: Origin not allowed'));
+    }
   }
 }
 
@@ -150,11 +150,8 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
  * @param {import('express').NextFunction} next - Next middleware
  * @returns {void}
  */
+// Request logging middleware (optional, disabled for production cleanliness)
 app.use((req, res, next) => {
-  console.log(`📨 ${req.method} ${req.path}`);
-  if (req.method === 'POST' || req.method === 'PUT') {
-    console.log(`📦 Body:`, JSON.stringify(req.body));
-  }
   next();
 });
 
@@ -168,9 +165,8 @@ app.use((req, res, next) => {
  * @returns {Promise<void>}
  */
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://mongo:27017/ai-interview')
-  .then(() => console.log('✓ MongoDB connected'))
   .catch(err => {
-    console.error('✗ MongoDB connection error:', err);
+    console.error('MongoDB connection error:', err.message);
     process.exit(1);
   });
 
@@ -210,8 +206,10 @@ app.get('/api/health', (req, res) => {
  * @returns {void}
  */
 app.use((err, req, res, next) => {
-  console.error('❌ Error:', err.message);
-  console.error('Stack:', err.stack);
+  console.error('Error:', err.message);
+  if (process.env.NODE_ENV === 'development') {
+    console.error('Stack:', err.stack);
+  }
 
   res.status(err.status || 500).json({
     message: err.message || 'Internal Server Error',
@@ -227,7 +225,6 @@ app.use((err, req, res, next) => {
  * @returns {void}
  */
 app.use((req, res) => {
-  console.log(`⚠️  404 - Route not found: ${req.method} ${req.path}`);
   res.status(404).json({ message: 'Route not found' });
 });
 
@@ -247,7 +244,9 @@ const PORT = process.env.PORT || 5000;
  * @returns {import('http').Server}
  */
 const server = app.listen(PORT, () => {
-  console.log(`✓ Server running on port ${PORT}`);
+  if (process.env.NODE_ENV !== 'test') {
+    console.log(`Server running on port ${PORT}`);
+  }
 });
 
 /**

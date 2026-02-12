@@ -10,23 +10,14 @@ const { GoogleGenAI } = require('@google/genai');
 
 const API_KEY = process.env.GEMINI_API_KEY;
 
-console.log('🔍 GitinestController initialization...');
-if (!API_KEY || API_KEY.trim() === '') {
-  console.error('❌ CRITICAL: GEMINI_API_KEY is not configured!');
-  console.error('   📝 Please add GEMINI_API_KEY to your .env file');
-} else {
-  console.log('✅ GEMINI_API_KEY found (length:', API_KEY.length, ')');
-}
-
 // Only create genAI if a valid API key exists
 let genAI = null;
-try {
-  if (API_KEY && API_KEY.trim() !== '') {
+if (API_KEY && API_KEY.trim() !== '') {
+  try {
     genAI = new GoogleGenAI({ apiKey: API_KEY });
-    console.log('✅ GoogleGenAI (new SDK) initialized successfully'); 
+  } catch (err) {
+    console.error('Error initializing GoogleGenAI:', err.message);
   }
-} catch (err) {
-  console.error('❌ Error initializing GoogleGenAI:', err.message);
 }
 
 /**
@@ -71,7 +62,6 @@ async function fetchReadme(owner, repo) {
         if (res.ok) {
           const text = await res.text();
           if (text && text.trim().length > 0) {
-            console.log(`✅ README found: ${branch}/${readmeFile}`);
             return text;
           }
         }
@@ -81,7 +71,6 @@ async function fetchReadme(owner, repo) {
     }
   }
 
-  console.log(`⚠️ No README found for ${owner}/${repo}`);
   return null;
 }
 
@@ -116,7 +105,6 @@ async function fetchRepoInfo(owner, repo) {
 
     if (res.ok) {
       const data = await res.json();
-      console.log(`✅ Repository info obtained: ${data.name}`);
       return {
         name: data.name,
         description: data.description || '',
@@ -128,7 +116,7 @@ async function fetchRepoInfo(owner, repo) {
       };
     }
   } catch (e) {
-    console.error('❌ Error fetching repo info:', e.message);
+    console.error('Error fetching repository info:', e.message);
   }
 
   return null;
@@ -174,17 +162,13 @@ async function generateTextAndQuestions(
       throw new Error('repoUrl must be a non-empty string');
     }
 
-    console.log(`\n🚀 Starting question generation for: ${repoUrl}`);
-    console.log(`   Params: count=${questionCount}, difficulty=${difficulty}, language=${language}`);
-
-    // ✅ Parse GitHub URL
+    // Parse GitHub URL
     const parsed = parseGitHubUrl(repoUrl);
     if (!parsed) {
       throw new Error(`Invalid GitHub URL format: ${repoUrl}`);
     }
-    console.log(`📦 Repository: ${parsed.owner}/${parsed.repo}`);
 
-    // ✅ Fetch README or repo info
+    // Fetch README or repo info
     let baseText = '';
     let repoInfo = null;
     let isGeneric = false;
@@ -193,7 +177,6 @@ async function generateTextAndQuestions(
 
     if (readme && readme.trim().length > 0) {
       baseText = readme.slice(0, 8000);
-      console.log(`📚 README obtained, length: ${baseText.length} chars`);
     } else {
       repoInfo = await fetchRepoInfo(parsed.owner, parsed.repo);
       if (repoInfo) {
@@ -207,12 +190,8 @@ Homepage: ${repoInfo.homepage || 'None'}
 This is a ${repoInfo.language} project${
           repoInfo.topics.length > 0 ? ` focused on ${repoInfo.topics.join(', ')}` : ''
         }.`;
-        console.log(`📚 Using GitHub API info, length: ${baseText.length} chars`);
       } else {
-        // ✅ NEW: If the repository is inaccessible, use generic information
-        console.log(
-          `⚠️ Repository ${parsed.owner}/${parsed.repo} is private or inaccessible. Generating generic questions.`,
-        );
+        // If the repository is inaccessible, use generic information
         isGeneric = true;
         baseText = `Repository: ${parsed.repo}
 Owner: ${parsed.owner}
@@ -220,16 +199,13 @@ This is a software development project. Since the repository is private or inacc
       }
     }
 
-    // ✅ Check Gemini configuration
+    // Check Gemini configuration
     if (!genAI || !API_KEY) {
-      console.error('❌ GEMINI_API_KEY not available');
       throw new Error(
         'AI service not available. GEMINI_API_KEY is not configured. ' +
           'Please add GEMINI_API_KEY to your .env file.',
       );
     }
-
-    console.log(`\n🤖 Generating ${questionCount} questions with Gemini...`);
 
     // ✅ Prepare language text
     const languageText =
@@ -291,7 +267,7 @@ OUTPUT FORMAT: JSON with array of objects {question: string, difficulty: string}
 
     console.log('📤 Calling Gemini API using gemini-2.5-flash...');
 
-    // ✅ Call Gemini API using the new SDK @google/genai
+    // Call Gemini API using the new SDK @google/genai
     let result;
     try {
       result = await genAI.models.generateContent({
@@ -319,39 +295,34 @@ OUTPUT FORMAT: JSON with array of objects {question: string, difficulty: string}
         },
       });
     } catch (geminiError) {
-      console.error('❌ Gemini API call failed:', geminiError.message);
+      console.error('Error calling Gemini API:', geminiError.message);
       throw new Error(`Gemini API error: ${geminiError.message}`);
     }
 
-    // ✅ Validate response
+    // Validate response
     if (!result || !result.text) {
       throw new Error('Gemini returned empty response');
     }
 
-    // ✅ Parse JSON
+    // Parse JSON response
     const jsonText = result.text.trim();
-    console.log('📥 Gemini response received, parsing...');
-    console.log('📄 Raw JSON response:', jsonText.substring(0, 500));
 
     let parsedResult;
     try {
       const rawParsed = JSON.parse(jsonText);
 
-      // ✅ ADAPTACIÓN: Si Gemini devuelve un array directamente, envolverlo en un objeto
+      // If Gemini returns an array directly, wrap it in an object
       if (Array.isArray(rawParsed)) {
-        console.log('⚠️ Gemini returned array instead of object, wrapping...');
         parsedResult = { questions: rawParsed };
       } else {
         parsedResult = rawParsed;
       }
-
-      console.log('✅ Parsed result with', parsedResult.questions?.length || 0, 'questions');
     } catch (parseErr) {
-      console.error('❌ JSON parse error. Raw response (first 300 chars):', jsonText.substring(0, 300));
+      console.error('JSON parse error:', jsonText.substring(0, 300));
       throw new Error(`Failed to parse Gemini response as JSON: ${parseErr.message}`);
     }
 
-    // ✅ Extract and validate questions
+    // Extract and validate questions
     const questions = parsedResult.questions || [];
 
     if (!Array.isArray(questions)) {
@@ -362,12 +333,7 @@ OUTPUT FORMAT: JSON with array of objects {question: string, difficulty: string}
       throw new Error('Gemini did not generate any questions');
     }
 
-    console.log(`✅ Generated ${questions.length} questions successfully`);
-    if (questions.length > 0) {
-      console.log('📝 First question:', questions[0].question?.substring(0, 80) + '...');
-    }
-
-    // ✅ Return result
+    // Return successfully generated questions
     return {
       repo: `${parsed.owner}/${parsed.repo}`,
       repoUrl: repoUrl,
@@ -382,7 +348,7 @@ OUTPUT FORMAT: JSON with array of objects {question: string, difficulty: string}
       questions: questions.slice(0, questionCount),
     };
   } catch (error) {
-    console.error('❌ generateTextAndQuestions error:', error.message);
+    console.error('Error generating questions:', error.message);
     throw error;
   }
 }

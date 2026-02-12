@@ -29,14 +29,7 @@ let API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 if (API_URL && !API_URL.endsWith('/api')) {
   API_URL = API_URL.replace(/\/$/, '') + '/api';
 }
-/**
- * Logging de configuración de API para debugging.
- * Muestra tanto la variable de entorno como la URL final procesada.
- */
-console.log('🔧 API Configuration:', {
-  REACT_APP_API_URL: process.env.REACT_APP_API_URL,
-  API_URL: API_URL
-});
+
 /**
  * Instancia principal de Axios configurada para todas las peticiones HTTP.
  * @type {import('axios').AxiosInstance}
@@ -69,25 +62,15 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
     
-    // Aplicar timeout más largo para operaciones de IA
+    // Apply longer timeout for AI operations
     if (config.url?.includes('generate-feedback') || config.url?.includes('generate-questions')) {
-      config.timeout = 180000; // 3 minutos para operaciones de IA
-      console.log('⏱️  Timeout extendido (180s) para:', config.url);
+      config.timeout = 180000; // 3 minutes for AI operations
     }
     
-    console.log('📤 API Request:', config.method?.toUpperCase(), config.url);
-    if (config.data) {
-      console.log('📤 Request Body:', JSON.stringify(config.data));
-      if (config.url?.includes('generate-questions')) {
-        console.log('📤 GENERATE-QUESTIONS - Body keys:', Object.keys(config.data));
-        console.log('📤 GENERATE-QUESTIONS - repoUrl:', config.data.repoUrl);
-      }
-    }
     return config;
   },
   /** @param {Error} error */
   error => {
-    console.error('❌ Request Error:', error);
     return Promise.reject(error);
   }
 );
@@ -96,27 +79,25 @@ api.interceptors.request.use(
  * Interceptor de respuestas entrantes.
  * @param {import('axios').AxiosResponse} response - Respuesta exitosa
  * @returns {Promise<import('axios').AxiosResponse>} Respuesta procesada
- * @description Loggea status y URL de respuestas exitosas
  */
 api.interceptors.response.use(
   /** @param {import('axios').AxiosResponse} response */
   response => {
-    console.log('✅ API Response:', response.status, response.config.url);
     return response;
   },
   /**
    * @param {import('axios').AxiosError} error - Error de respuesta
    * @returns {Promise<never>} Error rechazado
-   * @description Loggea detalles completos de errores HTTP con status, URL y data
    */
   error => {
-    console.error('❌ API Error:', {
-      url: error.config?.url,
-      method: error.config?.method,
-      status: error.response?.status,
-      message: error.message,
-      data: error.response?.data
-    });
+    if (process.env.NODE_ENV === 'development') {
+      console.error('API Error:', {
+        url: error.config?.url,
+        method: error.config?.method,
+        status: error.response?.status,
+        message: error.message
+      });
+    }
     return Promise.reject(error);
   }
 );

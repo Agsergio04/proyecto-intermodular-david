@@ -12,12 +12,9 @@ const Question = require('../models/Question');
 const Interview = require('../models/Interview');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-if (!process.env.GEMINI_API_KEY) {
-    console.warn("⚠️  GEMINI_API_KEY not set. AI features will be disabled.");
-}
+// Note: GEMINI_API_KEY is required for AI feedback features
 
 /**
  * Submit a response for a specific interview question.
@@ -75,16 +72,11 @@ exports.submitResponse = async (req, res) => {
       analysis: null
     });
 
-    console.log('💾 Saving response without evaluation (will be evaluated when feedback is requested)');
-
     await response.save();
 
     // Update question with response
     question.responses.push(response._id);
     await question.save();
-    
-    console.log(`✅ Response added to question. Question now has ${question.responses.length} responses`);
-    console.log(`📝 Response IDs:`, question.responses);
 
     // Update interview statistics (without including score until feedback is generated)
     const allResponses = await Response.find({ interviewId });
@@ -321,9 +313,8 @@ exports.generateInterviewFeedback = async (req, res) => {
       });
     }
 
-    // Obtener todas las respuestas de la entrevista
+    // Get all responses for the interview
     const responses = await Response.find({ interviewId });
-    console.log(`📝 Found ${responses.length} responses`);
 
     if (responses.length === 0) {
       return res.status(400).json({ message: 'No responses found for this interview' });
@@ -345,18 +336,15 @@ exports.generateInterviewFeedback = async (req, res) => {
     // Generate feedback for each response that has text and no prior feedback
     for (const response of responses) {
       if (!response.responseText || (response.feedback && response.score !== null)) {
-        console.log(`⏭️  Skipping response ${response._id} (no text or already evaluated)`);
         continue;
       }
 
       const question = await Question.findById(response.questionId);
       if (!question) {
-        console.log(`⚠️  Question not found for response ${response._id}`);
         continue;
       }
 
       try {
-        console.log(`🤖 Evaluando respuesta ${evaluatedCount + 1}...`);
 
         let contextInfo = '';
         if (repoContext && repoContext.readmeContent) {
