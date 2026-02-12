@@ -1,19 +1,23 @@
+# PreguntaT
 
-# PreguntaT  
-## Índice
+## Table of Contents
 
-- [Descripción del Proyecto](#descripcion-del-proyecto)
-- [Stack Tecnológico](#stack-tecnologico)
-- [Instalación y Configuración](#instalacion-y-configuracion)
-- [Demostración](#prueba-realizada)
-- [Despliegue en Producción](#puesta-en-produccion)
-- [Documentación API](#documentacion-api)
-- [Seguridad](#seguridad)
-- [Equipo de Desarrollo](#equipo-de-desarrollo)
-- [Licencia](#licencia)
+- [Project Description](#project-description)
+- [Tech Stack](#tech-stack)
+- [Installation and Setup](#installation-and-setup)
+- [Environment Variables](#environment-variables)
+- [Project Structure](#project-structure)
+- [Demo](#demo)
+- [Production Deployment](#production-deployment)
+- [Architecture](#architecture)
+- [API Documentation](#api-documentation)
+- [Security](#security)
+- [Development Team](#development-team)
+- [Contributing](#contributing)
+- [License](#license)
 
+## Overview
 
-# Descripcion sencilla
 [![Backend v1.0.0](https://img.shields.io/badge/backend-v1.0.0-blue)](backend/)
 [![Frontend v1.0.0](https://img.shields.io/badge/frontend-v1.0.0-blue)](frontend/)
 [![License ISC](https://img.shields.io/badge/license-ISC-green)](LICENSE)
@@ -24,120 +28,88 @@
 [![Last commit](https://img.shields.io/github/last-commit/Agsergio04/proyecto-intermodular-david/main)](https://github.com/Agsergio04/proyecto-intermodular-david/commits/main)
 [![GitHub stars](https://img.shields.io/github/stars/Agsergio04/proyecto-intermodular-david?style=social)](https://github.com/Agsergio04/proyecto-intermodular-david/stargazers)
 
-## Descripcion del proyecto
-Este es un proyecto el cual tiene como objetivo la realizacion de una entrevista de un proyecto de github con un proposito didactico,siendo posible la realizacion de la practica por medio de ia (`gemini 2.5 flash`) e incluso la realizacion de las preguntas hechas por uno mismo.  
+## Project Description
 
-Por otro lado tambien tenemos un enfoque de esta aplicaion chatear en lenguaje natural con una base de código para entender su arquitectura, funcionalidades y calidad antes de desarrollar un producto propio con enfoque similar.  
+This project aims to conduct interviews about GitHub projects for educational purposes. It enables users to practice through AI (`gemini 2.5 flash`) and even create their own custom questions.
 
-Asi mismo nosotros tenemos un enfoque didactico para el aprendizaje del uso de una tecnologia o conjunto de tecnologias asociadas para un aprendizaje de manera mas "humana". 
+Additionally, the application allows users to chat in natural language with a codebase to understand its architecture, features, and quality before developing a similar product with their own approach.
 
-## Stack Tecnologico
+We also take a didactic approach to learning the use of a technology or set of associated technologies in a more "human" way.
 
+## Tech Stack
 
 ### Frontend
 
-- **React** – Framework principal de UI 
-- **React Router DOM** – Enrutado del frontend 
-- **Axios** – Peticiones HTTP 
-- **Tailwind CSS** – Framework de estilos utilitario 
-- **Vite** – Bundler y entorno de desarrollo 
-- **Testing:** Jest, React Testing Library, Supertest 
-- **Herramientas:** ESLint, Prettier para la calidad y el formato de código
+- **React** – Main UI framework
+- **React Router DOM** – Frontend routing
+- **Axios** – HTTP requests
+- **Tailwind CSS** – Utility-first CSS framework
+- **Vite** – Bundler and development environment
+- **Testing:** Jest, React Testing Library, Supertest
+- **Tools:** ESLint, Prettier for code quality and formatting
 
 ### Backend
 
-- **Node.js** – Entorno de ejecución 
-- **Express** – Framework para API REST 
-- **Mongoose** – ODM para MongoDB 
-- **MongoDB Atlas** – Base de datos cloud
-- **Autenticación y Seguridad:** bcrypt, jsonwebtoken 
-- **Testing:** Jest, Supertest 
-- **Nodemon** – Hot reload en desarrollo 
+- **Node.js** – Runtime environment
+- **Express** – REST API framework
+- **Mongoose** – MongoDB ODM
+- **MongoDB Atlas** – Cloud database
+- **Authentication and Security:** bcrypt, jsonwebtoken
+- **Testing:** Jest, Supertest
+- **Nodemon** – Hot reload in development
 
-### DevOps y Development
+### DevOps and Development
 
-- **Docker y docker-compose** – Orquestación y contenedores de servicios
-- **Despliegue:** Render.com (automatización Cloud)
-- **GitHub Actions** – Integración y entrega continua ([GitHub Actions Docs](https://docs.github.com/actions))
-- **Variables de entorno** configuradas para gestión de API keys, secretos, etc.
+- **Docker and docker-compose** – Service orchestration and containers
+- **Deployment:** Render.com (Cloud automation)
+- **GitHub Actions** – Continuous integration and delivery ([GitHub Actions Docs](https://docs.github.com/actions))
+- **Environment variables** configured for API keys, secrets, etc.
 
-### Servicios y APIs Adicionales
+### Additional Services and APIs
 
-- **Google Gemini API** – Integración para IA (preguntas/respuestas automáticas)
-- **PayPal** – Integración opcional de pagos (configurable desde variables de entorno)
-- **(Opcional) Otras APIs o servicios documentados en la configuración y recursos legales**
+- **Google Gemini API** – AI integration (automatic questions/answers)
+- **PayPal** – Optional payment integration (configurable via environment variables)
+- **(Optional) Other APIs or services documented in configuration and legal resources**
 
-## Puesta en Produccion  
+## Installation and Setup
 
-Para acceder a la puesta en produccion realizada en Render (Tanto el Backend como el Frontend) se accede a traves del siguiente [enlace](ai-interview-frontend-q9db.onrender.com) (https://ai-interview-frontend-q9db.onrender.com) .  
+### Prerequisites
 
-## Prueba Realizada 
-Aqui hago la prueba de la realizacion de una entrevista con este enlace del repositorio -> `https://github.com/Agsergio04/proyecto-intermodular-david` y veo los resultados realizados.  
+- **Docker and Docker Compose** installed
+- **Git** installed
+- **Node.js** v18+ (for local development without Docker)
 
-Entro a la pagina: 
-![Imagen 1](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_1.png)
-Me registro: 
-![Imagen 2](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_2.png)
-Sale el Dashboard en el cual sale la media de todas las entrevistas realizadas : 
-![Imagen 3](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_3.png)
-Creo una entrevista con este repostiorio con el lenguaje en español y elijo hacerla sencilla : 
-![Imagen 4](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_4.png)
-Veo que a la hora de realizarla sale el numero de la pregunta con una entrada de texto para poder realizarla o si quiero avanzar ir a otra pregunta : 
-![Imagen 5](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_5.png) 
-Respondi a la pregunta anterior con lo cual me ha llevado a la siguiente pregunta a realizar : 
-![Imagen 6](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_6.png)
-Decidi volver a la anterior para ver que habia puesto dado que se almacena en el recuadro la ultima respuesta realizada : 
-![Imagen 7](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_7.png)
-Tras realizar la entrevista hasta la ultima pregunta me hubiera gustado acabarla pero como no realice todos las las preguntas porque se me olvido me obliga a rellenar el campo para poder acabarla y entregarla : 
-![Imagen 8](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_8.png)
-Tras darle al boton te lleva a la pregunta sin realizar mas temprana que tenga,siendo en estecaso la pregunta nº 3 : 
-![Imagen 9](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_9.png)
-Despues de responder a las preguntas tienes que esperar a que se genere el resultado de las mismas un cierto periodo de tiempo: 
-![Imagen 10](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_10.png)
-Pasado el tiempo del generado del feedback te lleva al apartado de las entrevistas en el que te lleva a las entrevistas que has realizado ya con la nota dada: 
-![Imagen 11](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_11.png)
-Metiendote en la entrevista realizada puedes ver un feedback detallado por cada pregunta junto con la nota correspondiente segun la respuesta dada frente a la pregunta a responder: 
-![Imagen 12](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_12.png)  
+### Installation Steps
 
-## Instalación y Configuración
-
-### Requisitos Previos
-
-- **Docker y Docker Compose** instalados
-- **Git** instalado
-- **Node.js** v18+ (para desarrollo local sin Docker)
-
-### Pasos de Instalación
-
-#### 1. Clonar el Repositorio
+#### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/Agsergio04/proyecto-intermodular-david.git
 cd proyecto-intermodular-david
 ```
 
-#### 2. Configurar Variables de Entorno
+#### 2. Configure Environment Variables
 
-Crea los archivos `.env.local` en las carpetas `backend/` y `frontend/`:
+Create `.env.local` files in the `backend/` and `frontend/` directories:
 
 **Backend** (`backend/.env.local`):
 ```env
-# Base de Datos
+# Database
 MONGODB_URI=mongodb://localhost:27017/ai-interview
 
-# Servidor
+# Server
 PORT=5000
 NODE_ENV=development
 
-# Autenticación
-JWT_SECRET=tu-clave-secreta-muy-segura
+# Authentication
+JWT_SECRET=your-very-secure-secret-key
 
 # Google Gemini AI
-GEMINI_API_KEY=tu-api-key-de-google-gemini
+GEMINI_API_KEY=your-google-gemini-api-key
 
-# PayPal (opcional)
-PAYPAL_CLIENT_ID=tu-paypal-client-id
-PAYPAL_SECRET=tu-paypal-secret
+# PayPal (optional)
+PAYPAL_CLIENT_ID=your-paypal-client-id
+PAYPAL_SECRET=your-paypal-secret
 ```
 
 **Frontend** (`frontend/.env.local`):
@@ -145,67 +117,156 @@ PAYPAL_SECRET=tu-paypal-secret
 REACT_APP_API_URL=http://localhost:5000/api
 ```
 
-#### 3. Desplegar con Docker
+#### 3. Deploy with Docker
 
 ```bash
-# Descargar imágenes y construir contenedores
+# Pull images and build containers
 docker-compose build --no-cache
 
-# Iniciar servicios en segundo plano
+# Start services in the background
 docker-compose up -d
 
-# Ver logs en tiempo real
+# View logs in real time
 docker-compose logs -f
 ```
 
-La aplicación estará disponible en:
+The application will be available at:
 - **Frontend**: http://localhost:3000
 - **Backend**: http://localhost:5000
 
-#### 4. Detener Servicios
+#### 4. Stop Services
 
 ```bash
-# Parar contenedores
+# Stop containers
 docker-compose down
 
-# Parar y eliminar volúmenes
+# Stop and remove volumes
 docker-compose down -v
 ```
 
-## Documentación API
+## Environment Variables
 
-- [Documentación de la API REST](docs/documentacion_api.md)
-- [Política de Seguridad](SECURITY.md)
-- [Informe de Seguridad - Trivy](trivy/README.md)
+### Frontend (`frontend/.env.local`)
 
-## Seguridad
+| Variable                     | Description                    |
+| ---------------------------- | ------------------------------ |
+| `REACT_APP_API_URL`          | Backend API base URL           |
+| `REACT_APP_GEMINI_API_KEY`   | Google Gemini API key          |
+| `REACT_APP_PAYPAL_CLIENT_ID` | PayPal client ID               |
 
-Este proyecto implementa medidas de seguridad robustas:
+### Backend (`backend/.env.local`)
 
-- **Helmet.js**: Headers HTTP de seguridad automáticos
-- **CORS**: Validación de orígenes permitidos
-- **Rate Limiting**: Protección contra DDoS (100 req/IP cada 15 min)
-- **JWT**: Autenticación segura con tokens
-- **Bcrypt**: Hash de contraseñas con 10 rounds de sal
-- **Validación de Entrada**: Validación con express-validator
-- **MongoDB**: Acceso autenticado a la base de datos
+| Variable        | Description                          |
+| --------------- | ------------------------------------ |
+| `NODE_ENV`      | Environment (development/production) |
+| `PORT`          | Server port (default: 5000)          |
+| `MONGODB_URI`   | MongoDB connection string            |
+| `JWT_SECRET`    | Secret key for JWT tokens            |
+| `FRONTEND_URL`  | Frontend URL for CORS                |
+| `GEMINI_API_KEY`| Google Gemini API key                |
 
-Para más información, consulta [SECURITY.md](SECURITY.md).
+## Project Structure
 
-PreguntaT ha sido desarrollado por los siguientes profesionales: 
+```
+proyecto-intermodular-david/
+├── backend/
+│   ├── controllers/    # Route handlers
+│   ├── middleware/      # Auth and validation
+│   ├── models/          # Mongoose schemas
+│   ├── routes/          # API endpoints
+│   ├── scripts/         # Seed scripts
+│   ├── server.js        # Entry point
+│   └── Dockerfile
+├── frontend/
+│   ├── public/          # Static assets
+│   ├── src/
+│   │   ├── api/         # API client and i18n
+│   │   ├── assets/      # Images and styles
+│   │   ├── components/  # Reusable components
+│   │   ├── hooks/       # Custom React hooks
+│   │   ├── pages/       # Page components
+│   │   └── store/       # Zustand state stores
+│   └── Dockerfile
+├── docker-compose.yml
+├── render.yaml          # Render deployment config
+└── README.md
+```
 
-### Primer Participante
-#### Sergio Aragón García 
-**GitHub** : [@Agsergio04](https://github.com/Agsergio04)  
-**Rol** : Desarrollador Full Stack / Líder de Proyecto  
-**Responsabilidades** : Coordinación del equipo, análisis de requisitos, diseño e implementación de funcionalidades principales, gestión de la integración entre frontend y backend, revisión de código y despliegue y documentacion.
+## Production Deployment
 
-### Segundo Participante
-#### Pablo Sanz Aznar
-**GitHub** : [@pablitoclavito04](https://github.com/pablitoclavito04)  
-**Rol** : Frontend Developer   
-**Responsabilidades** : Desarrollo del frontend y documentación.
+The application is deployed on Render (both Backend and Frontend). Access it through the following [link](https://ai-interview-frontend-q9db.onrender.com).
 
-## Licencia
+## Demo
 
-Este proyecto está bajo la licencia ISC. Consulta el archivo [LICENSE.md](LICENSE.md) para más detalles. : 
+Below is a walkthrough of an interview session using the repository `https://github.com/Agsergio04/proyecto-intermodular-david`.
+
+Landing page:
+![Screenshot 1](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_1.png)
+Registration:
+![Screenshot 2](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_2.png)
+Dashboard showing the average score across all completed interviews:
+![Screenshot 3](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_3.png)
+Creating an interview with this repository in Spanish and easy difficulty:
+![Screenshot 4](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_4.png)
+The interview view shows the question number with a text input to answer, or the option to skip to another question:
+![Screenshot 5](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_5.png)
+After answering the previous question, it moves to the next one:
+![Screenshot 6](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_6.png)
+Going back to a previous question to review the stored answer:
+![Screenshot 7](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_7.png)
+Attempting to finish the interview without answering all questions triggers a validation requiring all fields to be filled:
+![Screenshot 8](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_8.png)
+The app redirects to the earliest unanswered question (question #3 in this case):
+![Screenshot 9](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_9.png)
+After submitting all answers, the AI generates feedback (this takes a moment):
+![Screenshot 10](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_10.png)
+Once feedback is generated, the interviews list shows the completed interview with its score:
+![Screenshot 11](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_11.png)
+Clicking on the interview shows detailed feedback per question with individual scores:
+![Screenshot 12](https://github.com/Agsergio04/proyecto-intermodular-david/blob/main/docs/imgs/Prueba_12.png)
+
+## Architecture
+
+For detailed system architecture, technical decisions, data models, and the full API reference (29 endpoints), see [ARCHITECTURE.md](ARCHITECTURE.md).
+
+## API Documentation
+
+- [REST API Documentation](docs/documentacion_api.md)
+- [Security Policy](SECURITY.md)
+- [Security Report - Trivy](trivy/README.md)
+
+## Security
+
+This project implements robust security measures:
+
+- **Helmet.js**: Automatic HTTP security headers
+- **CORS**: Allowed origin validation
+- **Rate Limiting**: DDoS protection (100 req/IP per 15 min)
+- **JWT**: Secure token-based authentication
+- **Bcrypt**: Password hashing with 10 salt rounds
+- **Input Validation**: Validation with express-validator
+- **MongoDB**: Authenticated database access
+
+For more information, see [SECURITY.md](SECURITY.md).
+
+## Development Team
+
+PreguntaT was developed by the following professionals:
+
+### Sergio Aragon Garcia
+**GitHub**: [@Agsergio04](https://github.com/Agsergio04)
+**Role**: Full Stack Developer / Project Lead
+**Responsibilities**: Team coordination, requirements analysis, design and implementation of core features, frontend-backend integration management, code review, deployment, and documentation.
+
+### Pablo Sanz Aznar
+**GitHub**: [@pablitoclavito04](https://github.com/pablitoclavito04)
+**Role**: Frontend Developer
+**Responsibilities**: Frontend development and documentation.
+
+## Contributing
+
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) before submitting a pull request.
+
+## License
+
+This project is licensed under the ISC License. See the [LICENSE](LICENSE) file for details.
